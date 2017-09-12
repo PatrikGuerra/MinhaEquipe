@@ -7,12 +7,17 @@ import { AngularFireAuth } from "angularfire2/auth";
 
 //Paginas
 import { HomePage } from '../pages/home/home';
+import { CadastroPage } from "../pages/cadastro/cadastro";
+import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
+import { LoginPage } from "../pages/login/login";
+
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = HomePage;
+ // rootPage:any = HomePage;
+  rootPage:any;
 
   constructor(
     platform: Platform, 
@@ -22,11 +27,12 @@ export class MyApp {
 
 
     const authObserver = afAuth.authState.subscribe(user => {
-      if (!user) {
-        // this.rootPage = Home;
+      console.log(JSON.stringify(user));
+      if (user) {
+         this.rootPage = HomePage;
         //authObserver.unsubscribe();
-      //} else {
-       // this.rootPage = Login;
+      } else {
+        this.rootPage = LoginPage;
         //authObserver.unsubscribe();
       }
       authObserver.unsubscribe();

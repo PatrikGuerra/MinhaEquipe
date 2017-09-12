@@ -12,6 +12,9 @@ import { AngularFireAuthModule } from "angularfire2/auth";
 
 //Paginas
 import { HomePage } from '../pages/home/home';
+import { CadastroPage } from "../pages/cadastro/cadastro";
+import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
+import { LoginPage } from "../pages/login/login";
 
 //Providers
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
@@ -31,7 +34,10 @@ const firebaseConfig = {
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+      CadastroPage,
+      EsqueciSenhaPage,
+      LoginPage
   ],
   imports: [
     BrowserModule,
@@ -42,7 +48,10 @@ const firebaseConfig = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+      CadastroPage,
+      EsqueciSenhaPage,
+      LoginPage
   ],
   providers: [
     StatusBar,
