@@ -15,11 +15,13 @@ import { HomePage } from '../pages/home/home';
 import { CadastroPage } from "../pages/cadastro/cadastro";
 import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
 import { LoginPage } from "../pages/login/login";
+import { PerfilPage } from "../pages/perfil/perfil";
 
 //Providers
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 
-
+//Storage
+import { IonicStorageModule } from "@ionic/storage";
 
 //Configuracao Firebase
 const firebaseConfig = {
@@ -37,11 +39,13 @@ const firebaseConfig = {
     HomePage,
       CadastroPage,
       EsqueciSenhaPage,
-      LoginPage
+      LoginPage,
+      PerfilPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(), //Storage
     AngularFireModule.initializeApp(firebaseConfig), //Novo -- Firebase
     AngularFireAuthModule //Novo -- Firebase
   ],
@@ -51,7 +55,8 @@ const firebaseConfig = {
     HomePage,
       CadastroPage,
       EsqueciSenhaPage,
-      LoginPage
+      LoginPage,
+      PerfilPage
   ],
   providers: [
     StatusBar,

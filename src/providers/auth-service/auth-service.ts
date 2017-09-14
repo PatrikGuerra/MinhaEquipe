@@ -22,7 +22,8 @@ export class AuthServiceProvider {
   //constructor(public http: Http) {
   constructor(private angularFireAuth: AngularFireAuth) {
     this.user = angularFireAuth.authState;
-    console.log('AuthServiceProvider -- inicializado');
+    //console.log('AuthServiceProvider -- inicializado');
+   // console.log(angularFireAuth.authState);
   }
 
   criarUsuario(user: User) {
@@ -33,9 +34,9 @@ export class AuthServiceProvider {
     return this.angularFireAuth.auth.signOut();
   }
 
-  entrar(user: User) {
-    return this.angularFireAuth.auth.signInWithEmailAndPassword(user.email, user.senha);
-  }
+        entrar(login) {
+          return this.angularFireAuth.auth.signInWithEmailAndPassword(login.email, login.password);
+        }
 
   esqueciSenha(email: string) {
     return this.angularFireAuth.auth.sendPasswordResetEmail(email);

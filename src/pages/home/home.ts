@@ -3,6 +3,7 @@ import { NavController, ToastController } from 'ionic-angular';
 
 //Pages
 import { LoginPage } from "../login/login";
+import { PerfilPage } from "../perfil/perfil";
 
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
@@ -36,7 +37,7 @@ export class HomePage {
   }
 
   verPerfil() {
-    //this.navCtrl.setRoot(Perfil);
+    this.navCtrl.push(PerfilPage);
   }
 
 }

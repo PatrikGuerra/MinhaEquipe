@@ -11,21 +11,21 @@
 </ion-header>
 
 <ion-content padding no-bounce>
-  <form #form="ngForm" novalidate>
+  <form [formGroup]="loginForm" >
 
     <ion-list>
       <ion-item>
-        <ion-label stacked>E-mail</ion-label>
-        <ion-input type="text" name="email" [(ngModel)]="user.email" #email="ngModel" required></ion-input>
+        <ion-label floating>E-mail</ion-label>
+        <ion-input type="text" formControlName="email"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label stacked>Senha</ion-label>
-        <ion-input type="password" name="senha" [(ngModel)]="user.senha" #senha="ngModel" required></ion-input>
+        <ion-label floating>Senha</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
       </ion-item>
     </ion-list>
 
-    <button ion-button block color="primary" [disabled]="!form.form.valid" (click)="entrar()">
+    <button ion-button block color="primary" [disabled]="!loginForm.valid" (click)="entrar()">
       Entrar
     </button>
   </form>

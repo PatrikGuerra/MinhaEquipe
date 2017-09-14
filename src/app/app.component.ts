@@ -10,7 +10,7 @@ import { HomePage } from '../pages/home/home';
 import { CadastroPage } from "../pages/cadastro/cadastro";
 import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
 import { LoginPage } from "../pages/login/login";
-
+import { PerfilPage } from "../pages/perfil/perfil";
 
 @Component({
   templateUrl: 'app.html'
