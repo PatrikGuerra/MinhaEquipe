@@ -9,12 +9,6 @@ import * as firebase from 'firebase/app';
 //Classes
 import { User } from "./user";
 
-/*
-  Generated class for the AuthServiceProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class AuthServiceProvider {
   user: Observable<firebase.User>;
@@ -22,25 +16,25 @@ export class AuthServiceProvider {
   //constructor(public http: Http) {
   constructor(private angularFireAuth: AngularFireAuth) {
     this.user = angularFireAuth.authState;
-    //console.log('AuthServiceProvider -- inicializado');
+    console.log('AuthServiceProvider -- inicializado');
    // console.log(angularFireAuth.authState);
   }
 
-  criarUsuario(user: User) {
-    return this.angularFireAuth.auth.createUserWithEmailAndPassword(user.email, user.senha);
-  }
+        criarUsuario(credencial) {
+          return this.angularFireAuth.auth.createUserWithEmailAndPassword(credencial.email, credencial.password);
+        }
 
   sair() {
     return this.angularFireAuth.auth.signOut();
   }
 
-        entrar(login) {
-          return this.angularFireAuth.auth.signInWithEmailAndPassword(login.email, login.password);
+        entrar(credencial) {
+          return this.angularFireAuth.auth.signInWithEmailAndPassword(credencial.email, credencial.password);
         }
 
-  esqueciSenha(email: string) {
-    return this.angularFireAuth.auth.sendPasswordResetEmail(email);
-  }
+        esqueciSenha(email: string) {
+          return this.angularFireAuth.auth.sendPasswordResetEmail(email);
+        }
 
   pegaUsuario() {
     return this.angularFireAuth.auth.currentUser;

@@ -3,9 +3,6 @@ import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
-
-//import { Component } from '@angular/core';
-//import { NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 //Pages
@@ -13,17 +10,8 @@ import { CadastroPage } from "../cadastro/cadastro";
 import { EsqueciSenhaPage } from "../esqueci-senha/esqueci-senha";
 import { HomePage } from "../home/home";
 
-//Classes
-import { User } from "../../providers/auth-service/user";
-
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -64,6 +52,7 @@ export class LoginPage {
     let toast = this.toastCtrl.create({ position: 'bottom' });
 
     this.authService.entrar(credenciais).then((data) => {
+      console.log(data)
       if (!data.emailVerified) {
         toast.setMessage("Você deve confirmar seu e-mail.");
         toast.setShowCloseButton(true);
@@ -71,6 +60,7 @@ export class LoginPage {
 
         this.authService.sair();
       } else {
+        this.storage.set("uuid", data.uuid);
         this.navCtrl.setRoot(HomePage);
       }
     })

@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angu
 
 import { NgForm } from '@angular/forms';
 
+import { Camera } from '@ionic-native/camera';
+
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
@@ -18,12 +20,6 @@ import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 //Models
 import { User } from "../../providers/auth-service/user";
 */
-/**
- * Generated class for the PerfilPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({

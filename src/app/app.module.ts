@@ -6,9 +6,14 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 
+//Storage
+import { IonicStorageModule } from "@ionic/storage";
+
 //Firebase
 import { AngularFireModule } from "angularfire2";
 import { AngularFireAuthModule } from "angularfire2/auth";
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+
 
 //Paginas
 import { HomePage } from '../pages/home/home';
@@ -19,9 +24,9 @@ import { PerfilPage } from "../pages/perfil/perfil";
 
 //Providers
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
+import { UserServiceProvider } from "../providers/user-service/user-service";
 
-//Storage
-import { IonicStorageModule } from "@ionic/storage";
+
 
 //Configuracao Firebase
 const firebaseConfig = {
@@ -47,7 +52,8 @@ const firebaseConfig = {
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(), //Storage
     AngularFireModule.initializeApp(firebaseConfig), //Novo -- Firebase
-    AngularFireAuthModule //Novo -- Firebase
+    AngularFireAuthModule,
+    AngularFireDatabaseModule //Novo -- Firebase
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -62,7 +68,8 @@ const firebaseConfig = {
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthServiceProvider //Novo -- Provider do Firebase
+    AuthServiceProvider,
+    UserServiceProvider 
   ]
 })
 export class AppModule {}

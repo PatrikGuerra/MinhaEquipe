@@ -11,24 +11,20 @@
 </ion-header>
 
 <ion-content padding no-bounce>
-  <form #form="ngForm" novalidate>
+  <form [formGroup]="esqueciSenhaForm">
     <p>
-      Informe o endereço vinculado a sua conta e em instantes você receberá um e-mail com o link para realizar a alteração da sua senha.
+      Informe o endereço vinculado a sua conta e em instantes você receberá um e-mail com o link para realizar a alteração da sua
+      senha.
     </p>
 
     <ion-list>
       <ion-item>
-        <ion-label stacked>E-mail</ion-label>
-        <ion-input type="text" name="email" [(ngModel)]="emailUsuario" #email="ngModel" required></ion-input>
+        <ion-label floating>E-mail</ion-label>
+        <ion-input type="text" formControlName="email"></ion-input>
       </ion-item>
-      
-      <ion-item *ngIf="email.errors && (email.dirty || email.touched)" class="text-danger">
-        O campo é obrigatório
-      </ion-item>
-      
     </ion-list>
 
-    <button ion-button block color="primary" [disabled]="!form.form.valid" (click)="esqueciSenha()">
+    <button ion-button block color="primary" [disabled]="!esqueciSenhaForm.valid" (click)="esqueciSenha()">
       Resetar minha senha
     </button>
   </form>
