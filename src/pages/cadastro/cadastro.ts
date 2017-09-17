@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
@@ -12,7 +12,7 @@ import { UserServiceProvider } from "../../providers/user-service/user-service";
 
 //Models
 
-@IonicPage()
+//@IonicPage()
 @Component({
   selector: 'page-cadastro',
   templateUrl: 'cadastro.html',

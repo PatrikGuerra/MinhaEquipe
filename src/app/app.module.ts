@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 
+
 //Storage
 import { IonicStorageModule } from "@ionic/storage";
 

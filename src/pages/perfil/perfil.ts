@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+//import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 
 import { NgForm } from '@angular/forms';
 
-import { Camera } from '@ionic-native/camera';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
@@ -21,7 +22,7 @@ import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 import { User } from "../../providers/auth-service/user";
 */
 
-@IonicPage()
+//@IonicPage()
 @Component({
   selector: 'page-perfil',
   templateUrl: 'perfil.html',
@@ -32,7 +33,8 @@ export class PerfilPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    private authService: AuthServiceProvider) {
+    public authService: AuthServiceProvider,
+    public camera: Camera) {
 
       
       

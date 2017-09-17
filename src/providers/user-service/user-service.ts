@@ -50,4 +50,7 @@ export class UserServiceProvider {
       usuarioAtual.update(usuario);
     })
   }
+
+
+  
 }
