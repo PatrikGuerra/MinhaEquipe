@@ -13,49 +13,44 @@
 </ion-header>
 
 
-<ion-content>
+<ion-content padding>
 
+  <form (ngSubmit)="alterar()">
 
+      <ion-card>
+          <img *ngIf="!usuario.fotoUrl" src="https://s.yimg.com/dh/ap/social/profile/profile_b192.png"/>
+          <img *ngIf="usuario.fotoUrl" src="{{usuario.fotoUrl}}"/>
+      </ion-card>
 
+    <ion-item>
+      <ion-label>Nome</ion-label>
+      <ion-input type="text" [(ngModel)]="usuario.nome" name="Nome"></ion-input>
+    </ion-item>
 
-  <ion-card>
-    <img src="https://www.w3schools.com/css/trolltunga.jpg" />
-    <ion-card-content>
-      <ion-card-title>
-        Muhammad Kamran
-      </ion-card-title>
+    <ion-item>
+      <ion-label>E-mail</ion-label>
+      <ion-input type="text" [(ngModel)]="usuario.email" name="email"></ion-input>
+    </ion-item>
+    
+    <button ion-button type="submit" block>Salvar</button>
 
-    </ion-card-content>
-  </ion-card>
-
-
-
-  <form #form="ngForm" novalidate>
-    <p>
-      Você irá receber um e-mail solicitando a confirmação do seu endereço.
-    </p>
-
-    <ion-list>
-        <ion-item>
-            <ion-label stacked>Nome</ion-label>
-            <ion-input type="text" name="email" [(ngModel)]="user.email" #email="ngModel" required></ion-input>
-          </ion-item>
-
-      <ion-item>
-        <ion-label stacked>E-mail</ion-label>
-        <ion-input type="text" name="email" [(ngModel)]="user.email" #email="ngModel" required></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label stacked>Senha</ion-label>
-        <ion-input type="password" name="senha" [(ngModel)]="user.senha" #password="ngModel" required></ion-input>
-      </ion-item>
-    </ion-list>
-
-    <button ion-button block color="primary" [disabled]="!form.form.valid" (click)="criarConta()">
-      Criar conta
-    </button>
   </form>
+  <!---
+      <ion-list>
+          <ion-card>
+              <img *ngIf="!usuario.fotoUrl" src="assets/images/default.jpg"/>
+              <img *ngIf="usuario.fotoUrl" src="{{usuario.fotoUrl}}"/>
+          </ion-card>
+          <ion-item>
+              <button ion-button full (click)="updatePicture()">Change Picture</button>
+          </ion-item>
+          <a ion-item primary (click)="logout()">
+              Logout
+          </a>
+      </ion-list>
+-->
+
+
 
 
 

@@ -6,7 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 
-
 //Storage
 import { IonicStorageModule } from "@ionic/storage";
 
@@ -54,7 +53,8 @@ const firebaseConfig = {
     IonicStorageModule.forRoot(), //Storage
     AngularFireModule.initializeApp(firebaseConfig), //Novo -- Firebase
     AngularFireAuthModule,
-    AngularFireDatabaseModule //Novo -- Firebase
+    AngularFireDatabaseModule, //Novo -- Firebase
+  
   ],
   bootstrap: [IonicApp],
   entryComponents: [

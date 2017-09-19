@@ -10,7 +10,7 @@ import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
 //Models
 import { User } from "../../providers/auth-service/user";
-
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-home',
@@ -20,11 +20,17 @@ export class HomePage {
 
   constructor(
     public navCtrl: NavController,
-    private authService: AuthServiceProvider) {
+    private authService: AuthServiceProvider,
+  public storage: Storage) {
   }
 
   ionViewDidLoad() {
     console.log("HomePage");
+
+    this.storage.get("uid").then(uuid => {
+      console.log(uuid)
+    })
+    console.log(this.storage.get("uid"))
   }
 
   sair() {

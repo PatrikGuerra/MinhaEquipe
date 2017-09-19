@@ -1,26 +1,20 @@
 import { Component, ViewChild } from '@angular/core';
-//import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 
-import { NgForm } from '@angular/forms';
+import { Storage } from '@ionic/storage';
 
-import { Camera, CameraOptions } from '@ionic-native/camera';
+//import { NgForm } from '@angular/forms';
 
-//Providers
-import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
-
-//Models
-import { User } from "../../providers/auth-service/user";
-/*
-//Pages
-import { LoginPage } from "../login/login";
+//import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Providers
-import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
+import { UserServiceProvider } from "../../providers/user-service/user-service";
 
 //Models
-import { User } from "../../providers/auth-service/user";
-*/
+
+
+
+
 
 //@IonicPage()
 @Component({
@@ -28,23 +22,35 @@ import { User } from "../../providers/auth-service/user";
   templateUrl: 'perfil.html',
 })
 export class PerfilPage {
-  user: User = new User();
+   usuario = {};
 
   constructor(
-    public navCtrl: NavController, 
-    public navParams: NavParams,
-    public authService: AuthServiceProvider,
-    public camera: Camera) {
+    public navCtrl: NavController,
+    //public navParams: NavParams,
+    // public authService: AuthServiceProvider,
+    //  public camera: Camera
+    public userProvider: UserServiceProvider) {
 
-      
-      
-      //var obj = 
-     // this.user.email = (User)authService.pegaUsuario();
-      //this.user
+      this.userProvider.getUser().then(userObservable => {
+          userObservable.subscribe(usuarioData => {
+            console.log(usuarioData)
+              this.usuario = usuarioData;
+          });
+      });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad PerfilPage');
   }
 
+  logout() {
+
+  }
+
+  updatePicture() {
+
+  }
+  alterar() {
+    console.log(this.usuario)
+  }
 }

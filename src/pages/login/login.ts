@@ -26,7 +26,7 @@ export class LoginPage {
     public navParams: NavParams,
     private toastCtrl: ToastController,
     private authService: AuthServiceProvider,
-    private storage: Storage,
+    public storage: Storage,
     public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
@@ -37,6 +37,12 @@ export class LoginPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
+    console.log(this.storage.get("uuid"))
+
+
+    this.storage.get("uuid").then(uuid => {
+      console.log(uuid)
+    })
   }
 
   criarConta() {
@@ -52,7 +58,8 @@ export class LoginPage {
     let toast = this.toastCtrl.create({ position: 'bottom' });
 
     this.authService.entrar(credenciais).then((data) => {
-      console.log(data)
+
+      
       if (!data.emailVerified) {
         toast.setMessage("Você deve confirmar seu e-mail.");
         toast.setShowCloseButton(true);
@@ -60,7 +67,10 @@ export class LoginPage {
 
         this.authService.sair();
       } else {
-        this.storage.set("uuid", data.uuid);
+        this.storage.set('uid', data.uid);
+        console.log("uid")
+        console.log(this.storage.get("uid"))
+
         this.navCtrl.setRoot(HomePage);
       }
     })
