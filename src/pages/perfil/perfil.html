@@ -18,7 +18,7 @@
   <form (ngSubmit)="alterar()">
 
       <ion-card>
-          <img *ngIf="!usuario.fotoUrl" src="https://s.yimg.com/dh/ap/social/profile/profile_b192.png"/>
+          <img *ngIf="!usuario.fotoUrl" src="../../../resources/img/no-image.jpg"/>
           <img *ngIf="usuario.fotoUrl" src="{{usuario.fotoUrl}}"/>
       </ion-card>
 
@@ -31,7 +31,7 @@
       <ion-label>E-mail</ion-label>
       <ion-input type="text" [(ngModel)]="usuario.email" name="email"></ion-input>
     </ion-item>
-    
+
     <button ion-button type="submit" block>Salvar</button>
 
   </form>
