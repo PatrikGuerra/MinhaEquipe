@@ -4,26 +4,24 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding no-bounce>
+<ion-content no-bounce>
+  <p text-justify padding-horizontal>
+    Você irá receber um e-mail solicitando a confirmação do seu endereço.
+  </p>
+
   <form [formGroup]="cadastroForm">
-    <p>
-      Você irá receber um e-mail solicitando a confirmação do seu endereço.
-    </p>
+    <ion-item>
+      <ion-label floating>E-mail</ion-label>
+      <ion-input type="text" formControlName="email"></ion-input>
+    </ion-item>
 
-    <ion-list>
-      <ion-item>
-        <ion-label stacked>E-mail</ion-label>
-        <ion-input type="text" formControlName="email"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label stacked>Senha</ion-label>
-        <ion-input type="password" formControlName="password"></ion-input>
-      </ion-item>
-    </ion-list>
-
-    <button ion-button block color="primary" [disabled]="!cadastroForm.valid" (click)="criarConta()">
-      Criar conta
-    </button>
+    <ion-item>
+      <ion-label floating>Senha</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
   </form>
+
+  <div padding>
+    <button ion-button block color="primary" [disabled]="!cadastroForm.valid" (click)="criarConta()">Criar conta</button>
+  </div>
 </ion-content>
