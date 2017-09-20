@@ -5,9 +5,9 @@
 </ion-header>
 
 <ion-content no-bounce>
-  <p text-justify padding-horizontal>
+  <div text-justify padding-horizontal padding-top>
     Você irá receber um e-mail solicitando a confirmação do seu endereço.
-  </p>
+  </div>
 
   <form [formGroup]="cadastroForm">
     <ion-item>
@@ -19,9 +19,9 @@
       <ion-label floating>Senha</ion-label>
       <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
-  </form>
 
-  <div padding>
-    <button ion-button block color="primary" [disabled]="!cadastroForm.valid" (click)="criarConta()">Criar conta</button>
-  </div>
+    <div padding>
+      <button ion-button block color="primary" [disabled]="!cadastroForm.valid" (click)="criarConta()">Criar conta</button>
+    </div>
+  </form>
 </ion-content>

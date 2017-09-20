@@ -15,15 +15,15 @@
       <ion-label floating>Senha</ion-label>
       <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
+
+    <div padding-horizontal padding-top>
+      <button ion-button block color="primary" [disabled]="!loginForm.valid" (click)="entrar()">Entrar</button>
+      <button ion-button block outline (click)="criarConta()">Ou criar conta</button>
+    </div>
   </form>
 
   <div padding>
-    <button ion-button block color="primary" [disabled]="!loginForm.valid" (click)="entrar()">Entrar</button>
-    <button ion-button block outline (click)="criarConta()">Ou criar conta</button>
-
-    <div padding-top>
-      <button ion-button block clear small (click)="esqueciSenha()">Esqueceu sua senha?</button>
-    </div>
+    <button ion-button block clear small (click)="esqueciSenha()">Esqueceu sua senha?</button>
   </div>
   <!---
   <ion-fab right bottom>
