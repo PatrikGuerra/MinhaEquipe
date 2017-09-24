@@ -8,8 +8,6 @@ import { PerfilPage } from "../perfil/perfil";
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
-//Models
-import { User } from "../../providers/auth-service/user";
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -17,11 +15,10 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'home.html'
 })
 export class HomePage {
-
   constructor(
     public navCtrl: NavController,
     private authService: AuthServiceProvider,
-  public storage: Storage) {
+    public storage: Storage) {
   }
 
   ionViewDidLoad() {
@@ -33,17 +30,7 @@ export class HomePage {
     console.log(this.storage.get("uid"))
   }
 
-  sair() {
-    this.authService.sair().then(() => {
-      this.navCtrl.setRoot(LoginPage);
-    })
-    .catch((error) => {
-      console.error(error);
-    })
-  }
-
   verPerfil() {
     this.navCtrl.push(PerfilPage);
   }
-
 }

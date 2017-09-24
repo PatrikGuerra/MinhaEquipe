@@ -7,16 +7,17 @@ import { AngularFireAuth } from "angularfire2/auth";
 
 //Paginas
 import { HomePage } from '../pages/home/home';
-import { CadastroPage } from "../pages/cadastro/cadastro";
-import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
+//import { CadastroPage } from "../pages/cadastro/cadastro";
+//import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
 import { LoginPage } from "../pages/login/login";
-import { PerfilPage } from "../pages/perfil/perfil";
+//import { PerfilPage } from "../pages/perfil/perfil";
+
+
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
- // rootPage:any = HomePage;
   rootPage:any;
 
   constructor(

@@ -6,6 +6,10 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 
+
+//Camera
+import { Camera } from '@ionic-native/camera';
+
 //Storage
 import { IonicStorageModule } from "@ionic/storage";
 
@@ -13,7 +17,7 @@ import { IonicStorageModule } from "@ionic/storage";
 import { AngularFireModule } from "angularfire2";
 import { AngularFireAuthModule } from "angularfire2/auth";
 import { AngularFireDatabaseModule } from 'angularfire2/database';
-
+  
 
 //Paginas
 import { HomePage } from '../pages/home/home';
@@ -21,6 +25,9 @@ import { CadastroPage } from "../pages/cadastro/cadastro";
 import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
 import { LoginPage } from "../pages/login/login";
 import { PerfilPage } from "../pages/perfil/perfil";
+
+//Modals
+import { PerfilAlterarEmailPage } from "../pages/perfil-alterar-email/perfil-alterar-email";
 
 //Providers
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
@@ -45,7 +52,8 @@ const firebaseConfig = {
       CadastroPage,
       EsqueciSenhaPage,
       LoginPage,
-      PerfilPage
+      PerfilPage,
+      PerfilAlterarEmailPage
   ],
   imports: [
     BrowserModule,
@@ -63,11 +71,13 @@ const firebaseConfig = {
       CadastroPage,
       EsqueciSenhaPage,
       LoginPage,
-      PerfilPage
+      PerfilPage,
+      PerfilAlterarEmailPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthServiceProvider,
     UserServiceProvider 

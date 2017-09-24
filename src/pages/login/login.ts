@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {  NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
@@ -33,15 +33,24 @@ export class LoginPage {
       email: ['', Validators.compose([Validators.required])],
       password: ['', Validators.compose([Validators.required])]
     });
+    
+    this.loginForm.value.email = this.storage.get('loginEmail');
+    //console.log(this.storage.get('loginEmail'));
+
+    this.storage.get("loginEmail").then(loginEmail => {
+      console.log(loginEmail)
+      this.loginForm.value.email = loginEmail; 
+    })
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
-    console.log(this.storage.get("uuid"))
+    console.log(this.storage.get("uid"))
 
+    
 
-    this.storage.get("uuid").then(uuid => {
-      console.log(uuid)
+    this.storage.get("uid").then(uid => {
+      console.log(uid)
     })
   }
 
@@ -58,7 +67,7 @@ export class LoginPage {
     let toast = this.toastCtrl.create({ position: 'bottom' });
 
     this.authService.entrar(credenciais).then((data) => {
-
+      this.storage.set('loginEmail', this.loginForm.value.email);
       
       if (!data.emailVerified) {
         toast.setMessage("Você deve confirmar seu e-mail.");

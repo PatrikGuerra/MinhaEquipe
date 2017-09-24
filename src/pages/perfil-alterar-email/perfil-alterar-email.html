@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-buttons start>
+      <button ion-button (click)="cancelar()">Cancelar</button>
+    </ion-buttons>
+    <ion-title>Alterar e-mail</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content no-bounce>
+  <div text-justify padding-horizontal padding-top>
+    Você irá receber um e-mail solicitando a confirmação do seu endereço.
+  </div>
+
+  <form [formGroup]="alterarEmailForm">
+    <ion-item>
+      <ion-label floating>Novo e-mail</ion-label>
+      <ion-input type="email" formControlName="novoEmail"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Senha</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+
+    <div padding>
+      <button ion-button block color="primary" [disabled]="!alterarEmailForm.valid" (click)="alterarEmail()">Alterar e-mail</button>
+    </div>
+  </form> 
+</ion-content>
