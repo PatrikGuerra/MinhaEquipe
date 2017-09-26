@@ -66,26 +66,6 @@ export class UserServiceProvider {
   }
 
 
-  uploadImage(imageString: string, uid: string): Promise<any> {
-    let image: string = `${this.basePath}/${uid}.jpg`;
-    let storageRef: any;
-    let parseUpload: any;
-
-    return new Promise((resolve, reject) => {
-      storageRef = firebase.storage().ref('posters/' + image);
-      parseUpload = storageRef.putString(imageString, firebase.storage.StringFormat.DATA_URL);
-
-      parseUpload.on('state_changed', (_snapshot) => {
-
-      },
-        (_err) => {
-          reject(_err);
-        },
-        (success) => {
-          resolve(parseUpload.snapshot);
-        });
-    });
-  }
 
 
   atualizarEmail(novoEmail: string, senha: string): Promise<any> {
@@ -164,6 +144,25 @@ export class UserServiceProvider {
   }
 
 
+  uploadImage(imageString: string, uid: string): Promise<any> {
+    let storageRef: any;
+    let parseUpload: any;
+
+    return new Promise((resolve, reject) => {
+      storageRef = firebase.storage().ref(`${this.basePath}/${uid}.jpg`);
+      parseUpload = storageRef.putString(imageString, firebase.storage.StringFormat.DATA_URL);
+
+      parseUpload.on('state_changed', (_snapshot) => {
+
+      },
+        (_err) => {
+          reject(_err);
+        },
+        (success) => {
+          resolve(parseUpload.snapshot);
+        });
+    });
+  }
   pictureFromCamera() {
     const cameraOptions: CameraOptions = {
       quality: 50,
