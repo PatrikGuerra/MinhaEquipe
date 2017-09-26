@@ -85,7 +85,7 @@ export class PerfilAlterarSenhaPage {
     var senhaAtual = this.alterarSenhaForm.value.senhaAtual;
     var novaSenha = this.alterarSenhaForm.value.novaSenha;
 
-    this.userProvider.atualizarSenha(senhaAtual, novaSenha).then((data) => {
+    this.userProvider.atualizarSenha(novaSenha, senhaAtual).then((data) => {
       loading.dismiss();
 
       alert.onDidDismiss((data) => {

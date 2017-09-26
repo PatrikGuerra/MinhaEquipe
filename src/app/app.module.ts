@@ -23,6 +23,7 @@ import { CadastroPage } from "../pages/cadastro/cadastro";
 import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
 import { LoginPage } from "../pages/login/login";
 import { PerfilPage } from "../pages/perfil/perfil";
+import { PerfilAlterarSenhaPage } from "../pages/perfil-alterar-senha/perfil-alterar-senha";
 
 //Modals
 import { PerfilAlterarEmailPage } from "../pages/perfil-alterar-email/perfil-alterar-email";
@@ -53,7 +54,8 @@ const firebaseConfig = {
       EsqueciSenhaPage,
       LoginPage,
       PerfilPage,
-      PerfilAlterarEmailPage
+      PerfilAlterarEmailPage,
+      PerfilAlterarSenhaPage,
   ],
   imports: [
     BrowserModule,
@@ -74,7 +76,8 @@ const firebaseConfig = {
       EsqueciSenhaPage,
       LoginPage,
       PerfilPage,
-      PerfilAlterarEmailPage
+      PerfilAlterarEmailPage,
+      PerfilAlterarSenhaPage,
   ],
   providers: [
     StatusBar,

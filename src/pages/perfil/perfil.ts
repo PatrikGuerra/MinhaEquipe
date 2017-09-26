@@ -8,6 +8,7 @@ import { LoginPage } from "../login/login";
 
 //Modal
 import { PerfilAlterarEmailPage } from "../perfil-alterar-email/perfil-alterar-email";
+import { PerfilAlterarSenhaPage } from "../perfil-alterar-senha/perfil-alterar-senha";
 
 //Providers
 import { UserServiceProvider } from "../../providers/user-service/user-service";
@@ -45,19 +46,21 @@ export class PerfilPage {
         }
       });
     });
-
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad PerfilPage');
   }
 
-
-
   alterarSenha() {
+    let perfilAlterarSenhaPage = this.modalCtrl.create(PerfilAlterarSenhaPage);
 
+    perfilAlterarSenhaPage.onDidDismiss(data => {
+      console.log(data)
+    });
+
+    perfilAlterarSenhaPage.present();
   }
-
   alterarEmail() {
     let perfilAlterarEmailPage = this.modalCtrl.create(PerfilAlterarEmailPage);
 
@@ -88,15 +91,7 @@ export class PerfilPage {
             console.log('Galeria');
             this.biblioteca()
           }
-        }/*,
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
         }
-        */
       ]
     });
 
