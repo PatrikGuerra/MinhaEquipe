@@ -13,14 +13,15 @@ import { PerfilAlterarEmailPage } from "../perfil-alterar-email/perfil-alterar-e
 import { UserServiceProvider } from "../../providers/user-service/user-service";
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
+//Components
+import { TagsInputComponent } from "../../components/tags-input/tags-input.component";
 
-//@IonicPage()
 @Component({
   selector: 'page-perfil',
   templateUrl: 'perfil.html',
 })
 export class PerfilPage {
-  usuario = {};
+  usuario: any = {};
 
   constructor(
     public navCtrl: NavController,
@@ -30,16 +31,21 @@ export class PerfilPage {
     private loadingCtrl: LoadingController,
     public modalCtrl: ModalController,
     private toastCtrl: ToastController,
-
     private userProvider: UserServiceProvider,
     private authService: AuthServiceProvider) {
 
     this.userProvider.getUser().then(userObservable => {
       userObservable.subscribe(usuarioData => {
         console.log(usuarioData)
+
         this.usuario = usuarioData;
+
+        if (!this.usuario.tags) {
+          this.usuario.tags = [];
+        }
       });
     });
+
   }
 
   ionViewDidLoad() {
@@ -48,6 +54,9 @@ export class PerfilPage {
 
 
 
+  alterarSenha() {
+
+  }
 
   alterarEmail() {
     let perfilAlterarEmailPage = this.modalCtrl.create(PerfilAlterarEmailPage);
@@ -145,7 +154,7 @@ export class PerfilPage {
                 </div>
                 <div>Alterando informações de perfil...</div>`
     });
-    
+
     loading.present();
 
     this.userProvider.updateCurrentUser(this.usuario).then((data) => {
@@ -153,7 +162,7 @@ export class PerfilPage {
       toast.present();
     });
 
-    toast.dismiss();    
+    toast.dismiss();
     loading._destroy;
   }
 

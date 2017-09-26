@@ -1,33 +1,31 @@
 import { Injectable } from '@angular/core';
-//import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-
 import { Observable } from "rxjs/Observable";
+
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
-//import { AngularFire } from 'angularfire2';
 
 import { Storage } from '@ionic/storage';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+
 import * as firebase from 'firebase';
+
 //Models
 import { Usuario } from "../../models/usuario";
 
-import { Camera, CameraOptions } from '@ionic-native/camera';
-
+//Services
 import { AuthServiceProvider } from "../auth-service/auth-service";
 
 @Injectable()
 export class UserServiceProvider {
   private basePath: string = '/usuarios';
-  usuario: any
+  usuario: any;
 
-  firebaseStorage = firebase.storage();
   constructor(
     public db: AngularFireDatabase,
     public storage: Storage,
     private camera: Camera,
     private authProvider: AuthServiceProvider) {
   }
-
 
   getuid() {
     return this.storage.get("uid");
@@ -89,9 +87,9 @@ export class UserServiceProvider {
     });
   }
 
+
   atualizarEmail(novoEmail: string, senha: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      
       this.getuid().then(uid => {
         this.authProvider.reauthenticateWithCredential(senha).then((dataReautenticacao) => {
 
@@ -116,14 +114,36 @@ export class UserServiceProvider {
           console.error("Erro ao reautenticar.");
           reject(erro);
         });
-        
+
       }).catch((erro: any) => {
         console.error("Erro do pegar uid.");
         reject(erro);
-      });;
+      });
     });
   }
+  atualizarSenha(novaSenha: string, senhaAtual: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.getuid().then(uid => {
+        this.authProvider.reauthenticateWithCredential(senhaAtual).then((dataReautenticacao) => {
+          this.authProvider.updatePassword(novaSenha).then((data) => {
+            resolve(data);
 
+          }).catch((erro: any) => {
+            console.error("Erro ao alterar senha no auth.");
+            reject(erro);
+          });
+
+        }).catch((erro: any) => {
+          console.error("Erro ao reautenticar.");
+          reject(erro);
+        });
+
+      }).catch((erro: any) => {
+        console.error("Erro do pegar uid.");
+        reject(erro);
+      });
+    });
+  }
   atualizarImagem(image: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getuid().then(uid => {
@@ -142,7 +162,6 @@ export class UserServiceProvider {
       });
     });
   }
-
 
 
   pictureFromCamera() {
@@ -165,7 +184,6 @@ export class UserServiceProvider {
       // Handle error
     });*/
   }
-
   pictureFromLibray() {
     const cameraOptions: CameraOptions = {
       // quality: 50,
@@ -187,8 +205,5 @@ export class UserServiceProvider {
       // Handle error
     });*/
   }
-
-
-
 
 }

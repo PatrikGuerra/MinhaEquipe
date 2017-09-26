@@ -45,10 +45,20 @@ export class AuthServiceProvider {
             resolve(dataEmail);
           })
         })
-      } 
+      }
       catch (ex) {
         reject(ex);
       }
+    });
+  }
+
+  updatePassword(novaSenha: string) {
+    return new Promise((resolve, reject) => {
+      this.angularFireAuth.auth.currentUser.updatePassword(novaSenha).then((data) => {
+        resolve(data);
+      }).catch((error) => {
+        reject(error);
+      });
     });
   }
 

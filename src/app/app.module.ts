@@ -6,7 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 
-
 //Camera
 import { Camera } from '@ionic-native/camera';
 
@@ -18,7 +17,6 @@ import { AngularFireModule } from "angularfire2";
 import { AngularFireAuthModule } from "angularfire2/auth";
 import { AngularFireDatabaseModule } from 'angularfire2/database';
   
-
 //Paginas
 import { HomePage } from '../pages/home/home';
 import { CadastroPage } from "../pages/cadastro/cadastro";
@@ -33,7 +31,9 @@ import { PerfilAlterarEmailPage } from "../pages/perfil-alterar-email/perfil-alt
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { UserServiceProvider } from "../providers/user-service/user-service";
 
-
+//Components
+import { IonTagsInputModule } from "../components/ion-tags-input/index";
+import { TagsInputModule } from "../components/tags-input/index";
 
 //Configuracao Firebase
 const firebaseConfig = {
@@ -62,7 +62,9 @@ const firebaseConfig = {
     AngularFireModule.initializeApp(firebaseConfig), //Novo -- Firebase
     AngularFireAuthModule,
     AngularFireDatabaseModule, //Novo -- Firebase
-  
+    
+    IonTagsInputModule,
+    TagsInputModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

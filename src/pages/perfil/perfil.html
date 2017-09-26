@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content no-bounce>
+<ion-content>
   <div id="profile-bg"></div>
 
   <div id="content">
@@ -17,54 +17,31 @@
     <button ion-button icon-only (click)="menuAlterarFoto()"><ion-icon name="camera"></ion-icon></button>
   </div>
 
-  <!--<form (ngSubmit)=""> -->
-    <ion-item>
-      <ion-label>Nome</ion-label>
-      <ion-input type="text" [(ngModel)]="usuario.nome" name="Nome"></ion-input>
-    </ion-item>
+  <ion-item>
+    <ion-label>Nome</ion-label>
+    <ion-input type="text" [(ngModel)]="usuario.nome" name="Nome"></ion-input>
+    <button ion-button item-right icon-only (click)="alterarSenha()"><ion-icon name="key"></ion-icon></button>
+  </ion-item>
 
-    <ion-item>
-      <ion-label>E-mail</ion-label>
-      <ion-input type="text" [ngModel]="usuario.email" readonly name="email"></ion-input>
-      <button ion-button item-right icon-only (click)="alterarEmail()"><ion-icon name="swap"></ion-icon></button>
-    </ion-item>
+  <ion-item>
+    <ion-label>E-mail</ion-label>
+    <ion-input type="text" [ngModel]="usuario.email" readonly name="email"></ion-input>
+    <button ion-button item-right icon-only (click)="alterarEmail()"><ion-icon name="swap"></ion-icon></button>
+  </ion-item>
 
-    <div padding>
-      <button ion-button (click)="alterarUsuario()" block>Salvar</button> 
-      <!-- <button ion-button type="submit" block>Salvar</button> -->
-    </div>
-  <!---</form>-->
+  <div padding-horizontal padding-top>
+    <tags-input [maxWordLength]="10" [maxTags]="5" [allowDuplicates]="false" [duplicatesRestrictionMsg]=" moo" [(ngModel)]="usuario.tags"></tags-input>
+  </div>
 
+  <div padding>
+    <button ion-button (click)="alterarUsuario()" block>Salvar</button>
+    <button ion-button icon-start block color="danger" (click)="confirmarLogout()"><ion-icon name="log-out"></ion-icon>Sair</button>
+  </div>
+
+  <!---
   <ion-footer padding>
+    <button ion-button (click)="alterarUsuario()" block>Salvar</button>
     <button ion-button icon-start block color="danger" (click)="confirmarLogout()"><ion-icon name="log-out"></ion-icon>Sair</button>
   </ion-footer>
+  -->
 </ion-content>
-
-
-
-<!--
-<ion-content padding>
-  <form (ngSubmit)="alterarUsuario()">
-    <ion-card>
-      <img *ngIf="!usuario.fotoUrl" class="circle-pic center" src="../../../resources/img/no-image.jpg" />
-      <img *ngIf="usuario.fotoUrl" class="circle-pic center" src="{{usuario.fotoUrl}}" />
-      <button ion-button block (click)="menuFoto()">Alterar Foto</button>
-    </ion-card>
-
-    <ion-item>
-      <ion-label>Nome</ion-label>
-      <ion-input type="text" [(ngModel)]="usuario.nome" name="Nome"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>E-mail</ion-label>
-      <ion-input type="text" [(ngModel)]="usuario.email" name="email"></ion-input>
-    </ion-item>
-
-    <button ion-button type="submit" block>Salvar</button>
-  </form>
-
-
-
-</ion-content >
--->
