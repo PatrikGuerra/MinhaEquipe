@@ -28,6 +28,7 @@ import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 
 //popover
 import { PerfilPopoverPage } from "../pages/perfil-popover/perfil-popover";
+
 //Modals
 import { PerfilAlterarEmailPage } from "../pages/perfil-alterar-email/perfil-alterar-email";
 import { PerfilAlterarSenhaPage } from "../pages/perfil-alterar-senha/perfil-alterar-senha";
@@ -41,8 +42,6 @@ import { EquipeServiceProvider } from "../providers/equipe-service/equipe-servic
 //import { IonTagsInputModule } from "../components/ion-tags-input/index";
 import { TagsInputModule } from "../components/tags-input/index";
 
-//Models
-import { equipe } from "../models/equipe";
 //Configuracao Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDlEO52-eaJInj1sqL6gdraZ1CV5Cvh150",

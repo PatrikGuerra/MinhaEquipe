@@ -19,7 +19,7 @@ import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-ser
 
 
 //Models
-import { equipe } from "../../models/equipe";
+import { Equipe } from "../../models/equipe";
 
 
 @Component({
@@ -28,7 +28,7 @@ import { equipe } from "../../models/equipe";
 })
 export class EquipePage {
   key: string = "";
-  equipe: equipe = new equipe();
+  equipe: Equipe = new Equipe();
   imagemBase64: string = "";
 
   constructor(

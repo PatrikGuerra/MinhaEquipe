@@ -16,7 +16,7 @@ import * as firebase from 'firebase';
 import { UserServiceProvider } from "../user-service/user-service";
 
 //Models
-import { equipe } from "../../models/equipe";
+import { Equipe } from "../../models/equipe";
 
 @Injectable()
 export class EquipeServiceProvider {
@@ -27,7 +27,7 @@ export class EquipeServiceProvider {
   private usuario: any = {};
   private usuarioId: string = ""
 
-  private equipes: FirebaseListObservable<equipe[]>;
+  private equipes: FirebaseListObservable<Equipe[]>;
 
   constructor(
     public db: AngularFireDatabase,
@@ -36,7 +36,7 @@ export class EquipeServiceProvider {
     private userProvider: UserServiceProvider) {
     console.log('Hello EquipeServiceProvider Provider');
 
-    this.equipes = <FirebaseListObservable<equipe[]>>this.db.list(this.basePathEquipes);
+    this.equipes = <FirebaseListObservable<Equipe[]>>this.db.list(this.basePathEquipes);
     console.log(this.basePathEquipes)
     
     this.userProvider.getuid().then((uid) => {
@@ -56,7 +56,7 @@ export class EquipeServiceProvider {
     */
   }
 
-  public getAll(): FirebaseListObservable<equipe[]> {
+  public getAll(): FirebaseListObservable<Equipe[]> {
     console.log(this.equipes)
     return this.equipes;
 
@@ -66,7 +66,7 @@ export class EquipeServiceProvider {
    // });
   }
 //voltar ate aqui
-  public save(equipe: equipe, key: string, imagem: string): Promise<any> {
+  public save(equipe: Equipe, key: string, imagem: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.userProvider.getuid().then((userUid) => {
         

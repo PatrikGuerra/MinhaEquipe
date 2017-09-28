@@ -8,13 +8,14 @@ import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-ser
 
 //Pages
 import { EquipePage } from "../equipe/equipe";
-import { equipe } from "../../models/equipe";
+import { Equipe } from "../../models/equipe";
+
 @Component({
   selector: 'page-equipe-lista',
   templateUrl: 'equipe-lista.html',
 })
 export class EquipeListaPage {
-  equipes: FirebaseListObservable<equipe[]>;
+  equipes: FirebaseListObservable<Equipe[]>;
 
   constructor(
     public navCtrl: NavController, 
