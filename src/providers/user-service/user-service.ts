@@ -18,7 +18,7 @@ import { AuthServiceProvider } from "../auth-service/auth-service";
 @Injectable()
 export class UserServiceProvider {
   private basePath: string = '/usuarios';
-  usuario: any;
+  private usuario: FirebaseObjectObservable<Usuario>;
 
   constructor(
     public db: AngularFireDatabase,
@@ -27,15 +27,18 @@ export class UserServiceProvider {
     private authProvider: AuthServiceProvider) {
 
     console.log('Hello UserServiceProvider Provider');
+
   }
 
   getuid() {
     return this.storage.get("uid");
   }
 
-  getUser() {
-    return this.getuid().then(uid => {
-      return this.db.object(`${this.basePath}/${uid}`);
+  getUser()  {
+   return this.getuid().then(uid => {
+     let asd =<FirebaseObjectObservable<Usuario>>this.db.object(`${this.basePath}/${uid}`);
+     console.log(asd)
+      return asd;
     });
   }
 

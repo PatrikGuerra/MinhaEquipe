@@ -1,6 +1,11 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>Perfil</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="abrirPopover($event)">
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -9,7 +14,7 @@
 
   <div id="content">
     <div id="profile-info" padding-horizontal>
-      <img id="profile-image" src="{{usuario.fotoUrl ? usuario.fotoUrl : '../../assets/images/no-image.jpg'}}">
+      <img id="profile-image" src="{{ usuario.fotoUrl ? usuario.fotoUrl : '../../assets/images/no-image.jpg' }}">
     </div>
   </div>
 
@@ -20,28 +25,18 @@
   <ion-item>
     <ion-label>Nome</ion-label>
     <ion-input type="text" [(ngModel)]="usuario.nome" name="Nome"></ion-input>
-    <button ion-button item-right icon-only (click)="alterarSenha()"><ion-icon name="key"></ion-icon></button>
   </ion-item>
 
   <ion-item>
     <ion-label>E-mail</ion-label>
     <ion-input type="text" [ngModel]="usuario.email" readonly name="email"></ion-input>
-    <button ion-button item-right icon-only (click)="alterarEmail()"><ion-icon name="swap"></ion-icon></button>
   </ion-item>
 
   <div padding-horizontal padding-top>
     <tags-input [maxWordLength]="10" [maxTags]="5" [allowDuplicates]="false" [duplicatesRestrictionMsg]=" moo" [(ngModel)]="usuario.tags"></tags-input>
   </div>
 
-  <div padding>
-    <button ion-button (click)="alterarUsuario()" block>Salvar</button>
-    <button ion-button icon-start block color="danger" (click)="confirmarLogout()"><ion-icon name="log-out"></ion-icon>Sair</button>
-  </div>
-
-  <!---
   <ion-footer padding>
     <button ion-button (click)="alterarUsuario()" block>Salvar</button>
-    <button ion-button icon-start block color="danger" (click)="confirmarLogout()"><ion-icon name="log-out"></ion-icon>Sair</button>
   </ion-footer>
-  -->
 </ion-content>

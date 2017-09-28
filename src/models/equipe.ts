@@ -1,5 +1,6 @@
 export class equipe {
 	$key: string;
+	
 	nome: string;
 	dataCriacao: any;
 	dataInicio: any;

@@ -1,42 +1,45 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, Platform, ActionSheetController, LoadingController, AlertController, ModalController } from 'ionic-angular';
-
+import { IonicPage, NavController, NavParams, ToastController, Platform, ActionSheetController, LoadingController, AlertController, PopoverController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-
-//Page
-import { LoginPage } from "../login/login";
-
-//Modal
-import { PerfilAlterarEmailPage } from "../perfil-alterar-email/perfil-alterar-email";
-import { PerfilAlterarSenhaPage } from "../perfil-alterar-senha/perfil-alterar-senha";
 
 //Providers
 import { UserServiceProvider } from "../../providers/user-service/user-service";
-import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
 //Components
 import { TagsInputComponent } from "../../components/tags-input/tags-input.component";
+
+//Popover
+import { PerfilPopoverPage } from "../perfil-popover/perfil-popover";
+
+//Models
+import { Usuario } from './../../models/usuario';
 
 @Component({
   selector: 'page-perfil',
   templateUrl: 'perfil.html',
 })
 export class PerfilPage {
-  usuario: any = {};
+  usuario: Usuario = new Usuario();
 
   constructor(
     public navCtrl: NavController,
-    private alertCtrl: AlertController,
     private platform: Platform,
     private actionsheetCtrl: ActionSheetController,
     private loadingCtrl: LoadingController,
-    public modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private userProvider: UserServiceProvider,
-    private authService: AuthServiceProvider) {
+    public popoverCtrl: PopoverController) {
+
+    let loading = this.loadingCtrl.create({
+      content: 'Carregando perfil...'
+    });
+    loading.present();
 
     this.userProvider.getUser().then(userObservable => {
-      userObservable.subscribe(usuarioData => {
+
+      userObservable.subscribe((usuarioData: Usuario) => {
+        loading.dismiss();
+
         console.log(usuarioData)
 
         this.usuario = usuarioData;
@@ -52,29 +55,17 @@ export class PerfilPage {
     console.log('ionViewDidLoad PerfilPage');
   }
 
-  alterarSenha() {
-    let perfilAlterarSenhaPage = this.modalCtrl.create(PerfilAlterarSenhaPage);
+  abrirPopover(myEvent) {
+    let perfilPopoverPage = this.popoverCtrl.create(PerfilPopoverPage);
 
-    perfilAlterarSenhaPage.onDidDismiss(data => {
-      console.log(data)
+    perfilPopoverPage.present({
+      ev: myEvent
     });
-
-    perfilAlterarSenhaPage.present();
-  }
-  alterarEmail() {
-    let perfilAlterarEmailPage = this.modalCtrl.create(PerfilAlterarEmailPage);
-
-    perfilAlterarEmailPage.onDidDismiss(data => {
-      console.log(data);
-    });
-
-    perfilAlterarEmailPage.present();
   }
 
 
   menuAlterarFoto() {
     let actionSheet = this.actionsheetCtrl.create({
-      //cssClass: 'action-sheets-basic-page',
       buttons: [
         {
           text: 'Camera',
@@ -131,10 +122,7 @@ export class PerfilPage {
       loading.dismiss();
       console.log(erro);
     });
-
-    loading._destroy;
   }
-
 
   alterarUsuario() {
     let toast = this.toastCtrl.create({
@@ -144,10 +132,7 @@ export class PerfilPage {
     });
 
     let loading = this.loadingCtrl.create({
-      content: `<div class="loading-custom-spinner-container">
-                  <div class="loading-custom-spinner-box"></div>
-                </div>
-                <div>Alterando informações de perfil...</div>`
+      content: 'Alterando informações de perfil...'
     });
 
     loading.present();
@@ -156,37 +141,5 @@ export class PerfilPage {
       loading.dismiss();
       toast.present();
     });
-
-    toast.dismiss();
-    loading._destroy;
-  }
-
-  confirmarLogout() {
-    let alert = this.alertCtrl.create({
-      title: 'Sair',
-      message: 'Você tem certeza que deseja sair?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Sair',
-          handler: () => {
-            this.logout();
-          }
-        }
-      ]
-    });
-
-    alert.present();
-  }
-  logout() {
-    this.authService.sair().then(() => {
-      this.navCtrl.setRoot(LoginPage);
-    })
-      .catch((error) => {
-        console.error(error);
-      })
   }
 }
