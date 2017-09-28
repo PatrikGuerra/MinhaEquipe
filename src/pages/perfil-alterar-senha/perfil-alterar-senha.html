@@ -8,10 +8,6 @@
 </ion-header>
 
 <ion-content no-bounce>
-<!---  <div text-justify padding-horizontal padding-top>
-    Você irá receber um e-mail solicitando a confirmação do seu endereço.
-  </div>
--->
   <form [formGroup]="alterarSenhaForm">
     <ion-item>
       <ion-label floating>Senha atual</ion-label>
@@ -23,19 +19,17 @@
       <ion-input type="password" formControlName="novaSenha"></ion-input>
     </ion-item>
 
-    <ion-item>
+   <ion-item>
       <ion-label floating>Confirmar nova senha</ion-label>
       <ion-input type="password" formControlName="novaSenhaConfirmar"></ion-input>
     </ion-item>
-
-    <span *ngIf="!alterarSenhaForm.senhas.valid" class="help-block text-danger">
-      <div *ngIf="alterarSenhaForm.senhas?.errors?.areEqual">
+<!--
+      <div padding *ngIf="alterarSenhaForm.controls.novaSenhaConfirmar.touched && alterarSenhaForm.hasError('diferente')" >
         As senhas informadas não são iguais.
       </div>
-    </span>
-
+  -->
     <div padding>
-      <button ion-button block color="primary" [disabled]="!alterarSenhaForm.valid" (click)="alterarSenha()">Alterar e-mail</button>
+       <button ion-button block color="primary" [disabled]="!alterarSenhaForm.valid" (click)="alterarSenha()">Alterar senha</button>
     </div>
   </form> 
 </ion-content>

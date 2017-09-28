@@ -1,0 +1,37 @@
+<ion-header>
+    <ion-navbar color="primary">
+      <ion-title>Equipe</ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  <ion-content>
+    <div id="profile-bg"></div>
+  
+    <div id="content">
+      <div id="profile-info" padding-horizontal>
+        <img id="profile-image" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : '../../assets/images/no-image.gif'}}">
+      </div>
+    </div>
+  
+    <div text-center>
+      <button ion-button icon-only (click)="menuAlterarImagem()"><ion-icon name="camera"></ion-icon></button>
+    </div>
+  
+    <ion-item>
+      <ion-label>Nome</ion-label>
+      <ion-input type="text" [(ngModel)]="equipe.nome" name="Nome"></ion-input>
+    </ion-item>
+  
+
+  
+    <div padding>
+      <button ion-button (click)="save()" block>Salvar</button>
+    </div>
+  
+    <!---
+    <ion-footer padding>
+      <button ion-button (click)="alterarUsuario()" block>Salvar</button>
+      <button ion-button icon-start block color="danger" (click)="confirmarLogout()"><ion-icon name="log-out"></ion-icon>Sair</button>
+    </ion-footer>
+    -->
+  </ion-content>

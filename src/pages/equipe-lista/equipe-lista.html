@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Equipes</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div padding>
+    <button ion-button block color="primary" (click)="novaEquipe()">+</button>
+  </div>
+
+
+
+
+  <ion-list>
+
+    <!--<button ion-item>-->
+    <ion-item *ngFor="let e of equipes | async">
+      <ion-avatar item-start>
+        <img src="{{ e.fotoUrl ? e.fotoUrl : '../../assets/images/no-image.gif'}}">
+      </ion-avatar>
+      {{ e.nome }}
+      <!-- 
+      <h2>Nome</h2>
+      <p>Descrição</p>
+      -->
+    </ion-item>
+    <!--</button>-->
+
+  </ion-list>
+ <!--
+<ion-infinite-scroll [hidden]="!activities.stillHaveEvents" (ionInfinite)="doInfinite($event)"> 
+  <ion-infinite-scroll-content loadingSpinner="dots">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+-->
+</ion-content>

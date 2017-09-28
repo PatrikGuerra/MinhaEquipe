@@ -4,6 +4,7 @@ import { NavController, ToastController } from 'ionic-angular';
 //Pages
 import { LoginPage } from "../login/login";
 import { PerfilPage } from "../perfil/perfil";
+import { EquipeListaPage } from "../equipe-lista/equipe-lista";
 
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
@@ -32,5 +33,9 @@ export class HomePage {
 
   verPerfil() {
     this.navCtrl.push(PerfilPage);
+  }
+
+  verEquipes() {
+    this.navCtrl.push(EquipeListaPage);
   }
 }

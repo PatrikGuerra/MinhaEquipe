@@ -25,6 +25,8 @@ export class UserServiceProvider {
     public storage: Storage,
     private camera: Camera,
     private authProvider: AuthServiceProvider) {
+
+    console.log('Hello UserServiceProvider Provider');
   }
 
   getuid() {
@@ -64,8 +66,6 @@ export class UserServiceProvider {
     let usuarioAtual = this.db.database.ref(`${this.basePath}/${uid}`);
     usuarioAtual.set(usuario);
   }
-
-
 
 
   atualizarEmail(novoEmail: string, senha: string): Promise<any> {
@@ -204,5 +204,4 @@ export class UserServiceProvider {
       // Handle error
     });*/
   }
-
 }

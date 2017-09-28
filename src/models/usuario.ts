@@ -3,4 +3,5 @@ export class Usuario {
 	email: string;
 	fotoUrl: string;
 	tags: string[];
+	equipes: string[];
 }

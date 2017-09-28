@@ -23,19 +23,25 @@ import { CadastroPage } from "../pages/cadastro/cadastro";
 import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
 import { LoginPage } from "../pages/login/login";
 import { PerfilPage } from "../pages/perfil/perfil";
-import { PerfilAlterarSenhaPage } from "../pages/perfil-alterar-senha/perfil-alterar-senha";
+import { EquipePage } from "../pages/equipe/equipe";
+import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 
 //Modals
 import { PerfilAlterarEmailPage } from "../pages/perfil-alterar-email/perfil-alterar-email";
+import { PerfilAlterarSenhaPage } from "../pages/perfil-alterar-senha/perfil-alterar-senha";
 
 //Providers
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { UserServiceProvider } from "../providers/user-service/user-service";
+import { EquipeServiceProvider } from "../providers/equipe-service/equipe-service";
 
 //Components
-import { IonTagsInputModule } from "../components/ion-tags-input/index";
+//import { IonTagsInputModule } from "../components/ion-tags-input/index";
 import { TagsInputModule } from "../components/tags-input/index";
 
+
+//Models
+import { equipe } from "../models/equipe";
 //Configuracao Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDlEO52-eaJInj1sqL6gdraZ1CV5Cvh150",
@@ -56,6 +62,10 @@ const firebaseConfig = {
       PerfilPage,
       PerfilAlterarEmailPage,
       PerfilAlterarSenhaPage,
+      EquipePage,
+      EquipeListaPage,
+
+      
   ],
   imports: [
     BrowserModule,
@@ -65,7 +75,7 @@ const firebaseConfig = {
     AngularFireAuthModule,
     AngularFireDatabaseModule, //Novo -- Firebase
     
-    IonTagsInputModule,
+    //IonTagsInputModule,
     TagsInputModule
   ],
   bootstrap: [IonicApp],
@@ -78,6 +88,10 @@ const firebaseConfig = {
       PerfilPage,
       PerfilAlterarEmailPage,
       PerfilAlterarSenhaPage,
+      EquipePage,
+      EquipeListaPage,
+
+      
   ],
   providers: [
     StatusBar,
@@ -85,7 +99,8 @@ const firebaseConfig = {
     Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthServiceProvider,
-    UserServiceProvider 
+    UserServiceProvider,
+    EquipeServiceProvider,
   ]
 })
 export class AppModule {}

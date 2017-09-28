@@ -24,43 +24,25 @@ export class PerfilAlterarSenhaPage {
     private loadingCtrl: LoadingController) {
 
     this.alterarSenhaForm = formBuilder.group({
-      'senhaAtual': ['', Validators.required],
-
-      'senhas': formBuilder.group({
-        novaSenha: ['', Validators.required],
-        novaSenhaConfirmar: ['', Validators.required]
-      }, { validator: this.areEqual })
-    });
+      senhaAtual: ['', Validators.compose([Validators.required])],
+      novaSenha: ['', Validators.compose([Validators.required])],
+      novaSenhaConfirmar: ['', Validators.compose([Validators.required])]
+    }, { validator: this.saoIguais('novaSenha', 'novaSenhaConfirmar') }
+    );
   }
 
-  areEqual(group: FormGroup) {
-    console.log(group);
-    var valid = false;
+  private saoIguais(campoPrincipal: string, campoConfirmacao: string) {
+    return (group: FormGroup): { [key: string]: any } => {
 
-    if (group.controls['novaSenha'].value == group.controls['novaSenhaConfirmar'].value) {
-      return {
-        areEqual: true
-      };
-    };
+      let principal = group.controls[campoPrincipal];
+      let confirmacao = group.controls[campoConfirmacao];
 
-    return {
-      areEqual: false
-    };
-    // group.controls [name].value
-
-    /*
-        for (name in group.controls) {
-          var val = 
-      
-          (...)
-        }
-      
-        if (valid) {
-          return null;
-        }
-      
-       
-        */
+      if (principal.value !== confirmacao.value) {
+        return {
+          diferente: true
+        };
+      }
+    }
   }
 
   ionViewDidLoad() {
