@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 
 //Camera
 import { Camera } from '@ionic-native/camera';
+//https://github.com/apache/cordova-plugin-camera#module_camera.CameraOptions
 
 //Storage
 import { IonicStorageModule } from "@ionic/storage";
