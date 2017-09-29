@@ -1,12 +1,13 @@
 export class Equipe {
 	$key: string;
+	timestamp: any;
+	
+	timestampInicio: any;
+	timestampFim: any;
 
 	nome: string;
-	dataCriacao: any;
-	dataInicio: any;
-	dataFim: any;
-	responsavel: string;
-	membros = {};
 	fotoUrl: string;
+	keyResponsavel: string;
+	membros = {};
 
 }

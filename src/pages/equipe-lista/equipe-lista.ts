@@ -15,41 +15,24 @@ import { Equipe } from "../../models/equipe";
   templateUrl: 'equipe-lista.html',
 })
 export class EquipeListaPage {
-  equipes: FirebaseListObservable<Equipe[]>;
+  equipes: Equipe[] = [];//FirebaseListObservable<Equipe[]>;
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     private equipeProvider: EquipeServiceProvider,
     public db: AngularFireDatabase) {
 
-      console.log("carregando")
+    this.equipeProvider.getAll().then(userObservable => {
+      userObservable.subscribe((equipesData: Equipe[]) => {
+    
+        console.log(equipesData);
 
-      //this.equipes = this.db.list("/equipes");
-      this.equipeProvider.getAll().subscribe(items => {
-        // items is an array
-        items.forEach(item => {
-          console.log('Item:', item);
-          console.log(item.$key);
-          console.log(item.dataInicio);
-          console.log(item.dataFim);
-          console.log(item.nome);
-          console.log(item.responsavel);
-          
-        });
-        //this.equipes = items.
-  });
-      
-   
-
-/*
-    this.db.list('/equipes', { preserveSnapshot: true}).subscribe(snapshots=>{
-      console.log(snapshots);
-      snapshots.forEach(snapshot => {
-        console.log(snapshot.key, snapshot.val());
-      });*/
+        this.equipes = equipesData;
+      });
+    });
   }
-  
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipeListaPage');
   }
@@ -58,11 +41,13 @@ export class EquipeListaPage {
     this.navCtrl.push(EquipePage);
   }
 
-  editarEquipe(equipe: any) {
-    this.navCtrl.push(EquipePage, { equipe: equipe });
+  editarEquipe(equipe: Equipe) {
+    this.navCtrl.push(EquipePage, {
+       equipe: equipe
+       });
   }
 
-  removerEquipe(equipe: any) {
+  removerEquipe(equipe: Equipe) {
     this.equipeProvider.remove(equipe.$key);
   }
 

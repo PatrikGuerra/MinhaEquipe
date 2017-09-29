@@ -45,9 +45,13 @@ export class EquipePage {
     if (this.navParams.data.equipe) {
       this.equipe = this.navParams.data.equipe;
       this.key = this.navParams.data.equipe.$key;
+
+      console.log("this.equipe");
+      console.log(this.equipe);
+      console.log("this.key");
+      console.log(this.key);
     }
   }
-  //voltar ate aqui
   
 
   ionViewDidLoad() {
@@ -69,9 +73,7 @@ export class EquipePage {
       loading.setContent('Alterando equipe...');
     } else {
       toast.setMessage("Equipe criada.");
-      loading.setContent('Criando equipe...');
-
-      this.equipe.dataCriacao = Date.now();
+      loading.setContent('Criando equipe...');   
     }
 
     loading.present();

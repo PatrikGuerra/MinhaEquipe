@@ -15,11 +15,11 @@
   <ion-list>
 
     <!--<button ion-item>-->
-    <ion-item *ngFor="let e of equipes | async">
+    <ion-item *ngFor="let equipe of equipes" (click)="editarEquipe(equipe)">
       <ion-avatar item-start>
-        <img src="{{ e.fotoUrl ? e.fotoUrl : '../../assets/images/no-image.gif'}}">
+        <img src="{{ equipe.fotoUrl ? equipe.fotoUrl : '../../assets/images/no-image.gif'}}">
       </ion-avatar>
-      {{ e.nome }}
+      {{ equipe.nome }}
       <!-- 
       <h2>Nome</h2>
       <p>Descrição</p>

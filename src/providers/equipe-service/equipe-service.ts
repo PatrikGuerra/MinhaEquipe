@@ -27,7 +27,9 @@ export class EquipeServiceProvider {
   private usuario: any = {};
   private usuarioId: string = ""
 
-  private equipes: FirebaseListObservable<Equipe[]>;
+ // private equipes: FirebaseListObservable<Equipe[]>;
+//https://stackoverflow.com/questions/39788687/cast-firebaselistobservableany-to-firebaselistobservablemycustomtype?rq=1
+//https://stackoverflow.com/questions/40632308/casting-firebaselistobservable-results-to-objects
 
   constructor(
     public db: AngularFireDatabase,
@@ -36,15 +38,15 @@ export class EquipeServiceProvider {
     private userProvider: UserServiceProvider) {
     console.log('Hello EquipeServiceProvider Provider');
 
-    this.equipes = <FirebaseListObservable<Equipe[]>>this.db.list(this.basePathEquipes);
-    console.log(this.basePathEquipes)
+    //this.equipes = <FirebaseListObservable<Equipe[]>>this.db.list(this.basePathEquipes);
+    //console.log(this.basePathEquipes)
     
-    this.userProvider.getuid().then((uid) => {
-      //console.log(this.equipes)
-      this.usuarioId = uid;
-      console.log(uid)
-    });
-    console.log(this.basePathEquipes)
+    // this.userProvider.getuid().then((uid) => {
+    //   //console.log(this.equipes)
+    //   this.usuarioId = uid;
+    //   console.log(uid)
+    // });
+    // console.log(this.basePathEquipes)
     
     /*
     this.db.list(this.basePathEquipes, {
@@ -56,25 +58,38 @@ export class EquipeServiceProvider {
     */
   }
 
-  public getAll(): FirebaseListObservable<Equipe[]> {
-    console.log(this.equipes)
-    return this.equipes;
-
-    //this.userProvider.getuid().then((uid) => {
-     //return this.db.list(this.basePathEquipes);
-    //  console.log(this.equipes)
-   // });
+  public getAll() {
+    return this.userProvider.getuid().then(uid => {
+      return <FirebaseListObservable<Equipe[]>>this.db.list(`${this.basePathEquipes}`);
+    });
   }
-//voltar ate aqui
+  
+  // public getAll(): FirebaseListObservable<Equipe[]> {
+  //   console.log(this.equipes)
+  //   return this.equipes;
+
+  //   //this.userProvider.getuid().then((uid) => {
+  //    //return this.db.list(this.basePathEquipes);
+  //   //  console.log(this.equipes)
+  //  // });
+  // }
+  
+
+
+
+
+  public remove(key: string) {
+    return this.db.database.ref(key).remove();
+  }
   public save(equipe: Equipe, key: string, imagem: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.userProvider.getuid().then((userUid) => {
+      this.userProvider.getuid().then((usuarioUid) => {
         
-        equipe.responsavel = userUid;
-
         if (!key) {
           //Se é Push
           key = this.db.database.ref(this.basePathEquipes).push().key;
+          equipe.keyResponsavel = usuarioUid;
+          equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
         }
 
         if (imagem) {
@@ -86,7 +101,6 @@ export class EquipeServiceProvider {
             }).catch((error) => {
               reject(error);
             });
-
 
           }).catch((error) => {
             reject(error);
@@ -102,27 +116,18 @@ export class EquipeServiceProvider {
       });
     });
   }
-  private update(equipe: any, key: string) {
+  private update(equipe: Equipe, key: string) {
     var updates = {};
     updates[`${this.basePathEquipes}/${key}`] = equipe; //equipe
     // /equipes/_UidEquipe_
 
-    updates[`${this.basePathUsuarios}/${equipe.responsavel}/equipes/${key}`] = true; //Atualiza Usuario administrador
+    updates[`${this.basePathUsuarios}/${equipe.keyResponsavel}/equipes/${key}`] = true; //Atualiza Usuario administrador
     // /usuarios/_UidUsuario_/equipes/_UidEquipe_
 
     return this.db.database.ref().update(updates);
   }
 
-
-
-  public remove(key: string) {
-    this.equipes.remove(key);
-  }
-
-
-
-
-  public uploadImage(imageString: string, uid: string): Promise<any> {
+  private uploadImage(imageString: string, uid: string): Promise<any> {
     let storageRef: any;
     let parseUpload: any;
 
