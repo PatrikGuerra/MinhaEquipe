@@ -17,7 +17,7 @@ import { AuthServiceProvider } from "../auth-service/auth-service";
 
 @Injectable()
 export class UserServiceProvider {
-  private basePath: string = '/usuarios';
+  private basePathUsuarios: string = '/usuarios';
   private usuario: FirebaseObjectObservable<Usuario>;
 
   constructor(
@@ -27,7 +27,6 @@ export class UserServiceProvider {
     private authProvider: AuthServiceProvider) {
 
     console.log('Hello UserServiceProvider Provider');
-
   }
 
   getuid() {
@@ -36,9 +35,7 @@ export class UserServiceProvider {
 
   getUser()  {
    return this.getuid().then(uid => {
-     let asd =<FirebaseObjectObservable<Usuario>>this.db.object(`${this.basePath}/${uid}`);
-     console.log(asd)
-      return asd;
+      return <FirebaseObjectObservable<Usuario>>this.db.object(`${this.basePathUsuarios}/${uid}`);
     });
   }
 
@@ -46,7 +43,7 @@ export class UserServiceProvider {
     return new Promise((resolve, reject) => {
       try {
         this.getuid().then(uid => {
-          let usuarioAtual = this.db.database.ref(`${this.basePath}/${uid}`);
+          let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${uid}`);
           usuarioAtual.update(usuario).then((data) => {
             resolve(data);
           });
@@ -66,7 +63,7 @@ export class UserServiceProvider {
     usuario.nome = data.email;
     usuario.fotoUrl = "";
     console.log(data)
-    let usuarioAtual = this.db.database.ref(`${this.basePath}/${uid}`);
+    let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${uid}`);
     usuarioAtual.set(usuario);
   }
 
@@ -77,7 +74,7 @@ export class UserServiceProvider {
         this.authProvider.reauthenticateWithCredential(senha).then((dataReautenticacao) => {
 
           this.authProvider.updateEmailAndsendEmailVerification(novoEmail).then((data) => {
-            let usuarioAtual = this.db.database.ref(`${this.basePath}/${uid}`);
+            let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${uid}`);
 
             usuarioAtual.update(
               { email: novoEmail }
@@ -131,7 +128,7 @@ export class UserServiceProvider {
     return new Promise((resolve, reject) => {
       this.getuid().then(uid => {
         this.uploadImage(image, uid).then((snapshot: any) => {
-          let usuarioAtual = this.db.database.ref(`${this.basePath}/${uid}`);
+          let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${uid}`);
 
           usuarioAtual.update(
             { fotoUrl: snapshot.downloadURL }
@@ -152,7 +149,7 @@ export class UserServiceProvider {
     let parseUpload: any;
 
     return new Promise((resolve, reject) => {
-      storageRef = firebase.storage().ref(`${this.basePath}/${uid}.jpg`);
+      storageRef = firebase.storage().ref(`${this.basePathUsuarios}/${uid}.jpg`);
       parseUpload = storageRef.putString(imageString, firebase.storage.StringFormat.DATA_URL);
 
       parseUpload.on('state_changed', (_snapshot) => {
