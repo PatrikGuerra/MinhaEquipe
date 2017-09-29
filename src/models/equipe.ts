@@ -2,8 +2,8 @@ export class Equipe {
 	$key: string;
 	timestamp: any;
 	
-	timestampInicio: any;
-	timestampFim: any;
+	dataInicio: any;
+	dataFim: any;
 
 	nome: string;
 	fotoUrl: string;

@@ -23,11 +23,6 @@ export class EquipeServiceProvider {
   private basePathEquipes: string = '/equipes';
   private basePathUsuarios: string = '/usuarios';
 
-
-  private usuario: any = {};
-  private usuarioId: string = ""
-
- // private equipes: FirebaseListObservable<Equipe[]>;
 //https://stackoverflow.com/questions/39788687/cast-firebaselistobservableany-to-firebaselistobservablemycustomtype?rq=1
 //https://stackoverflow.com/questions/40632308/casting-firebaselistobservable-results-to-objects
 
@@ -37,25 +32,6 @@ export class EquipeServiceProvider {
     private camera: Camera,
     private userProvider: UserServiceProvider) {
     console.log('Hello EquipeServiceProvider Provider');
-
-    //this.equipes = <FirebaseListObservable<Equipe[]>>this.db.list(this.basePathEquipes);
-    //console.log(this.basePathEquipes)
-    
-    // this.userProvider.getuid().then((uid) => {
-    //   //console.log(this.equipes)
-    //   this.usuarioId = uid;
-    //   console.log(uid)
-    // });
-    // console.log(this.basePathEquipes)
-    
-    /*
-    this.db.list(this.basePathEquipes, {
-      query: {
-        orderByChild: 'eyeColor',
-        equalTo: "eyeColor"
-      }
-    });
-    */
   }
 
   public getAll() {
@@ -63,20 +39,6 @@ export class EquipeServiceProvider {
       return <FirebaseListObservable<Equipe[]>>this.db.list(`${this.basePathEquipes}`);
     });
   }
-  
-  // public getAll(): FirebaseListObservable<Equipe[]> {
-  //   console.log(this.equipes)
-  //   return this.equipes;
-
-  //   //this.userProvider.getuid().then((uid) => {
-  //    //return this.db.list(this.basePathEquipes);
-  //   //  console.log(this.equipes)
-  //  // });
-  // }
-  
-
-
-
 
   public remove(key: string) {
     return this.db.database.ref(key).remove();

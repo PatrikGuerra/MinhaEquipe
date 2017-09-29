@@ -21,6 +21,16 @@
       <ion-label>Nome</ion-label>
       <ion-input type="text" [(ngModel)]="equipe.nome" name="Nome"></ion-input>
     </ion-item>
+
+    <ion-item>
+      <ion-label>Inicio</ion-label>
+      <ion-datetime displayFormat="YYYY-MM-DD" [(ngModel)]="equipe.dataInicio"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Final</ion-label>
+      <ion-datetime displayFormat="YYYY-MM-DD" [(ngModel)]="equipe.dataFim"></ion-datetime>
+    </ion-item>
   
 
   
