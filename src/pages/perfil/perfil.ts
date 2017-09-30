@@ -36,7 +36,6 @@ export class PerfilPage {
     loading.present();
 
     this.userProvider.getUser().then(userObservable => {
-
       userObservable.subscribe((usuarioData: Usuario) => {
         loading.dismiss();
 
@@ -62,7 +61,6 @@ export class PerfilPage {
       ev: myEvent
     });
   }
-
 
   menuAlterarFoto() {
     let actionSheet = this.actionsheetCtrl.create({

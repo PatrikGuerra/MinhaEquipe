@@ -52,6 +52,7 @@ export class EquipeServiceProvider {
           key = this.db.database.ref(this.basePathEquipes).push().key;
           equipe.keyResponsavel = usuarioUid;
           equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
+          //equipe.
         }
 
         if (imagem) {

@@ -5,6 +5,8 @@ import { Observable } from "rxjs/Observable";
 import { AngularFireAuth } from "angularfire2/auth";
 import * as firebase from 'firebase/app';
 
+//Models
+import { Credencial } from "../../models/credencial";
 
 @Injectable()
 export class AuthServiceProvider {
@@ -15,16 +17,16 @@ export class AuthServiceProvider {
     console.log('AuthServiceProvider -- inicializado');
   }
 
-  criarUsuario(credencial) {
-    return this.angularFireAuth.auth.createUserWithEmailAndPassword(credencial.email, credencial.password);
+  criarUsuario(credencial: Credencial) {
+    return this.angularFireAuth.auth.createUserWithEmailAndPassword(credencial.email, credencial.senha);
   }
 
   sair() {
     return this.angularFireAuth.auth.signOut();
   }
 
-  entrar(credencial) {
-    return this.angularFireAuth.auth.signInWithEmailAndPassword(credencial.email, credencial.password);
+  entrar(credencial: Credencial) {
+    return this.angularFireAuth.auth.signInWithEmailAndPassword(credencial.email, credencial.senha);
   }
 
   esqueciSenha(email: string) {
@@ -39,16 +41,15 @@ export class AuthServiceProvider {
     //https://firebase.google.com/docs/reference/js/firebase.User#updateEmail
 
     return new Promise((resolve, reject) => {
-      try {
-        this.angularFireAuth.auth.currentUser.updateEmail(novoEmail).then((data) => {
-          this.angularFireAuth.auth.currentUser.sendEmailVerification().then((dataEmail) => {
-            resolve(dataEmail);
-          })
-        })
-      }
-      catch (ex) {
-        reject(ex);
-      }
+      this.angularFireAuth.auth.currentUser.updateEmail(novoEmail).then((data) => {
+        this.angularFireAuth.auth.currentUser.sendEmailVerification().then((dataEmail) => {
+          resolve(dataEmail);
+        }).catch((error) => {
+          reject(error);
+        });
+      }).catch((error) => {
+        reject(error);
+      });
     });
   }
 
@@ -66,9 +67,9 @@ export class AuthServiceProvider {
     //https://stackoverflow.com/questions/45163737/firebase-auth-reauthenticate-is-not-a-function
     //https://firebase.google.com/docs/reference/js/firebase.User#reauthenticateWithCredential
 
-    var user = firebase.auth().currentUser;
-    var credentials = firebase.auth.EmailAuthProvider.credential(user.email, senha);
-    return this.angularFireAuth.auth.currentUser.reauthenticateWithCredential(credentials);
+    var firebaseUse = firebase.auth().currentUser;
+    var firebaseCredentials = firebase.auth.EmailAuthProvider.credential(firebaseUse.email, senha);
+    return this.angularFireAuth.auth.currentUser.reauthenticateWithCredential(firebaseCredentials);
   }
 
   sendEmailVerification() {

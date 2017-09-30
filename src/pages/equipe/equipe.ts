@@ -46,13 +46,12 @@ export class EquipePage {
       this.equipe = this.navParams.data.equipe;
       this.key = this.navParams.data.equipe.$key;
 
-      console.log("this.equipe");
+      console.log("---- EquipePage");
       console.log(this.equipe);
-      console.log("this.key");
       console.log(this.key);
+      console.log("---- EquipePage");
     }
   }
-  
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipePage');
@@ -73,7 +72,7 @@ export class EquipePage {
       loading.setContent('Alterando equipe...');
     } else {
       toast.setMessage("Equipe criada.");
-      loading.setContent('Criando equipe...');   
+      loading.setContent('Criando equipe...');
     }
 
     loading.present();
@@ -82,13 +81,13 @@ export class EquipePage {
       loading.dismiss();
       this.navCtrl.pop();
       toast.present();
+    }).catch((error) => {
+      loading.dismiss();
+      console.error(error);
     });
-
+ 
     toast.dismiss();
-    loading._destroy;
   }
-
-  //daqui pra baixo ta SHOW
 
   menuAlterarImagem() {
     let actionSheet = this.actionsheetCtrl.create({
@@ -97,14 +96,14 @@ export class EquipePage {
           text: 'Camera',
           icon: 'camera',
           handler: () => {
-            this.camera()
+            this.camera();
           }
         },
         {
           text: 'Galeria',
           icon: 'image',
           handler: () => {
-            this.biblioteca()
+            this.biblioteca();
           }
         }
       ]
@@ -113,36 +112,29 @@ export class EquipePage {
     actionSheet.present();
   }
   camera() {
-    let loading = this.loadingCtrl.create({
-      //content: 'Alterando imagem da equipe...'
-    });
-
+    let loading = this.loadingCtrl.create();
     loading.present();
 
     this.equipeService.pictureFromCamera().then((imageData) => {
       this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
-
-    }, (erro) => {
+    }).catch((error) => {
       this.imagemBase64 = "";
-      console.log(erro);
+      console.error(error);
     });
+    
     loading.dismiss();
   }
   biblioteca() {
-    let loading = this.loadingCtrl.create({
-      //content: 'Alterando imagem da equipe...'
-    });
-
+    let loading = this.loadingCtrl.create();
     loading.present();
 
     this.equipeService.pictureFromLibray().then((imageData) => {
       this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
-
-    }, (erro) => {
+    }).catch((error) => {
       this.imagemBase64 = "";
-      console.log(erro);
+      console.error(error);
     });
-
+    
     loading.dismiss();
   }
 }

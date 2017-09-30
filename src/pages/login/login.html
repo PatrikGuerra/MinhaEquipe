@@ -8,12 +8,12 @@
   <form [formGroup]="loginForm">
     <ion-item>
       <ion-label floating>E-mail</ion-label>
-      <ion-input type="email" formControlName="email"></ion-input>
+      <ion-input type="email" formControlName="email" [(ngModel)]="credencial.email"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label floating>Senha</ion-label>
-      <ion-input type="password" formControlName="password"></ion-input>
+      <ion-input type="password" formControlName="senha" [(ngModel)]="credencial.senha"></ion-input>
     </ion-item>
 
     <div padding-horizontal padding-top>
@@ -25,11 +25,4 @@
   <div padding>
     <button ion-button block clear small (click)="esqueciSenha()">Esqueceu sua senha?</button>
   </div>
-  <!---
-  <ion-fab right bottom>
-    <button ion-fab color="primary">
-      <ion-icon name="add"></ion-icon>
-    </button>
-  </ion-fab>
--->
 </ion-content>

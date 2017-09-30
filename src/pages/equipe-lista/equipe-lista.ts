@@ -20,10 +20,11 @@ export class EquipeListaPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private equipeProvider: EquipeServiceProvider,
-    public db: AngularFireDatabase) {
+    
+    public db: AngularFireDatabase,
+    private equipeService: EquipeServiceProvider) {
 
-    this.equipeProvider.getAll().then(userObservable => {
+    this.equipeService.getAll().then(userObservable => {
       userObservable.subscribe((equipesData: Equipe[]) => {
     
         console.log(equipesData);
@@ -48,7 +49,7 @@ export class EquipeListaPage {
   }
 
   removerEquipe(equipe: Equipe) {
-    this.equipeProvider.remove(equipe.$key);
+    this.equipeService.remove(equipe.$key);
   }
 
 

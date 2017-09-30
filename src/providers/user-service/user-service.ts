@@ -33,8 +33,8 @@ export class UserServiceProvider {
     return this.storage.get("uid");
   }
 
-  getUser()  {
-   return this.getuid().then(uid => {
+  getUser() {
+    return this.getuid().then(uid => {
       return <FirebaseObjectObservable<Usuario>>this.db.object(`${this.basePathUsuarios}/${uid}`);
     });
   }
@@ -58,11 +58,22 @@ export class UserServiceProvider {
   criarUsuario(data) {
     let uid = data.uid;
 
-    let usuario = new Usuario();
+    var usuario: Usuario = {
+      $key: "",
+      email: data.email,
+      equipes: {},
+      fotoUrl: "",
+      nome: "",
+      tags: {},
+    };
+
+    usuario.equipes["asda"] = true;
+
     usuario.email = data.email;
     usuario.nome = data.email;
-    usuario.fotoUrl = "";
-    console.log(data)
+    
+
+  
     let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${uid}`);
     usuarioAtual.set(usuario);
   }

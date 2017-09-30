@@ -19,9 +19,9 @@ export class PerfilAlterarSenhaPage {
     private viewCtrl: ViewController,
     private toastCtrl: ToastController,
     private formBuilder: FormBuilder,
-    private userProvider: UserServiceProvider,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private userService: UserServiceProvider) {
 
     this.alterarSenhaForm = formBuilder.group({
       senhaAtual: ['', Validators.compose([Validators.required])],
@@ -29,6 +29,10 @@ export class PerfilAlterarSenhaPage {
       novaSenhaConfirmar: ['', Validators.compose([Validators.required])]
     }, { validator: this.saoIguais('novaSenha', 'novaSenhaConfirmar') }
     );
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad PerfilAlterarSenhaPage');
   }
 
   private saoIguais(campoPrincipal: string, campoConfirmacao: string) {
@@ -43,10 +47,6 @@ export class PerfilAlterarSenhaPage {
         };
       }
     }
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad PerfilAlterarSenhaPage');
   }
 
   cancelar() {
@@ -67,7 +67,7 @@ export class PerfilAlterarSenhaPage {
     var senhaAtual = this.alterarSenhaForm.value.senhaAtual;
     var novaSenha = this.alterarSenhaForm.value.novaSenha;
 
-    this.userProvider.atualizarSenha(novaSenha, senhaAtual).then((data) => {
+    this.userService.atualizarSenha(novaSenha, senhaAtual).then((data) => {
       loading.dismiss();
 
       alert.onDidDismiss((data) => {

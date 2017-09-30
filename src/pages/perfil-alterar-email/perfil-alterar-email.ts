@@ -3,6 +3,7 @@ import { NavController, NavParams, ToastController, ViewController, AlertControl
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
+//Service
 import { UserServiceProvider } from "../../providers/user-service/user-service";
 
 //Pages
@@ -21,9 +22,9 @@ export class PerfilAlterarEmailPage {
     private viewCtrl: ViewController,
     private toastCtrl: ToastController,
     private formBuilder: FormBuilder,
-    private userProvider: UserServiceProvider,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private userService: UserServiceProvider) {
 
     this.alterarEmailForm = formBuilder.group({
       novoEmail: ['', Validators.compose([Validators.required])],
@@ -53,7 +54,7 @@ export class PerfilAlterarEmailPage {
     var novoEmail = this.alterarEmailForm.value.novoEmail;
     var senha = this.alterarEmailForm.value.password;
 
-    this.userProvider.atualizarEmail(novoEmail, senha).then((data) => {
+    this.userService.atualizarEmail(novoEmail, senha).then((data) => {
       alert.setMessage("Você irá receber um e-mail solicitando confirmação de seu endereço.");
       
       loading.dismiss();
@@ -65,7 +66,7 @@ export class PerfilAlterarEmailPage {
       alert.present();
 
     }).catch((error: any) => {
-      console.log(error);
+      console.error(error);
 
       //authService.reauthenticateWithCredential()
       if (error.code == 'auth/user-mismatch') {

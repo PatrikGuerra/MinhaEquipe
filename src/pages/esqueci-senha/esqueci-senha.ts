@@ -7,16 +7,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
-//Models
-//import { User } from "../../providers/auth-service/user";
-/**
- * Generated class for the EsqueciSenhaPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
-//@IonicPage()
 @Component({
   selector: 'page-esqueci-senha',
   templateUrl: 'esqueci-senha.html',
@@ -27,8 +17,8 @@ export class EsqueciSenhaPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
-    private authService: AuthServiceProvider,
-    public formBuilder: FormBuilder) {
+    public formBuilder: FormBuilder,
+    private authService: AuthServiceProvider, ) {
 
     this.esqueciSenhaForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required])]
@@ -40,7 +30,10 @@ export class EsqueciSenhaPage {
   }
 
   esqueciSenha() {
-    let toast = this.toastCtrl.create({ duration: 5000, position: 'bottom' });
+    let toast = this.toastCtrl.create({
+      duration: 5000,
+      position: 'bottom'
+    });
 
     var emailUsuario = this.esqueciSenhaForm.value.email;
 
@@ -49,16 +42,15 @@ export class EsqueciSenhaPage {
       toast.present();
 
       this.navCtrl.pop();
-    })
-      .catch((error: any) => {
-        if (error.code == 'auth/invalid-email') {
-          toast.setMessage('O e-mail digitado não é valido.');
-        } else if (error.code == 'auth/user-not-found') {
-          toast.setMessage('O usuário não foi encontrado.');
-        }
+    }).catch((error: any) => {
+      if (error.code == 'auth/invalid-email') {
+        toast.setMessage('O e-mail digitado não é valido.');
+      } else if (error.code == 'auth/user-not-found') {
+        toast.setMessage('O usuário não foi encontrado.');
+      }
 
-        toast.present();
-      });
+      toast.present();
+    });
   }
 
 }

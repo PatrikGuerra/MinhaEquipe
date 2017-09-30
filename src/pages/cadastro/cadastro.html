@@ -12,12 +12,12 @@
   <form [formGroup]="cadastroForm">
     <ion-item>
       <ion-label floating>E-mail</ion-label>
-      <ion-input type="text" formControlName="email"></ion-input>
+      <ion-input type="text" formControlName="email" [(ngModel)]="credencial.email"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label floating>Senha</ion-label>
-      <ion-input type="password" formControlName="password"></ion-input>
+      <ion-input type="password" formControlName="senha" [(ngModel)]="credencial.senha"></ion-input>
     </ion-item>
 
     <div padding>

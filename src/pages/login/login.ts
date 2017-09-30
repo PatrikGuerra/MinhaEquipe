@@ -1,8 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgForm } from '@angular/forms';
-
 import { Storage } from '@ionic/storage';
 
 //Pages
@@ -13,45 +11,40 @@ import { HomePage } from "../home/home";
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
-//@IonicPage()
+//Models
+import { Credencial } from "../../models/credencial";
+
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
 })
 export class LoginPage {
   loginForm: FormGroup;
+  private credencial: Credencial = new Credencial();
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
-    private authService: AuthServiceProvider,
     public storage: Storage,
-    public formBuilder: FormBuilder) {
+    public formBuilder: FormBuilder,
+    private loadingCtrl: LoadingController,
+    private authService: AuthServiceProvider) {
 
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required])],
-      password: ['', Validators.compose([Validators.required])]
+      senha: ['', Validators.compose([Validators.required])]
     });
-    
-    this.loginForm.value.email = this.storage.get('loginEmail');
-    //console.log(this.storage.get('loginEmail'));
 
-    this.storage.get("loginEmail").then(loginEmail => {
-      console.log(loginEmail)
-      this.loginForm.value.email = loginEmail; 
+    this.storage.get("loginEmail").then((credencialEmail) => {
+      if (credencialEmail) {
+        this.credencial.email = credencialEmail;
+      }
     })
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
-    console.log(this.storage.get("uid"))
-
-    
-
-    this.storage.get("uid").then(uid => {
-      console.log(uid)
-    })
   }
 
   criarConta() {
@@ -63,45 +56,46 @@ export class LoginPage {
   }
 
   entrar() {
-    let credenciais = this.loginForm.value;
-    let toast = this.toastCtrl.create({ position: 'bottom' });
+    let toast = this.toastCtrl.create({
+       position: 'bottom',
+       dismissOnPageChange: true
+      });
 
-    this.authService.entrar(credenciais).then((data) => {
-      this.storage.set('loginEmail', this.loginForm.value.email);
-      
-      if (!data.emailVerified) {
+    let loading = this.loadingCtrl.create({
+      content: 'Autenticando...'
+    });
+
+    loading.present();
+
+    this.authService.entrar(this.credencial).then((firebaseUser) => {
+      this.storage.set('loginEmail', this.credencial.email);
+
+      if (!firebaseUser.emailVerified) {
         toast.setMessage("Você deve confirmar seu e-mail.");
         toast.setShowCloseButton(true);
         toast.present();
 
         this.authService.sair();
       } else {
-        this.storage.set('uid', data.uid);
-        console.log("uid")
-        console.log(this.storage.get("uid"))
-
+        this.storage.set('uid', firebaseUser.uid);
         this.navCtrl.setRoot(HomePage);
       }
-    })
-      .catch((error: any) => {
-        toast.setDuration(3000);
+    }).catch((error: any) => {
+      toast.setDuration(3000);
+      
+      if (error.code == 'auth/invalid-email') {
+        toast.setMessage('O e-mail digitado não é valido.');
+      } else if (error.code == 'auth/user-disabled') {
+        toast.setMessage('O usuário está desativado.');
+      } else if (error.code == 'auth/user-not-found') {
+        toast.setMessage('O usuário não foi encontrado.');
+      } else if (error.code == 'auth/wrong-password') {
+        toast.setMessage('A senha digitada não é valida.');
+      }
+      
+      toast.present();
+    });
 
-        if (error.code == 'auth/invalid-email') {
-          toast.setMessage('O e-mail digitado não é valido.');
-        } else if (error.code == 'auth/user-disabled') {
-          toast.setMessage('O usuário está desativado.');
-        } else if (error.code == 'auth/user-not-found') {
-          toast.setMessage('O usuário não foi encontrado.');
-        } else if (error.code == 'auth/wrong-password') {
-          toast.setMessage('A senha digitada não é valida.');
-        }
-
-        toast.present();
-      });
+    loading.dismiss();
   }
-
-  verificarConfirmacaoDeEmail() {
-    var currentUser = this.authService.pegaUsuario();
-  }
-
 }
