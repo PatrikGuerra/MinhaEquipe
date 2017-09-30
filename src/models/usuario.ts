@@ -5,6 +5,5 @@ export class Usuario {
 	email: string;
 	fotoUrl: string;
 	tags: {};
-	equipes: {};
-
+	equipes: {};	
 }

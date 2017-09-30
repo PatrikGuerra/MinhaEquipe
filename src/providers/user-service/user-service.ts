@@ -11,6 +11,7 @@ import * as firebase from 'firebase';
 
 //Models
 import { Usuario } from "../../models/usuario";
+import { Credencial } from "../../models/credencial";
 
 //Services
 import { AuthServiceProvider } from "../auth-service/auth-service";
@@ -55,31 +56,15 @@ export class UserServiceProvider {
     });
   }
 
-  criarUsuario(data) {
-    let uid = data.uid;
+  public criarUsuario(email: string, key: string) {
+    var usuario: Usuario = new Usuario();
+    usuario.email = email;
 
-    var usuario: Usuario = {
-      $key: "",
-      email: data.email,
-      equipes: {},
-      fotoUrl: "",
-      nome: "",
-      tags: {},
-    };
-
-    usuario.equipes["asda"] = true;
-
-    usuario.email = data.email;
-    usuario.nome = data.email;
-    
-
-  
-    let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${uid}`);
-    usuarioAtual.set(usuario);
+    let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${key}`);
+    return usuarioAtual.set(usuario);
   }
 
-
-  atualizarEmail(novoEmail: string, senha: string): Promise<any> {
+  public atualizarEmail(novoEmail: string, senha: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getuid().then(uid => {
         this.authProvider.reauthenticateWithCredential(senha).then((dataReautenticacao) => {
@@ -112,7 +97,8 @@ export class UserServiceProvider {
       });
     });
   }
-  atualizarSenha(novaSenha: string, senhaAtual: string): Promise<any> {
+
+  public atualizarSenha(novaSenha: string, senhaAtual: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getuid().then(uid => {
         this.authProvider.reauthenticateWithCredential(senhaAtual).then((dataReautenticacao) => {
@@ -137,19 +123,19 @@ export class UserServiceProvider {
   }
   atualizarImagem(image: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.getuid().then(uid => {
-        this.uploadImage(image, uid).then((snapshot: any) => {
-          let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${uid}`);
+      this.getuid().then(usuarioUid => {
+        this.uploadImage(image, usuarioUid).then((firebaseImage: any) => {
+          let usuarioAtual = this.db.database.ref(`${this.basePathUsuarios}/${usuarioUid}`);
 
           usuarioAtual.update(
-            { fotoUrl: snapshot.downloadURL }
-          ).then(function (hue) {
-            resolve(hue);
+            { fotoUrl: firebaseImage.downloadURL }
+          ).then(function (firebaseImageUpdate) {
+            resolve(firebaseImageUpdate);
           }, function (error) {
             reject(error);
           });
-        });
 
+        });
       });
     });
   }

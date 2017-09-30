@@ -5,6 +5,7 @@ import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable }
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
+import { UserServiceProvider } from "../../providers/user-service/user-service";
 
 //Pages
 import { EquipePage } from "../equipe/equipe";
@@ -15,25 +16,50 @@ import { Equipe } from "../../models/equipe";
   templateUrl: 'equipe-lista.html',
 })
 export class EquipeListaPage {
-  equipes: Equipe[] = [];//FirebaseListObservable<Equipe[]>;
+  private equipes: Equipe[] = [];//FirebaseListObservable<Equipe[]>;
+  private usuarioUid: string = "";
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    
+
     public db: AngularFireDatabase,
+    private userService: UserServiceProvider,
     private equipeService: EquipeServiceProvider) {
 
-    this.equipeService.getAll().then(userObservable => {
-      userObservable.subscribe((equipesData: Equipe[]) => {
-    
-        console.log(equipesData);
+    this.userService.getuid().then((usuarioUid) => {
+      this.usuarioUid = usuarioUid;
 
-        this.equipes = equipesData;
+      this.equipeService.getAll(usuarioUid).then(userObservable => {
+        userObservable.subscribe((equipesData: Equipe[]) => {
+
+          console.log(equipesData);
+          //equipesData.sort()
+
+          equipesData.sort(function(a, b){
+            
+            if(a.$key < b.$key) return -1;
+            if(a.$key > b.$key) return 1;
+            if(a.timestamp < b.timestamp) return -1;
+            if(a.timestamp >b.timestamp) return 1;
+            return 0;
+          });
+
+          this.equipes = equipesData;
+        });
       });
     });
   }
 
+  private compare(a, b) {
+    if (a.last_nom < b.last_nom)
+      return -1;
+    if (a.last_nom > b.last_nom)
+      return 1;
+    return 0;
+  }
+
+  
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipeListaPage');
   }
@@ -44,8 +70,8 @@ export class EquipeListaPage {
 
   editarEquipe(equipe: Equipe) {
     this.navCtrl.push(EquipePage, {
-       equipe: equipe
-       });
+      equipe: equipe
+    });
   }
 
   removerEquipe(equipe: Equipe) {

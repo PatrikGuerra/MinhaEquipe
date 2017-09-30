@@ -1,7 +1,7 @@
 export class Equipe {
 	$key: string;
 	timestamp: any;
-	
+
 	dataInicio: any;
 	dataFim: any;
 
@@ -10,4 +10,11 @@ export class Equipe {
 	keyResponsavel: string;
 	membros = {};
 
+	public addMembro(uidUsuario: string) {
+		this.membros[uidUsuario] = true;
+	}
+
+	public getMembros(): string[] {
+		return Object.keys(this.membros);
+	}
 }

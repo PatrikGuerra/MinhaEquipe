@@ -19,7 +19,7 @@ import { Usuario } from './../../models/usuario';
   templateUrl: 'perfil.html',
 })
 export class PerfilPage {
-  usuario: Usuario = new Usuario();
+  private usuario: Usuario = new Usuario();
 
   constructor(
     public navCtrl: NavController,
@@ -33,6 +33,7 @@ export class PerfilPage {
     let loading = this.loadingCtrl.create({
       content: 'Carregando perfil...'
     });
+    
     loading.present();
 
     this.userProvider.getUser().then(userObservable => {

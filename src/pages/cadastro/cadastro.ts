@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
@@ -19,12 +19,13 @@ import { Credencial } from "../../models/credencial";
 })
 export class CadastroPage {
   cadastroForm: FormGroup;
-  credencial: Credencial = new Credencial();
+  private credencial: Credencial = new Credencial();
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
     private formBuilder: FormBuilder,
+    private loadingCtrl: LoadingController,
     private authService: AuthServiceProvider,
     private userService: UserServiceProvider) {
 
@@ -43,21 +44,31 @@ export class CadastroPage {
       position: 'bottom'
     });
 
-    this.authService.criarUsuario(this.credencial).then((data: any) => {
-      data.sendEmailVerification();
+    let loading = this.loadingCtrl.create({
+      content: 'Criando usuário...'
+    })
 
-      this.userService.criarUsuario(data);
+    loading.present();
 
-      toast.setShowCloseButton(true);
-      toast.setMessage('Usuário criado com sucesso. Verifique seu e-mail.');
-      toast.present();
+    console.log(this.credencial)
+    this.authService.criarUsuario(this.credencial).then((firebaseUser: any) => {
+      firebaseUser.sendEmailVerification();
+      console.log(firebaseUser);
 
-      this.authService.sair();
+      this.userService.criarUsuario(this.credencial.email, firebaseUser.uid).then((data) => {
+        toast.setShowCloseButton(true);
+        toast.setMessage('Usuário criado com sucesso. Verifique seu e-mail.');
+        toast.present();
 
-      this.navCtrl.setRoot(LoginPage);
+        this.authService.sair().then((dataSair) => {
+          this.navCtrl.setRoot(LoginPage);
+        });
+      });
+
     }).catch((error: any) => {
       toast.setDuration(3000);
-      console.error(JSON.stringify(error))
+      console.log("Erro:");
+      console.log(error);
 
       if (error.code == 'auth/email-already-in-use') {
         toast.setMessage('O e-mail digitado já está em uso.');
@@ -71,6 +82,8 @@ export class CadastroPage {
 
       toast.present();
     });
+
+    loading.dismiss();
   }
 
 }

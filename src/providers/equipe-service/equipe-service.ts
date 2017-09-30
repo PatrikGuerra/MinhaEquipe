@@ -34,11 +34,19 @@ export class EquipeServiceProvider {
     console.log('Hello EquipeServiceProvider Provider');
   }
 
-  public getAll() {
+  public getAll(usuarioUid: string) {
     return this.userProvider.getuid().then(uid => {
-      return <FirebaseListObservable<Equipe[]>>this.db.list(`${this.basePathEquipes}`);
+      // return <FirebaseListObservable<Equipe[]>>
+      
+      return this.db.list(`${this.basePathEquipes}`, {
+        query: {
+          orderByChild: `membros/${usuarioUid}`,
+          equalTo: true,
+         // orderByKey: true,
+        }
+      });
     });
-  }
+  }usuarioUid
 
   public remove(key: string) {
     return this.db.database.ref(key).remove();
@@ -51,8 +59,8 @@ export class EquipeServiceProvider {
           //Se é Push
           key = this.db.database.ref(this.basePathEquipes).push().key;
           equipe.keyResponsavel = usuarioUid;
+          equipe.addMembro(usuarioUid);
           equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
-          //equipe.
         }
 
         if (imagem) {
