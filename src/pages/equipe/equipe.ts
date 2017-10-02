@@ -3,9 +3,6 @@ import { IonicPage, NavController, NavParams, ToastController, Platform, ActionS
 
 import { Storage } from '@ionic/storage';
 
-//Page
-//import { LoginPage } from "../login/login";
-
 //Modal
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
 
@@ -23,7 +20,7 @@ import { Equipe } from "../../models/equipe";
 export class EquipePage {
   key: string = "";
   equipe: Equipe = new Equipe();
-  imagemBase64: string = "";
+  private imagemBase64: string = "";
 
   constructor(
     public navCtrl: NavController,
@@ -83,7 +80,7 @@ export class EquipePage {
     toast.dismiss();
   }
 
-  menuAlterarImagem() {
+  private menuAlterarImagem() {
     let actionSheet = this.actionsheetCtrl.create({
       buttons: [
         {
@@ -105,7 +102,7 @@ export class EquipePage {
 
     actionSheet.present();
   }
-  camera() {
+  private camera() {
     let loading = this.loadingCtrl.create();
     loading.present();
 
@@ -118,7 +115,7 @@ export class EquipePage {
     
     loading.dismiss();
   }
-  biblioteca() {
+  private biblioteca() {
     let loading = this.loadingCtrl.create();
     loading.present();
 
@@ -132,7 +129,7 @@ export class EquipePage {
     loading.dismiss();
   }
 
-  convidar() {
+  private convidar() {
     this.navCtrl.push(EquipeConvidarPage, {
       equipe: this.equipe
     });

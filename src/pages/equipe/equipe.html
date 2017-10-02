@@ -35,9 +35,8 @@
     <div padding>
       <button ion-button (click)="save()" block>Salvar</button>
     </div>
-  
 
-    <ion-fab right bottom>
+    <ion-fab right bottom *ngIf="key.length > 1" >
       <button ion-fab color="primary" (click)="convidar()"><ion-icon name="person-add"></ion-icon></button>
     </ion-fab>
   </ion-content>
