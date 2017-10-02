@@ -21,6 +21,7 @@ import { Credencial } from "../../models/credencial";
 export class LoginPage {
   loginForm: FormGroup;
   private credencial: Credencial = new Credencial();
+  private storageLoginEmail: string = "loginEmail";
 
   constructor(
     public navCtrl: NavController,
@@ -36,7 +37,7 @@ export class LoginPage {
       senha: ['', Validators.compose([Validators.required])]
     });
 
-    this.storage.get("loginEmail").then((credencialEmail) => {
+    this.storage.get(this.storageLoginEmail).then((credencialEmail) => {
       if (credencialEmail) {
         this.credencial.email = credencialEmail;
       }
@@ -68,7 +69,7 @@ export class LoginPage {
     loading.present();
 
     this.authService.entrar(this.credencial).then((firebaseUser) => {
-      this.storage.set('loginEmail', this.credencial.email);
+      this.storage.set(this.storageLoginEmail, this.credencial.email);
 
       if (!firebaseUser.emailVerified) {
         toast.setMessage("Você deve confirmar seu e-mail.");
