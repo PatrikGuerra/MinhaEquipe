@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Enviar convites</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="conviteForm" novalidate (ngSubmit)="enviar()">
+
+    <ion-list formArrayName="listaEmail">
+      <ion-item *ngFor="let address of conviteForm.controls.listaEmail.controls; let i=index" [formGroupName]="i">
+        <ion-icon name="mail" item-start color="primary"></ion-icon>
+        <ion-input type="email" formControlName="email"></ion-input>
+        <button ion-button item-right color="danger" *ngIf="conviteForm.controls.listaEmail.controls.length > 1" (click)="removerEmail(i)"><ion-icon name="trash"></ion-icon></button>
+      </ion-item>
+    </ion-list>
+
+    <ion-row justify-content-between>
+      <ion-col col-3>
+        <button ion-button icon-only type="button" color="secondary" (click)="adicionarEmail()" block><ion-icon name="add"></ion-icon></button>
+      </ion-col>
+      <ion-col col-3>
+        <button ion-button icon-only type="submit" [disabled]="!conviteForm.valid" block><ion-icon name="send"></ion-icon></button>
+      </ion-col>
+    </ion-row>
+
+  </form>
+</ion-content>

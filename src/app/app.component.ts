@@ -7,7 +7,8 @@ import { AngularFireAuth } from "angularfire2/auth";
 //pages
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from "../pages/login/login";
-import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
+//import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
+//import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 
 @Component({
   templateUrl: 'app.html'

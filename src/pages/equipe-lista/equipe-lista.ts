@@ -36,14 +36,14 @@ export class EquipeListaPage {
           console.log(equipesData);
           //equipesData.sort()
 
-          equipesData.sort(function(a, b){
+          // equipesData.sort(function(a, b){
             
-            if(a.$key < b.$key) return -1;
-            if(a.$key > b.$key) return 1;
-            if(a.timestamp < b.timestamp) return -1;
-            if(a.timestamp >b.timestamp) return 1;
-            return 0;
-          });
+          //   if(a.$key < b.$key) return -1;
+          //   if(a.$key > b.$key) return 1;
+          //   if(a.timestamp < b.timestamp) return -1;
+          //   if(a.timestamp >b.timestamp) return 1;
+          //   return 0;
+          // });
 
           this.equipes = equipesData;
         });
@@ -51,15 +51,14 @@ export class EquipeListaPage {
     });
   }
 
-  private compare(a, b) {
-    if (a.last_nom < b.last_nom)
-      return -1;
-    if (a.last_nom > b.last_nom)
-      return 1;
-    return 0;
-  }
+  // private compare(a, b) {
+  //   if (a.last_nom < b.last_nom)
+  //     return -1;
+  //   if (a.last_nom > b.last_nom)
+  //     return 1;
+  //   return 0;
+  // }
 
-  
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipeListaPage');
   }
@@ -73,16 +72,7 @@ export class EquipeListaPage {
       equipe: equipe
     });
   }
-
   removerEquipe(equipe: Equipe) {
     this.equipeService.remove(equipe.$key);
-  }
-
-
-
-  archive() {
-  }
-  buttonClick() {
-
   }
 }

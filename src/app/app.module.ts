@@ -26,6 +26,8 @@ import { LoginPage } from "../pages/login/login";
 import { PerfilPage } from "../pages/perfil/perfil";
 import { EquipePage } from "../pages/equipe/equipe";
 import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
+import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
+import { ConvitesPage } from "../pages/convites/convites";
 
 //popover
 import { PerfilPopoverPage } from "../pages/perfil-popover/perfil-popover";
@@ -66,8 +68,8 @@ const firebaseConfig = {
       PerfilAlterarSenhaPage,
       EquipePage,
       EquipeListaPage,
-
-      
+      EquipeConvidarPage,
+      ConvitesPage,
   ],
   imports: [
     BrowserModule,
@@ -98,8 +100,8 @@ const firebaseConfig = {
       PerfilAlterarSenhaPage,
       EquipePage,
       EquipeListaPage,
-
-      
+      EquipeConvidarPage,
+      ConvitesPage,
   ],
   providers: [
     StatusBar,

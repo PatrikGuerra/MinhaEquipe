@@ -7,16 +7,10 @@ import { Storage } from '@ionic/storage';
 //import { LoginPage } from "../login/login";
 
 //Modal
-//import { PerfilAlterarEmailPage } from "../perfil-alterar-email/perfil-alterar-email";
+import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
-//import { UserServiceProvider } from "../../providers/user-service/user-service";
-
-
-//Components
-//import { TagsInputComponent } from "../../components/tags-input/tags-input.component";
-
 
 //Models
 import { Equipe } from "../../models/equipe";
@@ -136,5 +130,11 @@ export class EquipePage {
     });
     
     loading.dismiss();
+  }
+
+  convidar() {
+    this.navCtrl.push(EquipeConvidarPage, {
+      equipe: this.equipe
+    });
   }
 }

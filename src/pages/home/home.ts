@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
 
+import { Storage } from '@ionic/storage';
+
 //Pages
 import { LoginPage } from "../login/login";
 import { PerfilPage } from "../perfil/perfil";
 import { EquipeListaPage } from "../equipe-lista/equipe-lista";
+import { ConvitesPage } from "../convites/convites";
 
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
-
-import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-home',
@@ -37,5 +38,9 @@ export class HomePage {
 
   verEquipes() {
     this.navCtrl.push(EquipeListaPage);
+  }
+
+  verConvites() {
+    this.navCtrl.push(ConvitesPage);
   }
 }

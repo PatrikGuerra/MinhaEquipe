@@ -32,16 +32,12 @@
       <ion-datetime displayFormat="YYYY-MM-DD" [(ngModel)]="equipe.dataFim"></ion-datetime>
     </ion-item>
   
-
-  
     <div padding>
       <button ion-button (click)="save()" block>Salvar</button>
     </div>
   
-    <!---
-    <ion-footer padding>
-      <button ion-button (click)="alterarUsuario()" block>Salvar</button>
-      <button ion-button icon-start block color="danger" (click)="confirmarLogout()"><ion-icon name="log-out"></ion-icon>Sair</button>
-    </ion-footer>
-    -->
+
+    <ion-fab right bottom>
+      <button ion-fab color="primary" (click)="convidar()"><ion-icon name="person-add"></ion-icon></button>
+    </ion-fab>
   </ion-content>
