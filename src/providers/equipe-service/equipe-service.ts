@@ -2,21 +2,19 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from "rxjs/Observable";
 
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 import * as firebase from 'firebase';
 
-//Models
-//import { Usuario } from "../../models/usuario";
-
 //Services
 import { UserServiceProvider } from "../user-service/user-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
+import { EquipeConvite } from "../../models/equipeConvite";
 
 @Injectable()
 export class EquipeServiceProvider {
@@ -46,7 +44,7 @@ export class EquipeServiceProvider {
         }
       });
     });
-  }usuarioUid
+  }
 
   public remove(key: string) {
     return this.db.database.ref(key).remove();
@@ -96,6 +94,10 @@ export class EquipeServiceProvider {
     // /usuarios/_UidUsuario_/equipes/_UidEquipe_
 
     return this.db.database.ref().update(updates);
+  }
+
+  public enviarConvites(convite: EquipeConvite) {
+
   }
 
   private uploadImage(imageString: string, uid: string): Promise<any> {

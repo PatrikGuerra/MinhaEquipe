@@ -48,15 +48,15 @@ export class LoginPage {
     console.log('ionViewDidLoad LoginPage');
   }
 
-  criarConta() {
+  private criarConta() {
     this.navCtrl.push(CadastroPage);
   }
 
-  esqueciSenha() {
+  private esqueciSenha() {
     this.navCtrl.push(EsqueciSenhaPage);
   }
 
-  entrar() {
+  private entrar() {
     let toast = this.toastCtrl.create({
        position: 'bottom',
        dismissOnPageChange: true

@@ -1,7 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgForm } from '@angular/forms';
 
 //Pages
 import { LoginPage } from "../login/login";
@@ -19,7 +18,7 @@ import { Credencial } from "../../models/credencial";
 })
 export class CadastroPage {
   cadastroForm: FormGroup;
-  private credencial: Credencial = new Credencial();
+  credencial: Credencial = new Credencial();
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -29,7 +28,7 @@ export class CadastroPage {
     private authService: AuthServiceProvider,
     private userService: UserServiceProvider) {
 
-    this.cadastroForm = formBuilder.group({
+    this.cadastroForm = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required])],
       senha: ['', Validators.compose([Validators.required])]
     });

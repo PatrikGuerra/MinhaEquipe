@@ -29,7 +29,7 @@ export class EsqueciSenhaPage {
     console.log('ionViewDidLoad EsqueciSenhaPage');
   }
 
-  esqueciSenha() {
+  private esqueciSenha() {
     let toast = this.toastCtrl.create({
       duration: 5000,
       position: 'bottom'
