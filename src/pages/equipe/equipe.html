@@ -1,42 +1,46 @@
 <ion-header>
-    <ion-navbar color="primary">
-      <ion-title>Equipe</ion-title>
-    </ion-navbar>
-  </ion-header>
-  
-  <ion-content>
-    <div id="profile-bg"></div>
-  
-    <div id="content">
-      <div id="profile-info" padding-horizontal>
-        <img id="profile-image" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : '../../assets/images/no-image.gif'}}">
-      </div>
-    </div>
-  
-    <div text-center>
-      <button ion-button icon-only (click)="menuAlterarImagem()"><ion-icon name="camera"></ion-icon></button>
-    </div>
-  
-    <ion-item>
-      <ion-label>Nome</ion-label>
-      <ion-input type="text" [(ngModel)]="equipe.nome" name="Nome"></ion-input>
-    </ion-item>
+  <ion-navbar color="primary">
+    <ion-title>Equipe</ion-title>
+  </ion-navbar>
+</ion-header>
 
-    <ion-item>
-      <ion-label>Inicio</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD" [(ngModel)]="equipe.dataInicio"></ion-datetime>
-    </ion-item>
+<ion-content>
+  <div id="profile-bg"></div>
 
-    <ion-item>
-      <ion-label>Final</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD" [(ngModel)]="equipe.dataFim"></ion-datetime>
-    </ion-item>
-  
-    <div padding>
-      <button ion-button (click)="save()" block>Salvar</button>
+  <div id="content">
+    <div id="profile-info" padding-horizontal>
+      <img id="profile-image" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : '../../assets/images/no-image.gif'}}">
     </div>
+  </div>
 
-    <ion-fab right bottom *ngIf="key.length > 1" >
-      <button ion-fab color="primary" (click)="convidar()"><ion-icon name="person-add"></ion-icon></button>
-    </ion-fab>
-  </ion-content>
+  <div text-center>
+    <button ion-button icon-only (click)="menuAlterarImagem()"><ion-icon name="camera"></ion-icon></button>
+  </div>
+
+  <ion-item>
+    <ion-label>Nome</ion-label>
+    <ion-input type="text" [(ngModel)]="equipe.nome" name="Nome"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Inicio</ion-label>
+    <ion-datetime displayFormat="YYYY-MM-DD" [(ngModel)]="equipe.dataInicio"></ion-datetime>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Final</ion-label>
+    <ion-datetime displayFormat="YYYY-MM-DD" [(ngModel)]="equipe.dataFim"></ion-datetime>
+  </ion-item>
+
+  <div padding>
+    <button ion-button (click)="save()" block>Salvar</button>
+  </div>
+
+  <ion-fab right bottom *ngIf="key.length > 1">
+    <button ion-fab color="primary"><ion-icon name="arrow-dropup"></ion-icon></button>
+    <ion-fab-list side="top">
+      <button ion-fab><ion-icon name="person-add" (click)="convidar()"></ion-icon></button>
+      <button ion-fab><ion-icon name="chatboxes" (click)="abrirChat()"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>

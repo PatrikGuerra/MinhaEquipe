@@ -10,6 +10,9 @@ import { LoginPage } from "../pages/login/login";
 //import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 //import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 
+import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
+
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -20,6 +23,7 @@ export class MyApp {
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
+    usuarioService: UsuarioServiceProvider,
     afAuth: AngularFireAuth) {
 
     const authObserver = afAuth.authState.subscribe(user => {
@@ -30,7 +34,7 @@ export class MyApp {
         this.rootPage = LoginPage;
         //authObserver.unsubscribe();
       }
-      authObserver.unsubscribe();
+    //  authObserver.unsubscribe();
     });
 
     platform.ready().then(() => {

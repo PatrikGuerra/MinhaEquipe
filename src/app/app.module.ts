@@ -28,6 +28,7 @@ import { EquipePage } from "../pages/equipe/equipe";
 import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 import { ConvitesPage } from "../pages/convites/convites";
+import { ChatPage } from "../pages/chat/chat";
 
 //popover
 import { PerfilPopoverPage } from "../pages/perfil-popover/perfil-popover";
@@ -40,8 +41,10 @@ import { PerfilAlterarSenhaPage } from "../pages/perfil-alterar-senha/perfil-alt
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { UserServiceProvider } from "../providers/user-service/user-service";
 import { EquipeServiceProvider } from "../providers/equipe-service/equipe-service";
+import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
 
-//Components
+//Componentsdoxygen
+
 //import { IonTagsInputModule } from "../components/ion-tags-input/index";
 import { TagsInputModule } from "../components/tags-input/index";
 
@@ -70,6 +73,7 @@ const firebaseConfig = {
       EquipeListaPage,
       EquipeConvidarPage,
       ConvitesPage,
+      ChatPage
   ],
   imports: [
     BrowserModule,
@@ -102,6 +106,7 @@ const firebaseConfig = {
       EquipeListaPage,
       EquipeConvidarPage,
       ConvitesPage,
+      ChatPage
   ],
   providers: [
     StatusBar,
@@ -111,6 +116,7 @@ const firebaseConfig = {
     AuthServiceProvider,
     UserServiceProvider,
     EquipeServiceProvider,
+    UsuarioServiceProvider,
   ]
 })
 export class AppModule {}

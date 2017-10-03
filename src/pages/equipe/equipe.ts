@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 
 //Modal
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
+import { ChatPage } from "../chat/chat";
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
@@ -131,6 +132,12 @@ export class EquipePage {
 
   private convidar() {
     this.navCtrl.push(EquipeConvidarPage, {
+      equipe: this.equipe
+    });
+  }
+
+  private abrirChat() {
+    this.navCtrl.push(ChatPage, {
       equipe: this.equipe
     });
   }
