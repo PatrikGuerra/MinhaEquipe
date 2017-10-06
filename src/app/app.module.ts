@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { Keyboard } from '@ionic-native/keyboard';
 
 import { MyApp } from './app.component';
 
@@ -28,7 +29,7 @@ import { EquipePage } from "../pages/equipe/equipe";
 import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 import { ConvitesPage } from "../pages/convites/convites";
-import { ChatPage } from "../pages/chat/chat";
+import { ChatMessagePage } from "../pages/chat-message/chat-message";
 
 //popover
 import { PerfilPopoverPage } from "../pages/perfil-popover/perfil-popover";
@@ -41,22 +42,17 @@ import { PerfilAlterarSenhaPage } from "../pages/perfil-alterar-senha/perfil-alt
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { UserServiceProvider } from "../providers/user-service/user-service";
 import { EquipeServiceProvider } from "../providers/equipe-service/equipe-service";
-import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
+import { ConviteServiceProvider } from "../providers/convite-service/convite-service";
+import { ChatServiceProvider } from "../providers/chat-service/chats-service";
 
-//Componentsdoxygen
+import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
 
 //import { IonTagsInputModule } from "../components/ion-tags-input/index";
 import { TagsInputModule } from "../components/tags-input/index";
 
-//Configuracao Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDlEO52-eaJInj1sqL6gdraZ1CV5Cvh150",
-  authDomain: "minha-equipe.firebaseapp.com",
-  databaseURL: "https://minha-equipe.firebaseio.com",
-  projectId: "minha-equipe",
-  storageBucket: "minha-equipe.appspot.com",
-  messagingSenderId: "357623072399"
-};
+import { firebaseConfig } from "./app.constants";
+
+import { ElasticDirective } from "../directives/elastic/elastic";
 
 @NgModule({
   declarations: [
@@ -73,7 +69,8 @@ const firebaseConfig = {
       EquipeListaPage,
       EquipeConvidarPage,
       ConvitesPage,
-      ChatPage
+      ChatMessagePage,
+      ElasticDirective
   ],
   imports: [
     BrowserModule,
@@ -106,10 +103,11 @@ const firebaseConfig = {
       EquipeListaPage,
       EquipeConvidarPage,
       ConvitesPage,
-      ChatPage
+      ChatMessagePage
   ],
   providers: [
     StatusBar,
+    Keyboard,
     SplashScreen,
     Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
@@ -117,6 +115,8 @@ const firebaseConfig = {
     UserServiceProvider,
     EquipeServiceProvider,
     UsuarioServiceProvider,
+    ConviteServiceProvider,
+    ChatServiceProvider
   ]
 })
 export class AppModule {}

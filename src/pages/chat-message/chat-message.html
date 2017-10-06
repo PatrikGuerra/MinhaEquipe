@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Chat</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="messages">
+  <ion-list no-padding *ngIf="usuario">
+    <div *ngFor="let msg of chatMessages; let i = index">
+
+      <fieldset *ngIf="i == 0 || (i > 0) && msg.day != chatMessages[i-1].day">
+        <legend align="center" *ngIf="isToday(msg.timestamp)">
+          Hoje
+        </legend>
+        <legend align="center" *ngIf="!isToday(msg.timestamp)">
+          {{ msg.timestamp | date: "dd/mm/yyyy" }}
+        </legend>
+      </fieldset>
+
+      <ion-item no-lines>
+        <ion-label>
+          <p *ngIf="msg.keyUsuario == usuario.$key">
+            <span class="message-text right">{{ msg.conteudo }}</span>
+            <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
+          </p>
+
+          <p *ngIf="msg.keyUsuario != usuario.$key">
+            <ion-avatar>
+              <img class="user-image" [src]="msg.usuario?.fotoUrl ||  '../../assets/images/no-image.jpg' " />
+            </ion-avatar>
+            <span class="message-text left">{{ msg.conteudo }}</span>
+            <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
+          </p>
+        </ion-label>
+
+        {{ msg.conteudo }}
+      </ion-item>
+
+    </div>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col col-10 no-padding>
+        <ion-textarea elastic type="text" [(ngModel)]="chatText" (keydown.enter)="sendMessage($event);false" rows="1" [placeholder]="'Digite aqui...'"
+          autocapitalize="off" color="dark" block></ion-textarea>
+      </ion-col>
+      <ion-col no-padding text-right col-2>
+        <button ion-button (click)="sendMessage($event)" [disabled]="!chatText" color="primary" block clear icon-only>
+          <ion-icon name="send"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
