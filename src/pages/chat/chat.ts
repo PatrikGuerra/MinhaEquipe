@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, Platform } from 'ionic-angular';
 import { Keyboard } from '@ionic-native/keyboard';
 
-import { ChatServiceProvider } from "../../providers/chat-service/chats-service";
+import { ChatServiceProvider } from "../../providers/chat-service/chat-service";
 
 import { Usuario } from "../../models/usuario";
 import { Equipe } from "../../models/equipe";

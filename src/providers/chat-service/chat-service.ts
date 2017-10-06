@@ -4,8 +4,9 @@ import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable }
 
 import { dataBaseStorage } from "../../app/app.constants";
 
-//Service
 import { UserServiceProvider } from "../user-service/user-service";
+
+import { ChatMensagemData } from './../../models/data/chatMensagemData';
 
 @Injectable()
 export class ChatServiceProvider {
@@ -50,20 +51,8 @@ export class ChatServiceProvider {
   */
 
   sendMessage(usuarioId: string, conteudo: string, equipeId: string) {
-    var mensagem = new Mensagem(usuarioId, conteudo);
+    var mensagem = new ChatMensagemData(usuarioId, conteudo);
 
     return this.db.list(`${dataBaseStorage.Chat}/${equipeId}`).push(mensagem);
   }
-}
-
-export class Mensagem {
-  public constructor(usuarioRemetenteId: string, conteudo: string) {
-    this.keyUsuario = usuarioRemetenteId;
-    this.conteudo = conteudo;
-    this.timestamp = firebase.database.ServerValue.TIMESTAMP;
-  }
-
-  keyUsuario: string;
-  conteudo: string;
-  timestamp?: string | Object;
 }

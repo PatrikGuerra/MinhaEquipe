@@ -43,7 +43,7 @@ import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { UserServiceProvider } from "../providers/user-service/user-service";
 import { EquipeServiceProvider } from "../providers/equipe-service/equipe-service";
 import { ConviteServiceProvider } from "../providers/convite-service/convite-service";
-import { ChatServiceProvider } from "../providers/chat-service/chats-service";
+import { ChatServiceProvider } from "../providers/chat-service/chat-service";
 
 import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
 
