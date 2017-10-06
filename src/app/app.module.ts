@@ -29,7 +29,7 @@ import { EquipePage } from "../pages/equipe/equipe";
 import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 import { ConvitesPage } from "../pages/convites/convites";
-import { ChatMessagePage } from "../pages/chat-message/chat-message";
+import { ChatPage } from "../pages/chat/chat";
 
 //popover
 import { PerfilPopoverPage } from "../pages/perfil-popover/perfil-popover";
@@ -69,7 +69,7 @@ import { ElasticDirective } from "../directives/elastic/elastic";
       EquipeListaPage,
       EquipeConvidarPage,
       ConvitesPage,
-      ChatMessagePage,
+      ChatPage,
       ElasticDirective
   ],
   imports: [
@@ -103,7 +103,7 @@ import { ElasticDirective } from "../directives/elastic/elastic";
       EquipeListaPage,
       EquipeConvidarPage,
       ConvitesPage,
-      ChatMessagePage
+      ChatPage
   ],
   providers: [
     StatusBar,

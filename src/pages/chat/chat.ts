@@ -10,10 +10,10 @@ import { Equipe } from "../../models/equipe";
 import { ElasticDirective } from "../../directives/elastic/elastic";
 
 @Component({
-  selector: 'page-chat-message',
-  templateUrl: 'chat-message.html',
+  selector: 'page-chat',
+  templateUrl: 'chat.html',
 })
-export class ChatMessagePage implements OnInit, OnDestroy {
+export class ChatPage implements OnInit, OnDestroy {
   chatText: string;
   chatMessages: Array<string>;
   textMaxLength: number = 400;
@@ -98,5 +98,4 @@ export class ChatMessagePage implements OnInit, OnDestroy {
   private get scroller(): Element {
     return this.messageContent.querySelector('.scroll-content');
   }
-
 }

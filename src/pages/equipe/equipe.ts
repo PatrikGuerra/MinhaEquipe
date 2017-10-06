@@ -5,7 +5,7 @@ import { Storage } from '@ionic/storage';
 
 //Modal
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
-import { ChatMessagePage } from "../chat-message/chat-message";
+import { ChatPage } from "../chat/chat";
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
@@ -151,7 +151,7 @@ export class EquipePage {
 
         console.log("data ususario ao abrir sa merda")
         console.log(usuarioData)
-        this.navCtrl.push(ChatMessagePage, {
+        this.navCtrl.push(ChatPage, {
           equipe: this.equipe,
           user: usuarioData
         });
