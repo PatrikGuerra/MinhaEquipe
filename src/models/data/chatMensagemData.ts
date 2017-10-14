@@ -1,3 +1,5 @@
+import * as firebase from 'firebase/app';
+
 export class ChatMensagemData {
     public constructor(usuarioRemetenteId: string, conteudo: string) {
       this.keyUsuario = usuarioRemetenteId;
