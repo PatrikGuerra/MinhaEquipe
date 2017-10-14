@@ -41,11 +41,24 @@ export class UserServiceProvider {
     });
   }
 
-  getUsuario(key: string) {
-      return this.db.object(`${dataBaseStorage.Usuario}/${key}`).subscribe(data => {
-        return <FirebaseObjectObservable<Usuario>>data;
-      });
+  public getUsuario(key: string) {
+    return this.db.object(`${dataBaseStorage.Usuario}/${key}`).subscribe(data => {
+      return <FirebaseObjectObservable<Usuario>>data;
+    }, (error: any) => {
+      console.error(error);
+    });
   }
+
+  public getUsuarioByEmail(email: string) {
+    return this.db.list(`${dataBaseStorage.Usuario}`, {
+      query: {
+        orderByChild: `email`,
+        equalTo: email
+      }
+    });
+  }
+
+
 
 
   updateCurrentUser(usuario): Promise<any> {
@@ -191,6 +204,8 @@ export class UserServiceProvider {
   pictureFromLibray() {
     const cameraOptions: CameraOptions = {
       // quality: 50,
+      targetHeight: 500,
+      targetWidth: 500,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,

@@ -4,24 +4,24 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content >
+<ion-content>
+  <ion-list>
+      <ion-item-sliding *ngFor="let convite of convites">
+        <ion-item>
+          <ion-avatar item-start>
+            <!--<img src="{{ convite?.equipe?.fotoUrl ? convite?.equipe?.fotoUrl : '../../assets/images/no-image.gif'}}">-->
+            <img src="{{ convite.equipe?.fotoUrl ? convite.equipe?.fotoUrl : '../../assets/images/no-image.gif'}}">
+          </ion-avatar>
 
-  <ion-list >
-      
-    <button ion-item *ngFor="let convite of convites" >
+          <!--{{ convite?.equipe?.nome }}-->
+          {{ convite.equipe?.nome }}
+        </ion-item>
 
-      <ion-avatar item-start>
-        <img src="{{ convite.equipe?.fotoUrl ? convite.equipe?.fotoUrl : '../../assets/images/no-image.gif'}}">
-      </ion-avatar>
-
-      {{ convite.equipe?.nome }}
-      
-      <button ion-button item-right color="primary" (click)="aceitarConvite(convite)"><ion-icon name="add"></ion-icon></button>
-      <button ion-button item-right color="danger" (click)="recusarConvite(convite)"><ion-icon name="close"></ion-icon></button>
-      
-      <!--<ion-icon item-end *ngIf="equipe.keyResponsavel == usuarioUid" name="star"></ion-icon> -->
-    </button>
-
+        <ion-item-options slide="right">
+          <button ion-button color="primary" (click)="aceitarConvite(convite)"><ion-icon name="checkmark"></ion-icon>Aceitar</button>
+          <button ion-button color="danger" (click)="recusarConvite(convite)"><ion-icon name="close"></ion-icon>Recusar</button>
+        </ion-item-options>
+      </ion-item-sliding>
   </ion-list>
   
 </ion-content>

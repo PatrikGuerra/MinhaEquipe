@@ -14,7 +14,7 @@ import { UserServiceProvider } from "../user-service/user-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
-import { EquipeConvite } from "../../models/equipeConvite";
+//import { EquipeConvite } from "../../models/equipeConvite";
 
 import { dataBaseStorage } from "../../app/app.constants";
 
@@ -31,22 +31,26 @@ export class EquipeServiceProvider {
     console.log('Hello EquipeServiceProvider Provider');
   }
 
-  public getAll(usuarioUid: string) {
-    return this.userProvider.getuid().then(uid => {
+  public getAll(usuarioId: string) {
+    //return this.userProvider.getuid().then(uid => {
       // return <FirebaseListObservable<Equipe[]>>
 
       return this.db.list(`${dataBaseStorage.Equipe}`, {
         query: {
-          orderByChild: `membros/${usuarioUid}`,
+          orderByChild: `membros/${usuarioId}`,
           equalTo: true,
-          // orderByKey: true,
         }
       });
-    });
+   // });
   }
 
   getEquipe(key: string) {
     return <FirebaseObjectObservable<Equipe>>this.db.object(`${dataBaseStorage.Equipe}/${key}`);
+    // return this.db.object(`${dataBaseStorage.Equipe}/${key}`).subscribe(data => {
+    //   return <FirebaseObjectObservable<Equipe>>data;
+    // }, (error: any) => {
+    //   console.error(error);
+    // });
   }
 
 

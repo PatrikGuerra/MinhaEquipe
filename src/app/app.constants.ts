@@ -9,7 +9,8 @@ export const firebaseConfig = {
 
 export const dataBaseStorage = {
 	Chat: 'chats',
-	Convite: 'convites',
 	Equipe: 'equipes',
 	Usuario: 'usuarios',
+	Convite: 'convites',
+	//ConviteUsuarioNovo: 'convitesUsuariosNovos'
 };
