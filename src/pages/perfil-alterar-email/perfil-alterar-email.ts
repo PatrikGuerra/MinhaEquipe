@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 
 //Service
 import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
 //Pages
 import { LoginPage } from "../login/login";
@@ -24,7 +25,8 @@ export class PerfilAlterarEmailPage {
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
-    private userService: UserServiceProvider) {
+    private userService: UserServiceProvider,
+    private authService: AuthServiceProvider) {
 
     this.alterarEmailForm = formBuilder.group({
       novoEmail: ['', Validators.compose([Validators.required])],
@@ -56,13 +58,15 @@ export class PerfilAlterarEmailPage {
 
     this.userService.atualizarEmail(novoEmail, senha).then((data) => {
       alert.setMessage("Você irá receber um e-mail solicitando confirmação de seu endereço.");
-      
+
       loading.dismiss();
 
       alert.onDidDismiss((data) => {
-        this.navCtrl.setRoot(LoginPage);
+        this.authService.sair().then(dataSair => {
+          this.navCtrl.setRoot(LoginPage);
+        });
       });
-       
+
       alert.present();
 
     }).catch((error: any) => {
