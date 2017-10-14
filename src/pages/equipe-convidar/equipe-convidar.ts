@@ -4,7 +4,7 @@ import { NavController, NavParams, LoadingController, ToastController } from 'io
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 //Models
-import { EquipeConvite } from "../../models/equipeConvite";
+import { Equipe } from "../../models/equipe";
 
 //Providers
 import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
@@ -14,8 +14,8 @@ import { ConviteServiceProvider } from "../../providers/convite-service/convite-
   templateUrl: 'equipe-convidar.html',
 })
 export class EquipeConvidarPage {
-  private convite: EquipeConvite = new EquipeConvite();
   public conviteForm: FormGroup;
+  private equipe: Equipe;
 
   constructor(
     public navCtrl: NavController,
@@ -26,11 +26,9 @@ export class EquipeConvidarPage {
     private conviteServiceProvider: ConviteServiceProvider) {
 
     if (this.navParams.data.equipe) {
-      this.convite.equipe = this.navParams.data.equipe;
-
-      console.log("---- EquipeConvidarPage");
-      console.log(this.convite);
-      console.log("---- EquipeConvidarPage");
+      //this.convite.equipe = this.navParams.data.equipe;
+      this.equipe = this.navParams.data.equipe;
+      console.log(this.equipe);
     }
 
     this.conviteForm = this.formBuilder.group({
@@ -38,17 +36,17 @@ export class EquipeConvidarPage {
         this.novoEmail(),
       ])
     });
+    
   }
+  private novoEmail() {
+      return this.formBuilder.group({
+        //https://stackoverflow.com/questions/41166571/email-validation-is-not-working-in-angular-2-form-validation
+        email: new FormControl('', [Validators.required, Validators.pattern(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)])
+      });
+    }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipeConvidarPage');
-  }
-
-  private novoEmail() {
-    return this.formBuilder.group({
-      //https://stackoverflow.com/questions/41166571/email-validation-is-not-working-in-angular-2-form-validation
-      email: new FormControl('', [Validators.required, Validators.pattern(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)])
-    });
   }
 
   private adicionarEmail() {
@@ -73,35 +71,14 @@ export class EquipeConvidarPage {
 
     loading.present();
 
-    this.mapearListaEmail();
-
-    this.conviteServiceProvider.enviarConvites(this.convite).then(data => {
+    var emails: string[] = [];
+    this.conviteForm.value['listaEmail'].forEach(element => {
+      emails.push(element['email']);
+    });
+      
+    this.conviteServiceProvider.enviarConvites(emails, this.equipe.$key).then(data => {
       loading.dismiss();
       toast.present();
-    })
-
-    console.log(this.convite)
-  }
-
-  private mapearListaEmail() {
-    var listaEmail: string[] = [];
-
-    this.conviteForm.value['listaEmail'].forEach(element => {
-      listaEmail.push(this.trim(element['email']));
-    });
-
-    listaEmail = this.uniqueValue(listaEmail);
-
-    this.convite.emails = listaEmail;
-  }
-
-  private trim(str) {
-    return str.replace(/^\s+|\s+$/g, "");
-  }
-
-  private uniqueValue(myArray: any) {
-    return myArray.filter(function (item, pos, self) {
-      return self.indexOf(item) == pos;
     })
   }
 }

@@ -30,34 +30,12 @@ export class EquipeListaPage {
     this.userService.getuid().then((usuarioUid) => {
       this.usuarioUid = usuarioUid;
 
-      this.equipeService.getAll(usuarioUid).then(userObservable => {
-        userObservable.subscribe((equipesData: Equipe[]) => {
-
-          console.log(equipesData);
-          //equipesData.sort()
-
-          // equipesData.sort(function(a, b){
-            
-          //   if(a.$key < b.$key) return -1;
-          //   if(a.$key > b.$key) return 1;
-          //   if(a.timestamp < b.timestamp) return -1;
-          //   if(a.timestamp >b.timestamp) return 1;
-          //   return 0;
-          // });
-
+      this.equipeService.getAll(usuarioUid).subscribe((equipesData: Equipe[]) => {
           this.equipes = equipesData;
         });
       });
-    });
+    //});
   }
-
-  // private compare(a, b) {
-  //   if (a.last_nom < b.last_nom)
-  //     return -1;
-  //   if (a.last_nom > b.last_nom)
-  //     return 1;
-  //   return 0;
-  // }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipeListaPage');
