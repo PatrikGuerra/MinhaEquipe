@@ -34,7 +34,12 @@
 
   <div padding>
     <button ion-button (click)="save()" block>Salvar</button>
+    <button ion-button (click)="convidar()" block icon-only><ion-icon name="person-add"></ion-icon></button>
+    <button ion-button (click)="abrirChat()" block icon-only><ion-icon name="chatboxes"></ion-icon></button>
   </div>
+
+
+
 
   <ion-fab right bottom *ngIf="key.length > 1">
     <button ion-fab color="primary"><ion-icon name="arrow-dropup"></ion-icon></button>

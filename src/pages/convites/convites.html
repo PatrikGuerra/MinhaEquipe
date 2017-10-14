@@ -1,10 +1,27 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>convites</ion-title>
+    <ion-title>Convites</ion-title>
   </ion-navbar>
 </ion-header>
 
+<ion-content >
 
-<ion-content padding>
+  <ion-list >
+      
+    <button ion-item *ngFor="let convite of convites" >
 
+      <ion-avatar item-start>
+        <img src="{{ convite.equipe?.fotoUrl ? convite.equipe?.fotoUrl : '../../assets/images/no-image.gif'}}">
+      </ion-avatar>
+
+      {{ convite.equipe?.nome }}
+      
+      <button ion-button item-right color="primary" (click)="aceitarConvite(convite)"><ion-icon name="add"></ion-icon></button>
+      <button ion-button item-right color="danger" (click)="recusarConvite(convite)"><ion-icon name="close"></ion-icon></button>
+      
+      <!--<ion-icon item-end *ngIf="equipe.keyResponsavel == usuarioUid" name="star"></ion-icon> -->
+    </button>
+
+  </ion-list>
+  
 </ion-content>

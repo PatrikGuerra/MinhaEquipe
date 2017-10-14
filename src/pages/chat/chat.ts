@@ -1,77 +1,101 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, Events, Content, TextInput } from 'ionic-angular';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { IonicPage, NavController, NavParams, LoadingController, Platform } from 'ionic-angular';
+import { Keyboard } from '@ionic-native/keyboard';
 
+import { ChatServiceProvider } from "../../providers/chat-service/chat-service";
+
+import { Usuario } from "../../models/usuario";
+import { Equipe } from "../../models/equipe";
+
+import { ElasticDirective } from "../../directives/elastic/elastic";
 
 @Component({
   selector: 'page-chat',
   templateUrl: 'chat.html',
 })
-export class ChatPage {
+export class ChatPage implements OnInit, OnDestroy {
+  chatText: string;
+  chatMessages: Array<string>;
+  textMaxLength: number = 400;
+  usuario: Usuario;
+  equipe: Equipe;
 
-  @ViewChild(Content) content: Content;
-  @ViewChild('chat_input') messageInput: TextInput;
-  editorMsg = '';
-  
+  private autoScroller: MutationObserver;
+
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
-    public events: Events) {
+    public loadingCtrl: LoadingController,
+    public platform: Platform,
+    public keyboard: Keyboard,
+    public chatService: ChatServiceProvider) {
+
+    this.usuario = navParams.get('user');
+    this.equipe = this.navParams.data.equipe;
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ChatPage');
+    this.chatService.getMessages(this.equipe.$key).subscribe((messages =>
+      this.chatMessages = messages
+    ));
+
+    console.log(this.chatMessages);
+
+    if (this.platform.is('cordova')) {
+      this.keyboard.onKeyboardShow().subscribe(() => this.scrollDown());
+    }
   }
 
-
-
-  sendMsg() {
-    if (!this.editorMsg.trim()) return;
-    /*
-
-    // Mock message
-    const id = Date.now().toString();
-    let newMsg: ChatMessage = {
-        messageId: Date.now().toString(),
-        userId: this.user.id,
-        userName: this.user.name,
-        userAvatar: this.user.avatar,
-        toUserId: this.toUser.id,
-        time: Date.now(),
-        message: this.editorMsg,
-        status: 'pending'
-    };
-
-    this.pushNewMsg(newMsg);
-    this.editorMsg = '';
-
-    // if (!this.showEmojiPicker) {
-    //     this.messageInput.setFocus();
-    // }
-
-    this.chatService.sendMsg(newMsg).then(() => {
-        let index = this.getMsgIndexById(id);
-
-        if (index !== -1) {
-            this.msgList[index].status = 'success';
-        }
-    })*/
+  ngOnInit() {
+    this.autoScroller = this.autoScroll();
   }
 
-  onFocus() {
-   /*  
-    //this.showEmojiPicker = false;
-    */
-    this.content.resize();
-    this.scrollToBottom();
-    
+  ngOnDestroy() {
+    this.autoScroller.disconnect();
   }
 
-  scrollToBottom() {
-    setTimeout(() => {
-        if (this.content.scrollToBottom) {
-            this.content.scrollToBottom();
-        }
-    }, 400)
+  sendMessage(event: any) {
+    var conteudoChat = this.chatText.trim();
+
+    if (!conteudoChat) {
+      return;
+    }
+
+    this.chatText = '';
+    this.chatText = ' ';
+    this.chatText = '';
+
+    this.chatService.sendMessage(this.usuario.$key, conteudoChat, this.equipe.$key).then(() => {
+      this.scrollDown();
+    }, (error) => {
+      console.log(error);
+    });
   }
 
+  isToday(timestamp: number) {
+    return new Date(timestamp).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0);
+  }
+
+  private scrollDown() {
+    this.scroller.scrollTop = this.scroller.scrollHeight;
+  }
+
+  private autoScroll(): MutationObserver {
+    const autoScroller = new MutationObserver(this.scrollDown.bind(this));
+
+    autoScroller.observe(this.messageContent, {
+      childList: true,
+      subtree: true
+    });
+
+    return autoScroller;
+  }
+
+  private get messageContent(): Element {
+    return document.querySelector('.messages');
+  }
+
+  private get scroller(): Element {
+    return this.messageContent.querySelector('.scroll-content');
+  }
 }

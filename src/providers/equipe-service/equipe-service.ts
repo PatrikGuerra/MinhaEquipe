@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from "rxjs/Observable";
 
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -16,13 +16,12 @@ import { UserServiceProvider } from "../user-service/user-service";
 import { Equipe } from "../../models/equipe";
 import { EquipeConvite } from "../../models/equipeConvite";
 
+import { dataBaseStorage } from "../../app/app.constants";
+
 @Injectable()
 export class EquipeServiceProvider {
-  private basePathEquipes: string = '/equipes';
-  private basePathUsuarios: string = '/usuarios';
-
-//https://stackoverflow.com/questions/39788687/cast-firebaselistobservableany-to-firebaselistobservablemycustomtype?rq=1
-//https://stackoverflow.com/questions/40632308/casting-firebaselistobservable-results-to-objects
+  //https://stackoverflow.com/questions/39788687/cast-firebaselistobservableany-to-firebaselistobservablemycustomtype?rq=1
+  //https://stackoverflow.com/questions/40632308/casting-firebaselistobservable-results-to-objects
 
   constructor(
     public db: AngularFireDatabase,
@@ -35,16 +34,21 @@ export class EquipeServiceProvider {
   public getAll(usuarioUid: string) {
     return this.userProvider.getuid().then(uid => {
       // return <FirebaseListObservable<Equipe[]>>
-      
-      return this.db.list(`${this.basePathEquipes}`, {
+
+      return this.db.list(`${dataBaseStorage.Equipe}`, {
         query: {
           orderByChild: `membros/${usuarioUid}`,
           equalTo: true,
-         // orderByKey: true,
+          // orderByKey: true,
         }
       });
     });
   }
+
+  getEquipe(key: string) {
+    return <FirebaseObjectObservable<Equipe>>this.db.object(`${dataBaseStorage.Equipe}/${key}`);
+  }
+
 
   public remove(key: string) {
     return this.db.database.ref(key).remove();
@@ -52,10 +56,10 @@ export class EquipeServiceProvider {
   public save(equipe: Equipe, key: string, imagem: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.userProvider.getuid().then((usuarioUid) => {
-        
+
         if (!key) {
           //Se é Push
-          key = this.db.database.ref(this.basePathEquipes).push().key;
+          key = this.db.database.ref(dataBaseStorage.Equipe).push().key;
           equipe.keyResponsavel = usuarioUid;
           equipe.addMembro(usuarioUid);
           equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
@@ -87,17 +91,13 @@ export class EquipeServiceProvider {
   }
   private update(equipe: Equipe, key: string) {
     var updates = {};
-    updates[`${this.basePathEquipes}/${key}`] = equipe; //equipe
+    updates[`${dataBaseStorage.Equipe}/${key}`] = equipe; //equipe
     // /equipes/_UidEquipe_
 
-    updates[`${this.basePathUsuarios}/${equipe.keyResponsavel}/equipes/${key}`] = true; //Atualiza Usuario administrador
+    updates[`${dataBaseStorage.Usuario}/${equipe.keyResponsavel}/equipes/${key}`] = true; //Atualiza Usuario administrador
     // /usuarios/_UidUsuario_/equipes/_UidEquipe_
 
     return this.db.database.ref().update(updates);
-  }
-
-  public enviarConvites(convite: EquipeConvite) {
-
   }
 
   private uploadImage(imageString: string, uid: string): Promise<any> {
@@ -105,7 +105,7 @@ export class EquipeServiceProvider {
     let parseUpload: any;
 
     return new Promise((resolve, reject) => {
-      storageRef = firebase.storage().ref(`${this.basePathEquipes}/${uid}.jpg`);
+      storageRef = firebase.storage().ref(`${dataBaseStorage.Equipe}/${uid}.jpg`);
       parseUpload = storageRef.putString(imageString, firebase.storage.StringFormat.DATA_URL);
 
       parseUpload.on('state_changed', (_snapshot) => {
@@ -160,4 +160,22 @@ export class EquipeServiceProvider {
       // Handle error
     });*/
   }
+
+  /*
+  public enviarConvites(convite: EquipeConvite) {
+    var updates = {};
+    var keyConvite: string = "";
+
+    for (var index = 0; index < convite.emails.length; index++) {
+      keyConvite = this.db.database.ref(dataBaseStorage.Convite).push().key;
+
+      updates[`${dataBaseStorage.Convite}/${keyConvite}`] = {
+        'email': convite.emails[index],
+        'keyEquipe': convite.equipe.$key
+      }
+    }
+
+    return this.db.database.ref().update(updates)
+  }
+  */
 }

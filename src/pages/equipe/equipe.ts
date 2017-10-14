@@ -9,9 +9,11 @@ import { ChatPage } from "../chat/chat";
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
+import { UserServiceProvider } from "../../providers/user-service/user-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
+import { Usuario } from "../../models/usuario";
 
 
 @Component({
@@ -32,7 +34,8 @@ export class EquipePage {
     public modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private navParams: NavParams,
-    private equipeService: EquipeServiceProvider) {
+    private equipeService: EquipeServiceProvider,
+    private userService: UserServiceProvider) {
 
     if (this.navParams.data.equipe) {
       this.equipe = this.navParams.data.equipe;
@@ -77,7 +80,7 @@ export class EquipePage {
       loading.dismiss();
       console.error(error);
     });
- 
+
     toast.dismiss();
   }
 
@@ -113,7 +116,7 @@ export class EquipePage {
       this.imagemBase64 = "";
       console.error(error);
     });
-    
+
     loading.dismiss();
   }
   private biblioteca() {
@@ -126,19 +129,35 @@ export class EquipePage {
       this.imagemBase64 = "";
       console.error(error);
     });
-    
+
     loading.dismiss();
   }
 
   private convidar() {
+    console.log("abrir Convidar");
     this.navCtrl.push(EquipeConvidarPage, {
       equipe: this.equipe
     });
   }
 
   private abrirChat() {
-    this.navCtrl.push(ChatPage, {
-      equipe: this.equipe
+
+
+    this.userService.getUser().then(userObservable => {
+      userObservable.subscribe((usuarioData: Usuario) => {
+
+
+        console.log(usuarioData)
+
+        console.log("data ususario ao abrir sa merda")
+        console.log(usuarioData)
+        this.navCtrl.push(ChatPage, {
+          equipe: this.equipe,
+          user: usuarioData
+        });
+
+      });
     });
+
   }
 }

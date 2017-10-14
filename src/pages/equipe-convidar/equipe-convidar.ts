@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 //Models
 import { EquipeConvite } from "../../models/equipeConvite";
+
+//Providers
+import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
 
 @Component({
   selector: 'page-equipe-convidar',
@@ -17,7 +20,10 @@ export class EquipeConvidarPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController,
+    private conviteServiceProvider: ConviteServiceProvider) {
 
     if (this.navParams.data.equipe) {
       this.convite.equipe = this.navParams.data.equipe;
@@ -56,8 +62,23 @@ export class EquipeConvidarPage {
   }
 
   private enviar() {
-    let loading
+    let loading = this.loadingCtrl.create({
+      content: `Enviando convites...`
+    })
+    
+    let toast = this.toastCtrl.create({
+      message: `Convites enviados com sucesso.`,
+      duration: 3000
+    })
+
+    loading.present();
+
     this.mapearListaEmail();
+
+    this.conviteServiceProvider.enviarConvites(this.convite).then(data => {
+      loading.dismiss();
+      toast.present();
+    })
 
     console.log(this.convite)
   }
