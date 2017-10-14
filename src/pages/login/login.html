@@ -8,12 +8,12 @@
   <form [formGroup]="loginForm">
     <ion-item>
       <ion-label floating>E-mail</ion-label>
-      <ion-input type="email" formControlName="email" [(ngModel)]="credencial.email"></ion-input>
+      <ion-input type="email" formControlName="email" maxlength="320" [(ngModel)]="credencial.email"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label floating>Senha</ion-label>
-      <ion-input type="password" formControlName="senha" [(ngModel)]="credencial.senha"></ion-input>
+      <ion-input type="password" formControlName="senha" minlength="8" [(ngModel)]="credencial.senha"></ion-input>
     </ion-item>
 
     <div padding-horizontal padding-top>

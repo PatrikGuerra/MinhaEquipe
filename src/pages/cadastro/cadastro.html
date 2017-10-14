@@ -1,3 +1,7 @@
+<!--
+  https://gsuite-developers.googleblog.com/2011/03/changes-to-minimum-password-length-for.html
+  https://support.google.com/a/answer/139399?hl=en
+-->
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>Cadastro</ion-title>
@@ -12,12 +16,12 @@
   <form [formGroup]="cadastroForm">
     <ion-item>
       <ion-label floating>E-mail</ion-label>
-      <ion-input type="text" formControlName="email" [(ngModel)]="credencial.email"></ion-input>
+      <ion-input type="text" maxlength="320" formControlName="email" [(ngModel)]="credencial.email"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label floating>Senha</ion-label>
-      <ion-input type="password" formControlName="senha" [(ngModel)]="credencial.senha"></ion-input>
+      <ion-input type="password" minlength="8" formControlName="senha" [(ngModel)]="credencial.senha"></ion-input>
     </ion-item>
 
     <div padding>

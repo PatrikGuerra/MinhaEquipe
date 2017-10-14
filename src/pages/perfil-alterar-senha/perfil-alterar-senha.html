@@ -11,17 +11,17 @@
   <form [formGroup]="alterarSenhaForm">
     <ion-item>
       <ion-label floating>Senha atual</ion-label>
-      <ion-input type="password" formControlName="senhaAtual"></ion-input>
+      <ion-input type="password" minlength="8" formControlName="senhaAtual"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label floating>Nova senha</ion-label>
-      <ion-input type="password" formControlName="novaSenha"></ion-input>
+      <ion-input type="password" minlength="8" formControlName="novaSenha"></ion-input>
     </ion-item>
 
    <ion-item>
       <ion-label floating>Confirmar nova senha</ion-label>
-      <ion-input type="password" formControlName="novaSenhaConfirmar"></ion-input>
+      <ion-input type="password" minlength="8" formControlName="novaSenhaConfirmar"></ion-input>
     </ion-item>
 <!--
       <div padding *ngIf="alterarSenhaForm.controls.novaSenhaConfirmar.touched && alterarSenhaForm.hasError('diferente')" >
