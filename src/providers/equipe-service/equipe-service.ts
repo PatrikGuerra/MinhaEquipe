@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from "rxjs/Observable";
 
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+import { dataBaseStorage } from "../../app/app.constants";
 
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -14,9 +15,7 @@ import { UserServiceProvider } from "../user-service/user-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
-//import { EquipeConvite } from "../../models/equipeConvite";
 
-import { dataBaseStorage } from "../../app/app.constants";
 
 @Injectable()
 export class EquipeServiceProvider {
@@ -32,31 +31,22 @@ export class EquipeServiceProvider {
   }
 
   public getAll(usuarioId: string) {
-    //return this.userProvider.getuid().then(uid => {
-      // return <FirebaseListObservable<Equipe[]>>
-
-      return this.db.list(`${dataBaseStorage.Equipe}`, {
-        query: {
-          orderByChild: `membros/${usuarioId}`,
-          equalTo: true,
-        }
-      });
-   // });
+    return this.db.list(`${dataBaseStorage.Equipe}`, {
+      query: {
+        orderByChild: `membros/${usuarioId}`,
+        equalTo: true,
+      }
+    });
   }
 
   getEquipe(key: string) {
     return <FirebaseObjectObservable<Equipe>>this.db.object(`${dataBaseStorage.Equipe}/${key}`);
-    // return this.db.object(`${dataBaseStorage.Equipe}/${key}`).subscribe(data => {
-    //   return <FirebaseObjectObservable<Equipe>>data;
-    // }, (error: any) => {
-    //   console.error(error);
-    // });
   }
-
 
   public remove(key: string) {
     return this.db.database.ref(key).remove();
   }
+
   public save(equipe: Equipe, key: string, imagem: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.userProvider.getuid().then((usuarioUid) => {
@@ -164,22 +154,4 @@ export class EquipeServiceProvider {
       // Handle error
     });*/
   }
-
-  /*
-  public enviarConvites(convite: EquipeConvite) {
-    var updates = {};
-    var keyConvite: string = "";
-
-    for (var index = 0; index < convite.emails.length; index++) {
-      keyConvite = this.db.database.ref(dataBaseStorage.Convite).push().key;
-
-      updates[`${dataBaseStorage.Convite}/${keyConvite}`] = {
-        'email': convite.emails[index],
-        'keyEquipe': convite.equipe.$key
-      }
-    }
-
-    return this.db.database.ref().update(updates)
-  }
-  */
 }
