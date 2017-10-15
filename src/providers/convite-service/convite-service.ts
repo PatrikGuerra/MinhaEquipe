@@ -5,7 +5,6 @@ import { Observable } from "rxjs/Observable";
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 import * as firebase from 'firebase';
-
 import { dataBaseStorage } from "../../app/app.constants";
 
 //Services
@@ -34,9 +33,8 @@ export class ConviteServiceProvider {
 
   //https://github.com/angular/angularfire2/issues/708
 
-  //ok
   public enviarConvites(listaEmails: string[], equipeId: string) {
-    listaEmails = this.tratarListaDeEmails(listaEmails);//ok
+    listaEmails = this.tratarListaDeEmails(listaEmails);
 
     var listaKeyUsuarios = [];
     var listaEmailsNaoCadastrados = [];
@@ -69,7 +67,7 @@ export class ConviteServiceProvider {
       });
     });
   }
-  //ok
+
   private buscarUsuariosPorEmail(listaEmails: string[], listaKeyUsuarios: any[], listaEmailsNaoCadastrados: string[]) {
     var promises = [];
 
@@ -93,7 +91,7 @@ export class ConviteServiceProvider {
 
     return Promise.all(promises);
   }
-  //ok
+
   private getConvitesEquipe(equipeId: string) {
     return this.db.list(`${dataBaseStorage.Convite}`, {
       query: {
@@ -102,7 +100,7 @@ export class ConviteServiceProvider {
       }
     });
   }
-  //ok
+
   private getKeyConvitesExistentes(equipeId: string, listaUsuariosKey: string[], listaEmails: string[]): Promise<any> {
     var keys: string[] = [];
 
@@ -118,7 +116,7 @@ export class ConviteServiceProvider {
       });
     });
   }
-  //ok
+
   private removerConvitesExistentes(equipeId: string, listaUsuariosKey: string[], listaEmails: string[]) {
     var promises = [];
 
@@ -135,7 +133,7 @@ export class ConviteServiceProvider {
     })
   }
 
-  public convites(usuarioId: string): FirebaseListObservable<ConviteUsuario[]> {//: Promise<any> {
+  public meusConvites(usuarioId: string): FirebaseListObservable<ConviteUsuario[]> {
     return <FirebaseListObservable<ConviteUsuario[]>>this.db.list(`${dataBaseStorage.Convite}`, {
       query: {
         orderByChild: `keyUsuario`,
@@ -152,41 +150,68 @@ export class ConviteServiceProvider {
     })
   }
 
-  private excluirConvite(keyConvite: string) {
-    var cv = this.db.database.ref(`${dataBaseStorage.Convite}/${keyConvite}`);
-    return cv.remove();
+  private excluirConvite(conviteId: string) {
+    return this.db.object(`${dataBaseStorage.Convite}/${conviteId}`).remove().then(data => {
+      return data;
+    });
   }
 
-  public recusarConvite(convite: any) {
-    return this.excluirConvite(convite.$key)
+  public recusarConvite(convite: ConviteUsuario) {
+    return this.excluirConvite(convite.$key).then(data => {
+      return data;
+    });
   }
 
-  public aceitarConvite(convite: any) {
-    console.log(convite);
+  public aceitarConvite(convite: ConviteUsuario) {
+    var updates = {};
+    updates[`${dataBaseStorage.Equipe}/${convite.keyEquipe}/membros/${convite.keyUsuario}`] = true
+    // /equipes
+    // /-KvRuD-alrojFi8PkGwW
+    // /membros
+    // /UGn4OuOO5GTPO7ZeI5xmqyM3yV92
 
-    this.userProvider.getUser().then(userObservable => {
-      userObservable.subscribe((usuarioData: Usuario) => {
+    updates[`${dataBaseStorage.Usuario}/${convite.keyUsuario}/equipes/${convite.keyEquipe}`] = true;
+    // /usuarios
+    // /UGn4OuOO5GTPO7ZeI5xmqyM3yV92
+    // /equipes
+    // /-KvRuD-alrojFi8PkGwW
 
-        var equipee: Equipe = convite.equipe
-
-        var updates = {};
-        updates[`${dataBaseStorage.Equipe}/${equipee.$key}/membros/${usuarioData.$key}`] = true
-        // /equipes
-        // /-KvRuD-alrojFi8PkGwW
-        // /membros
-        // /UGn4OuOO5GTPO7ZeI5xmqyM3yV92
-
-        updates[`${dataBaseStorage.Usuario}/${usuarioData.$key}/equipes/${equipee.$key}`] = true;
-        // /usuarios
-        // /UGn4OuOO5GTPO7ZeI5xmqyM3yV92
-        // /equipes
-        // /-KvRuD-alrojFi8PkGwW
-
-        return this.db.database.ref().update(updates).then((data) => {
-          this.excluirConvite(convite.$key)
-        });
-
+    return this.db.database.ref().update(updates).then((data) => {
+      return this.excluirConvite(convite.$key).then(excluirConviteData => {
+        return excluirConviteData;
       });
+    });
+  }
+
+  private convitesDataPorEmail(email: string): FirebaseListObservable<ConviteEquipeData[]> {
+    return <FirebaseListObservable<ConviteUsuario[]>>this.db.list(`${dataBaseStorage.Convite}`, {
+      query: {
+        orderByChild: `email`,
+        equalTo: email
+      }
+    });
+  }
+
+  public atualizarKeyUsuarioDosConvites(email: string, usuarioId: string) {
+    return new Promise((resolve, reject) => {
+
+      this.convitesDataPorEmail(email).subscribe((convites) => {
+        var updates = {};
+
+        convites.forEach(convite => {
+          convite.email = '';
+          convite.keyUsuario = usuarioId;
+
+          updates[`${dataBaseStorage.Convite}/${convite.$key}`] = convite;
+        })
+
+        this.db.database.ref().update(updates).then(data => {
+          resolve(data);
+        }).catch(error => {
+          reject(error);
+        });
+      })
+
     });
   }
 

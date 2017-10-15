@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 
-//Provider
 import { UserServiceProvider } from "../../providers/user-service/user-service";
 import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
 
@@ -17,54 +16,65 @@ export class ConvitesPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController,
     private conviteService: ConviteServiceProvider,
     private userService: UserServiceProvider) {
 
+    let loading = this.loadingCtrl.create({
+      content: 'Carregando convites...'
+    });
+
+    loading.present();
+
     this.userService.getuid().then((usuarioUid) => {
-      this.conviteService.convites(usuarioUid).subscribe((convitesData: ConviteUsuario[]) => {
+      this.conviteService.meusConvites(usuarioUid).subscribe((convitesData: ConviteUsuario[]) => {
         this.convites = convitesData;
+
+        loading.dismiss();
       });
     });
   }
 
-  // private carregar() {
-  //   this.conviteService.convites().then(data => {
-  //     this.convites = data
-  //     console.log(data)
-  //   });
-  // }
-
   ionViewDidLoad() {
-    //this.carregar();
     console.log('ionsViewDidLoad ConvitesPage');
-
-    // this.conviteService.convites().then((data) => {
-    //   console.log(data)
-    // });
-    //console.log()
   }
 
   private recusarConvite(convite: ConviteUsuario) {
-    // this.conviteService.recusarConvite(convite);
+    let loading = this.loadingCtrl.create();
 
-    // console.log(convite);
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom',
+      message: `Você recusou o convite da equipe '${convite.equipe.nome}'`
+    });
 
-    // this.convites.forEach((element, index) => {
-    //   if (element.$key == convite.$key) {
-    //     this.convites.splice(index, 1);
-    //   }
-    // });
+    loading.present();
+
+    this.conviteService.recusarConvite(convite).then(data => {
+      toast.present();
+      loading.dismiss();
+    });
   }
 
   private aceitarConvite(convite: ConviteUsuario) {
-    // this.conviteService.aceitarConvite(convite);
+    let loading = this.loadingCtrl.create();
 
-    // this.convites.forEach((element, index) => {
-    //   if (element.$key == convite.$key) {
-    //     this.convites.splice(index, 1);
-    //   }
-    // });
-    // console.log(convite);
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom',
+      message: `Você entrou na equipe '${convite.equipe.nome}'`
+    });
+
+    loading.present();
+
+    this.conviteService.aceitarConvite(convite).then(data => {
+      toast.present();
+      loading.dismiss();
+    });
   }
 
+  isToday(timestamp: number) {
+    return new Date(timestamp).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0);
+  }
 }

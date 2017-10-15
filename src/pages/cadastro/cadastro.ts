@@ -8,6 +8,7 @@ import { LoginPage } from "../login/login";
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
 
 //Models
 import { Credencial } from "../../models/credencial";
@@ -26,7 +27,8 @@ export class CadastroPage {
     private formBuilder: FormBuilder,
     private loadingCtrl: LoadingController,
     private authService: AuthServiceProvider,
-    private userService: UserServiceProvider) {
+    private userService: UserServiceProvider,
+    private conviteProvider: ConviteServiceProvider) {
 
     this.cadastroForm = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required])],
@@ -49,12 +51,13 @@ export class CadastroPage {
 
     loading.present();
 
-    console.log(this.credencial)
     this.authService.criarUsuario(this.credencial).then((firebaseUser: any) => {
       firebaseUser.sendEmailVerification();
-      console.log(firebaseUser);
 
       this.userService.criarUsuario(this.credencial.email, firebaseUser.uid).then((data) => {
+
+        this.conviteProvider.atualizarKeyUsuarioDosConvites(this.credencial.email, firebaseUser.uid);
+
         toast.setShowCloseButton(true);
         toast.setMessage('Usuário criado com sucesso. Verifique seu e-mail.');
         toast.present();
@@ -63,11 +66,8 @@ export class CadastroPage {
           this.navCtrl.setRoot(LoginPage);
         });
       });
-
     }).catch((error: any) => {
       toast.setDuration(3000);
-      console.log("Erro:");
-      console.log(error);
 
       if (error.code == 'auth/email-already-in-use') {
         toast.setMessage('O e-mail digitado já está em uso.');
@@ -84,5 +84,4 @@ export class CadastroPage {
 
     loading.dismiss();
   }
-
 }

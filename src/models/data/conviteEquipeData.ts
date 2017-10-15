@@ -1,6 +1,8 @@
 import * as firebase from 'firebase/app';
 
 export class ConviteEquipeData {
+    $key?: string;
+    
     email?: string; //Quando o emial é de um usuário nao cadastrado
     keyUsuario?: string; //quando á um usuário cadastrado
     timestamp?: string | Object;
@@ -19,4 +21,3 @@ export class ConviteEquipeData {
         this.timestamp = firebase.database.ServerValue.TIMESTAMP;
     }
 }
-//convites/key/
