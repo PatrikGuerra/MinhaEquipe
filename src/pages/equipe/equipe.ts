@@ -141,23 +141,44 @@ export class EquipePage {
   }
 
   private abrirChat() {
-
-
     this.userService.getUser().then(userObservable => {
       userObservable.subscribe((usuarioData: Usuario) => {
 
-
-        console.log(usuarioData)
-
-        console.log("data ususario ao abrir sa merda")
-        console.log(usuarioData)
         this.navCtrl.push(ChatPage, {
           equipe: this.equipe,
-          user: usuarioData
+          usuario: usuarioData
         });
 
       });
     });
-
   }
+
+  /*
+  private dataInicioMudou(value) {
+    //(ionChange)="dataInicioMudou($event)"
+    console.clear();
+
+    console.log("-----------")
+    console.log("this.equipe")
+    console.log(this.equipe)
+    console.log("-----------")
+    console.log("value")
+    console.log(value)
+    console.log("-----------")
+    var novaData = new Date(value.year, value.month, value.day, value.hour, value.minute, 0, 0)
+    console.log("new Date(value)")
+    console.log(novaData)
+    console.log("-----------")
+    console.log("novaData.toString()")
+    console.log(novaData.toString())
+    console.log("-----------")
+    console.log("novaData.toISOString()")
+    console.log(novaData.toISOString())
+
+    if (!this.equipe.dataFim) {
+      this.equipe.dataFim = novaData.toISOString();
+    }
+    //  if (!this.equipe.$key && ) {}
+  }
+  */
 }

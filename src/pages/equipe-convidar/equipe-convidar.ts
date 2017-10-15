@@ -77,6 +77,7 @@ export class EquipeConvidarPage {
     this.conviteServiceProvider.enviarConvites(emails, this.equipe.$key).then(data => {
       loading.dismiss();
       toast.present();
+      this.navCtrl.pop();
     })
   }
 }

@@ -30,7 +30,7 @@ export class ChatPage implements OnInit, OnDestroy {
     public keyboard: Keyboard,
     public chatService: ChatServiceProvider) {
 
-    this.usuario = navParams.get('user');
+    this.usuario = navParams.get('usuario');
     this.equipe = this.navParams.data.equipe;
   }
 
@@ -38,8 +38,6 @@ export class ChatPage implements OnInit, OnDestroy {
     this.chatService.getMessages(this.equipe.$key).subscribe((messages =>
       this.chatMessages = messages
     ));
-
-    console.log(this.chatMessages);
 
     if (this.platform.is('cordova')) {
       this.keyboard.onKeyboardShow().subscribe(() => this.scrollDown());

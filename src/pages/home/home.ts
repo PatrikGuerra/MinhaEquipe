@@ -24,12 +24,9 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    console.log("HomePage");
-
     this.storage.get("uid").then(uuid => {
       console.log(uuid)
     })
-    console.log(this.storage.get("uid"))
   }
 
   verPerfil() {
