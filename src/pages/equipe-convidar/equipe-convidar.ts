@@ -26,9 +26,7 @@ export class EquipeConvidarPage {
     private conviteServiceProvider: ConviteServiceProvider) {
 
     if (this.navParams.data.equipe) {
-      //this.convite.equipe = this.navParams.data.equipe;
       this.equipe = this.navParams.data.equipe;
-      console.log(this.equipe);
     }
 
     this.conviteForm = this.formBuilder.group({
@@ -36,14 +34,14 @@ export class EquipeConvidarPage {
         this.novoEmail(),
       ])
     });
-    
+
   }
   private novoEmail() {
-      return this.formBuilder.group({
-        //https://stackoverflow.com/questions/41166571/email-validation-is-not-working-in-angular-2-form-validation
-        email: new FormControl('', [Validators.required, Validators.pattern(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)])
-      });
-    }
+    return this.formBuilder.group({
+      //https://stackoverflow.com/questions/41166571/email-validation-is-not-working-in-angular-2-form-validation
+      email: new FormControl('', [Validators.required, Validators.pattern(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)])
+    });
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipeConvidarPage');
@@ -63,7 +61,7 @@ export class EquipeConvidarPage {
     let loading = this.loadingCtrl.create({
       content: `Enviando convites...`
     })
-    
+
     let toast = this.toastCtrl.create({
       message: `Convites enviados com sucesso.`,
       duration: 3000
@@ -75,7 +73,7 @@ export class EquipeConvidarPage {
     this.conviteForm.value['listaEmail'].forEach(element => {
       emails.push(element['email']);
     });
-      
+
     this.conviteServiceProvider.enviarConvites(emails, this.equipe.$key).then(data => {
       loading.dismiss();
       toast.present();

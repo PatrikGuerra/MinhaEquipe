@@ -33,16 +33,14 @@ export class PerfilPage {
     let loading = this.loadingCtrl.create({
       content: 'Carregando perfil...'
     });
-    
+
     loading.present();
 
     this.userProvider.getUser().then(userObservable => {
       userObservable.subscribe((usuarioData: Usuario) => {
-        loading.dismiss();
-
-        console.log(usuarioData)
-
         this.usuario = usuarioData;
+
+        loading.dismiss();
 
         if (!this.usuario.tags) {
           this.usuario.tags = [];
@@ -142,3 +140,4 @@ export class PerfilPage {
     });
   }
 }
+ 

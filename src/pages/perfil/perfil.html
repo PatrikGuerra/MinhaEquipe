@@ -35,10 +35,8 @@
   <div padding-horizontal padding-top>
     <tags-input [maxWordLength]="10" [maxTags]="5" [allowDuplicates]="false" [duplicatesRestrictionMsg]=" moo" [(ngModel)]="usuario.tags"></tags-input>
   </div>
-</ion-content>
 
-<ion-footer no-shadow>
-    <ion-toolbar position="bottom">
-      <button ion-button full>Button</button>
-    </ion-toolbar>
-  </ion-footer>
+  <div padding>
+    <button ion-button full (click)="alterarUsuario()">Salvar</button>
+  </div>
+</ion-content>

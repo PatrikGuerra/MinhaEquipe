@@ -9,11 +9,13 @@
     <button ion-button block color="primary" (click)="novaEquipe()">+</button>
   </div>
 
+  <ion-card *ngIf="equipes.length == 0">
+    <ion-card-content>
+      Parece que você está em nenhuma equipe...
+    </ion-card-content>
+  </ion-card>
 
-
-
-  <ion-list padding-right>
-
+  <ion-list *ngIf="equipes.length > 0">
     <button ion-item *ngFor="let equipe of equipes" (click)="editarEquipe(equipe)">
     <!--<ion-item *ngFor="let equipe of equipes" (click)="editarEquipe(equipe)">-->
       <ion-avatar item-start>
@@ -27,12 +29,5 @@
      <!--</ion-item>-->
      <ion-icon item-end *ngIf="equipe.keyResponsavel == usuarioUid" name="star"></ion-icon>
    </button>
-
   </ion-list>
-  <!--
-  <ion-infinite-scroll [hidden]="!activities.stillHaveEvents" (ionInfinite)="doInfinite($event)"> 
-    <ion-infinite-scroll-content loadingSpinner="dots">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-  -->
 </ion-content>
