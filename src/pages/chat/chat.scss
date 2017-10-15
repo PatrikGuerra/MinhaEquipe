@@ -1,42 +1,56 @@
 page-chat {
+	font-size: 14px;
+	font-family: inherit;
+	
     ion-content {
 		ion-list {
 			margin: 0 !important;
-
+			
 			fieldset {
+				font-size: 12px;
 				border: none;
-				border-top: 0.55px solid #c8c7cc !important;
-				margin-top: 24px !important;
+				border-top: 0.55px solid #F1F0F0 !important;
+				margin-top: 10px; //fix
+			}
+			.margem  {
+				margin: 5px 8px  5px 0px;
 			}
 		}
 
-
 		ion-avatar {
 			max-width: 32px;
-			margin-bottom: -24px;
+			margin-bottom: -40px;
 			align-items: flex-start;
-
-			.user-image
-			{
-				border-radius: 50%;
+			
+			.user-image {
+				width: 32px;
+				height: 32px;
 			}
 		}
 
 		.message-text {
 			display: inline-block;
-			padding: 8px;
-			border-radius: 4px;
-			max-width: 180px;
-			font-size: 13px;
-			font-family: Lato, "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
-			line-height: 20px;
+			padding: 5px 8px 6px;
+			border-radius: 12px;
+			max-width: 55%;
+			//line-height: 20px;
 			white-space: normal;
-			-webkit-box-sizing: border-box;
+			//-webkit-box-sizing: border-box;
 			box-sizing: border-box;
 
+			.author{
+				display:block;
+				font-weight: bold;
+				width: 100%;
+
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
+			
 			&.left {
-				background-color: #a7e4ed;
-				color: #444;
+				background-color: #F1F0F0;
+				color: #717479;
 				float: left !important;
 				margin-left: 46px;
 			}
@@ -49,13 +63,13 @@ page-chat {
 				height: 0;
 				border-width: 7px 14px 7px 0;
 				border-style: solid;
-				border-color: transparent #a7e4ed transparent;
+				border-color: transparent #F1F0F0 transparent;
 			}
 
 			&.right {
-				background-color: #d7e4ed;
+				background-color: #4080FF;
 				margin-right: 54px;
-				color: #444;
+				color: #fff;
 				float: right !important;
 			}
 
@@ -67,7 +81,7 @@ page-chat {
 				height: 0;
 				border-width: 7px 0 7px 14px;
 				border-style: solid;
-				border-color: transparent #d7e4ed transparent;
+				border-color: transparent #4080FF transparent;
 			}
 		}
 
@@ -93,8 +107,6 @@ page-chat {
             font-style: italic;
             font-size: 10px !important;
         }
-
-
 
         textarea {
             padding: 0 8px !important;

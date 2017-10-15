@@ -4,10 +4,11 @@ import { Observable } from "rxjs/Observable";
 
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 
+import * as firebase from 'firebase';
+import { dataBaseStorage } from "../../app/app.constants";
+
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-
-import * as firebase from 'firebase';
 
 //Models
 import { Usuario } from "../../models/usuario";
@@ -16,11 +17,8 @@ import { Credencial } from "../../models/credencial";
 //Services
 import { AuthServiceProvider } from "../auth-service/auth-service";
 
-import { dataBaseStorage } from "../../app/app.constants";
-
 @Injectable()
 export class UserServiceProvider {
-  private usuario: FirebaseObjectObservable<Usuario>;
 
   constructor(
     public db: AngularFireDatabase,
@@ -42,11 +40,7 @@ export class UserServiceProvider {
   }
 
   public getUsuario(key: string) {
-    return this.db.object(`${dataBaseStorage.Usuario}/${key}`).subscribe(data => {
-      return <FirebaseObjectObservable<Usuario>>data;
-    }, (error: any) => {
-      console.error(error);
-    });
+    return this.db.object(`${dataBaseStorage.Usuario}/${key}`);
   }
 
   public getUsuarioByEmail(email: string) {
@@ -57,9 +51,6 @@ export class UserServiceProvider {
       }
     });
   }
-
-
-
 
   updateCurrentUser(usuario): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -160,7 +151,6 @@ export class UserServiceProvider {
       });
     });
   }
-
 
   uploadImage(imageString: string, uid: string): Promise<any> {
     let storageRef: any;

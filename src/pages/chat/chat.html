@@ -18,7 +18,7 @@
       </fieldset>
 
       <ion-item no-lines>
-        <ion-label>
+        <ion-label class="margem">
           <p *ngIf="msg.keyUsuario == usuario.$key">
             <span class="message-text right">{{ msg.conteudo }}</span>
             <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
@@ -28,7 +28,10 @@
             <ion-avatar>
               <img class="user-image" [src]="msg.usuario?.fotoUrl ||  '../../assets/images/no-image.jpg' " />
             </ion-avatar>
-            <span class="message-text left">{{ msg.conteudo }}</span>
+            <span class="message-text left">
+              <span class="author">{{ msg.usuario?.name || msg.usuario?.email }}</span>
+              {{ msg.conteudo }}
+            </span>
             <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
           </p>
         </ion-label>

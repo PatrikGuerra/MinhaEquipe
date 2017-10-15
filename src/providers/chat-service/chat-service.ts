@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase/app';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 
+import * as firebase from 'firebase/app';
 import { dataBaseStorage } from "../../app/app.constants";
 
+//Services
 import { UserServiceProvider } from "../user-service/user-service";
 
+//Models
+import { Usuario } from "../../models/usuario";
 import { ChatMensagemData } from './../../models/data/chatMensagemData';
 
 @Injectable()
@@ -24,16 +27,18 @@ export class ChatServiceProvider {
         item.day = new Date(item.timestamp || Date.now()).getDate();
 
         if (item.keyUsuario) {
-          item.usuario = this.userService.getUsuario(item.keyUsuario);
+          this.userService.getUsuario(item.keyUsuario).subscribe(data => {
+            item.usuario = <FirebaseObjectObservable<Usuario>>data;
+          });
         }
 
         return item;
       }));
   }
 
-  /*
-  getLastMessages(keyEquipe: string, count: number = 5) {
-    return this.db.list(`${dataBaseStorage.Chat}/${keyEquipe}`, {
+
+  getLastMessages(equipeId: string, count: number = 5) {
+    return this.db.list(`${dataBaseStorage.Chat}/${equipeId}`, {
       query: {
         limitToLast: count,
         orderByPriority: true
@@ -41,18 +46,18 @@ export class ChatServiceProvider {
     }).subscribe(data => {
       data.map(messages => messages.reverse().map((item) => {
         if (item.keyUsuario) {
-          item.usuario = this.userService.getUsuario(item.keyUsuario);
+          this.userService.getUsuario(item.keyUsuario).subscribe(data => {
+            item.usuario = <FirebaseObjectObservable<Usuario>>data;
+          });
         }
 
         return item;
       }));
     })
   }
-  */
 
   sendMessage(usuarioId: string, conteudo: string, equipeId: string) {
     var mensagem = new ChatMensagemData(usuarioId, conteudo);
-
     return this.db.list(`${dataBaseStorage.Chat}/${equipeId}`).push(mensagem);
   }
 }
