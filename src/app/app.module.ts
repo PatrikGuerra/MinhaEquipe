@@ -30,6 +30,12 @@ import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 import { ConvitesPage } from "../pages/convites/convites";
 import { ChatPage } from "../pages/chat/chat";
+import { LocalPage } from "../pages/local/local";
+import { LocalMapaPage } from "../pages/local-mapa/local-mapa";
+import { MapsAutoCompletePage } from "../pages/maps-auto-complete/maps-auto-complete";
+import { LocaisPage } from "../pages/locais/locais";
+//Maps
+import { Geolocation } from '@ionic-native/geolocation';
 
 //popover
 import { PerfilPopoverPage } from "../pages/perfil-popover/perfil-popover";
@@ -53,6 +59,7 @@ import { TagsInputModule } from "../components/tags-input/index";
 import { firebaseConfig } from "./app.constants";
 
 import { ElasticDirective } from "../directives/elastic/elastic";
+import { LocalServiceProvider } from '../providers/local-service/local-service';
 
 @NgModule({
   declarations: [
@@ -69,8 +76,11 @@ import { ElasticDirective } from "../directives/elastic/elastic";
       EquipeListaPage,
       EquipeConvidarPage,
       ConvitesPage,
-      ChatPage,
-      ElasticDirective
+      ChatPage, ElasticDirective,
+      LocalPage,
+      LocaisPage,
+      LocalMapaPage,
+      MapsAutoCompletePage
   ],
   imports: [
     BrowserModule,
@@ -103,7 +113,11 @@ import { ElasticDirective } from "../directives/elastic/elastic";
       EquipeListaPage,
       EquipeConvidarPage,
       ConvitesPage,
-      ChatPage
+      ChatPage,
+      LocalPage,
+      LocaisPage,
+      LocalMapaPage,
+      MapsAutoCompletePage
   ],
   providers: [
     StatusBar,
@@ -116,7 +130,9 @@ import { ElasticDirective } from "../directives/elastic/elastic";
     EquipeServiceProvider,
     UsuarioServiceProvider,
     ConviteServiceProvider,
-    ChatServiceProvider
+    ChatServiceProvider,
+    Geolocation,
+    LocalServiceProvider
   ]
 })
 export class AppModule {}
