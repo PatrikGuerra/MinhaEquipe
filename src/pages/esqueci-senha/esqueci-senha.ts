@@ -13,12 +13,17 @@ import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 })
 export class EsqueciSenhaPage {
   esqueciSenhaForm: FormGroup;
+  private email: string = "";
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
     public formBuilder: FormBuilder,
     private authService: AuthServiceProvider, ) {
+
+    if (this.navParams.data.email) {
+      this.email = this.navParams.data.email;
+    }
 
     this.esqueciSenhaForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required])]

@@ -13,7 +13,7 @@
   <form [formGroup]="esqueciSenhaForm">
     <ion-item>
       <ion-label floating>E-mail</ion-label>
-      <ion-input type="text" formControlName="email" maxlength="320"></ion-input>
+      <ion-input type="text" formControlName="email" maxlength="320" [(ngModel)]="email"></ion-input>
     </ion-item>
 
     <div padding>
