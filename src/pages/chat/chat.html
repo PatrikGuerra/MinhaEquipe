@@ -19,14 +19,25 @@
 
       <ion-item no-lines>
         <ion-label class="margem">
+
+          <!-- 
+          Tratamento de mensagens do tipo notificação
+          <p style="text-align: center" *ngIf="msg.tipo == 1">
+            <span class="notificacao">{{ msg.conteudo }}</span>
+            <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
+          </p> 
+          -->
+
+          <!-- <p *ngIf="msg.keyUsuario == usuario.$key && (msg.tipo == 0 || !msg.tipo)"> -->
           <p *ngIf="msg.keyUsuario == usuario.$key">
             <span class="message-text right">{{ msg.conteudo }}</span>
             <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
           </p>
 
+          <!-- <p *ngIf="msg.keyUsuario != usuario.$key && (msg.tipo == 0 || !msg.tipo)"> -->
           <p *ngIf="msg.keyUsuario != usuario.$key">
             <ion-avatar>
-              <img class="user-image" [src]="msg.usuario?.fotoUrl ||  '../../assets/images/no-image.jpg' " />
+              <img class="user-image" [src]="msg.usuario?.fotoUrl || '../../assets/images/no-image.jpg'" />
             </ion-avatar>
             <span class="message-text left">
               <span class="author">{{ msg.usuario?.name || msg.usuario?.email }}</span>
@@ -34,6 +45,7 @@
             </span>
             <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
           </p>
+        
         </ion-label>
 
         {{ msg.conteudo }}
