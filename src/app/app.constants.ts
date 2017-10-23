@@ -12,5 +12,5 @@ export const dataBaseStorage = {
 	Equipe: 'equipes',
 	Usuario: 'usuarios',
 	Convite: 'convites',
-	//ConviteUsuarioNovo: 'convitesUsuariosNovos'
+	Local: 'locais',
 };

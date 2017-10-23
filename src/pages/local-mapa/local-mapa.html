@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-buttons start left>
+      <button ion-button icon-only (click)="cancelar()"><ion-icon name="arrow-back"></ion-icon></button>
+    </ion-buttons>
+
+    <ion-title>Mapa</ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="confirmar()"><ion-icon name="checkmark"></ion-icon></button>
+    </ion-buttons>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content no-bounce>
+  <div #map id="map"></div>
+  <!--
+  <ion-fab right bottom>
+    <button ion-fab (click)="pesquisaLocal()">
+      <ion-icon name="search"></ion-icon>
+    </button>
+  </ion-fab>
+-->
+</ion-content>

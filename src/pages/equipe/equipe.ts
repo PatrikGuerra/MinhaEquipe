@@ -6,6 +6,7 @@ import { Storage } from '@ionic/storage';
 //Modal
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
 import { ChatPage } from "../chat/chat";
+import { LocaisPage } from "../locais/locais";
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
@@ -151,6 +152,20 @@ export class EquipePage {
 
       });
     });
+  }
+
+  private abrirLocais() {
+    console.log("Abrindo")
+    //this.userService.getUser().then(userObservable => {
+    //userObservable.subscribe((usuarioData: Usuario) => {
+
+    this.navCtrl.push(LocaisPage, {
+      equipe: this.equipe,
+      //usuario: usuarioData
+    });
+
+    //});
+    //});
   }
 
   /*
