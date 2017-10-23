@@ -15,6 +15,11 @@
 
   <form [formGroup]="cadastroForm">
     <ion-item>
+      <ion-label floating>Nome</ion-label>
+      <ion-input type="text" minlength="3" maxlength="25" formControlName="nome" [(ngModel)]="credencial.nome"></ion-input>
+    </ion-item>
+
+    <ion-item>
       <ion-label floating>E-mail</ion-label>
       <ion-input type="text" maxlength="320" formControlName="email" [(ngModel)]="credencial.email"></ion-input>
     </ion-item>

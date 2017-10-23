@@ -68,9 +68,10 @@ export class UserServiceProvider {
     });
   }
 
-  public criarUsuario(email: string, key: string) {
+  public criarUsuario(key: string, nome: string, email: string) {
     var usuario: Usuario = new Usuario();
     usuario.email = email;
+    usuario.nome = nome;
 
     let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${key}`);
     return usuarioAtual.set(usuario);

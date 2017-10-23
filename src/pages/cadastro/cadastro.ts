@@ -19,7 +19,7 @@ import { Credencial } from "../../models/credencial";
 })
 export class CadastroPage {
   cadastroForm: FormGroup;
-  credencial: Credencial = new Credencial();
+  private credencial: Credencial = new Credencial();
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -31,6 +31,7 @@ export class CadastroPage {
     private conviteProvider: ConviteServiceProvider) {
 
     this.cadastroForm = this.formBuilder.group({
+      nome: ['', Validators.compose([Validators.required])],
       email: ['', Validators.compose([Validators.required])],
       senha: ['', Validators.compose([Validators.required])]
     });
@@ -54,7 +55,7 @@ export class CadastroPage {
     this.authService.criarUsuario(this.credencial).then((firebaseUser: any) => {
       firebaseUser.sendEmailVerification();
 
-      this.userService.criarUsuario(this.credencial.email, firebaseUser.uid).then((data) => {
+      this.userService.criarUsuario(firebaseUser.uid, this.credencial.nome, this.credencial.email).then((data) => {
 
         this.conviteProvider.atualizarKeyUsuarioDosConvites(this.credencial.email, firebaseUser.uid);
 
