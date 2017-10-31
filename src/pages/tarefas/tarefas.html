@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Tarefas</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div padding>
+    <button ion-button block color="primary" (click)="novaTarefa()">+</button>
+  </div>
+
+  <ion-card *ngIf="equipe.tarefas.length == 0">
+    <ion-card-content>
+      Parece que a equipe não possui nenhuma tarefa...
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list *ngIf="equipe.tarefas.length > 0">
+    <button ion-item *ngFor="let tarefa of equipe.tarefas" (click)="editarTarefa(tarefa)">
+      <!--
+        <ion-avatar item-start>/
+          <img src="{{ equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
+        </ion-avatar>
+      -->
+
+      <h2>{{ tarefa.nome }}</h2>
+      <p>{{ tarefa.descricao }}</p>
+
+      <!-- <p>{{ tarefa.responsaveis.length }}</p> -->
+    </button>
+  </ion-list>
+</ion-content>

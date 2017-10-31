@@ -1,9 +1,9 @@
 import { Coordenadas } from "./coordenadas";
 
 export class Local {
-	$key?:string;
+	$key:string;
 
-	nome: string;
-	descricao: string;
+	nome: string = "";
+	descricao: string = "";
 	coordenadas: Coordenadas;
 }

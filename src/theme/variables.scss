@@ -86,3 +86,10 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+//Fiz para backbutton in modal
+//https://forum.ionicframework.com/t/navbar-back-button-in-modal/82185
+ion-buttons button[icon-only].my-style-for-modal {
+  margin: 0 6px;
+  min-width: 36px;
+}

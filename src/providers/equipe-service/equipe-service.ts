@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from "rxjs/Observable";
 
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2/database';
 import { dataBaseStorage } from "../../app/app.constants";
 
 import { Storage } from '@ionic/storage';
@@ -11,7 +11,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import * as firebase from 'firebase';
 
 //Services
-import { UserServiceProvider } from "../user-service/user-service";
+import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
@@ -26,44 +26,80 @@ export class EquipeServiceProvider {
     public db: AngularFireDatabase,
     public storage: Storage,
     private camera: Camera,
-    private userProvider: UserServiceProvider) {
+    private userProvider: UsuarioServiceProvider) {
     console.log('Hello EquipeServiceProvider Provider');
   }
 
+  private firebaseToEquipe(objeto: any) {
+    let equipe: Equipe = Object.assign(new Equipe(), JSON.parse(JSON.stringify(objeto)))
+    equipe.$key = objeto.$key;
+
+    return equipe;
+  }
+
   public getAll(usuarioId: string) {
-    return this.db.list(`${dataBaseStorage.Equipe}`, {
+
+    // var query = firebase.database().ref(dataBaseStorage.Equipe).orderByChild( `keyMembros/${usuarioId}`).equalTo(true);
+    // return query.once("value").then(snapshot => {
+    //   console.log(snapshot)
+
+    //     snapshot.forEach(childSnapshot=> {
+
+    //       var key = childSnapshot.key; // "ada"
+    //       console.log(childSnapshot.key)
+    //       console.log(childSnapshot.val())
+
+    //       console.log(childSnapshot.val())
+
+    //       console.log(Object.assign(new Equipe(), JSON.parse(JSON.stringify(childSnapshot.val()))))
+
+    //       // childSnapshot.value
+    //       // Cancel enumeration
+    //       return true;
+    //   });
+    // });
+
+
+
+    return <FirebaseListObservable<Equipe[]>>this.db.list(`${dataBaseStorage.Equipe}`, {
       query: {
-        orderByChild: `membros/${usuarioId}`,
+        orderByChild: `keyMembros/${usuarioId}`,
         equalTo: true,
       }
-    });
+    }).map((items) => {
+      return items.map(item => {
+        return this.firebaseToEquipe(item);
+      });
+    })
   }
 
   getEquipe(key: string) {
-    return <FirebaseObjectObservable<Equipe>>this.db.object(`${dataBaseStorage.Equipe}/${key}`);
+    return this.db.object(`${dataBaseStorage.Equipe}/${key}`).map((item) => {
+      return this.firebaseToEquipe(item);
+    })
   }
 
   public remove(key: string) {
     return this.db.database.ref(key).remove();
   }
 
-  public save(equipe: Equipe, key: string, imagem: string): Promise<any> {
+  public save(equipe: Equipe, imagem: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.userProvider.getuid().then((usuarioUid) => {
 
-        if (!key) {
+        if (!equipe.$key) {
           //Se é Push
-          key = this.db.database.ref(dataBaseStorage.Equipe).push().key;
+          equipe.$key = this.db.database.ref(dataBaseStorage.Equipe).push().key;
           equipe.keyResponsavel = usuarioUid;
           equipe.addMembro(usuarioUid);
           equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
         }
 
         if (imagem) {
-          this.uploadImage(imagem, key).then((imageSnapshot: any) => {
+          this.uploadImage(imagem, equipe.$key).then((imageSnapshot: any) => {
             equipe.fotoUrl = imageSnapshot.downloadURL;
 
-            this.update(equipe, key).then((dataEquipePush) => {
+            this.update(equipe).then((dataEquipePush) => {
               resolve(dataEquipePush);
             }).catch((error) => {
               reject(error);
@@ -73,7 +109,7 @@ export class EquipeServiceProvider {
             reject(error);
           });
         } else {
-          this.update(equipe, key).then((dataEquipePush) => {
+          this.update(equipe).then((dataEquipePush) => {
             resolve(dataEquipePush);
           }).catch((error) => {
             reject(error);
@@ -83,12 +119,21 @@ export class EquipeServiceProvider {
       });
     });
   }
-  private update(equipe: Equipe, key: string) {
+  private update(equipe: Equipe) {
     var updates = {};
-    updates[`${dataBaseStorage.Equipe}/${key}`] = equipe; //equipe
+
+    updates[`${dataBaseStorage.Equipe}/${equipe.$key}`] = {
+      'timestamp': equipe.timestamp,
+      'dataInicio': equipe.dataInicio,
+      'dataFim': equipe.dataFim,
+      'nome': equipe.nome,
+      'fotoUrl': equipe.fotoUrl,
+      'keyResponsavel': equipe.keyResponsavel,
+      'keyMembros': equipe.keyMembros,
+    };
     // /equipes/_UidEquipe_
 
-    updates[`${dataBaseStorage.Usuario}/${equipe.keyResponsavel}/equipes/${key}`] = true; //Atualiza Usuario administrador
+    updates[`${dataBaseStorage.Usuario}/${equipe.keyResponsavel}/equipes/${equipe.$key}`] = true; //Atualiza Usuario administrador
     // /usuarios/_UidUsuario_/equipes/_UidEquipe_
 
     return this.db.database.ref().update(updates);

@@ -12,6 +12,7 @@ import { ConvitesPage } from "../convites/convites";
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
+import { dataBaseStorage } from "../../app/app.constants";
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -27,6 +28,9 @@ export class HomePage {
     this.storage.get("uid").then(uuid => {
       console.log(uuid)
     })
+    
+    console.log("dataBaseStorage[0]")
+    console.log(dataBaseStorage[0])
   }
 
   verPerfil() {

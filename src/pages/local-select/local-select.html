@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-buttons start left>
+      <button ion-button icon-only (click)="cancel()" class="my-style-for-modal">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-title>
+      {{ title }}
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="confirm()">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar..."></ion-searchbar>
+
+  <ion-list radio-group>
+    <ion-item *ngFor="let item of items">
+      <ion-label>{{ item[displayProperty] }}</ion-label>
+      <ion-radio [checked]="item === selectedItem ||  item.$key == keySelected" (click)="select(item)"></ion-radio>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

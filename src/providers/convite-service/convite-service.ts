@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 import { dataBaseStorage } from "../../app/app.constants";
 
 //Services
-import { UserServiceProvider } from "../user-service/user-service";
+import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
 import { EquipeServiceProvider } from "../equipe-service/equipe-service";
 
 //Models
@@ -25,7 +25,7 @@ export class ConviteServiceProvider {
 
   constructor(
     public db: AngularFireDatabase,
-    public userProvider: UserServiceProvider,
+    public userProvider: UsuarioServiceProvider,
     public equipeService: EquipeServiceProvider) {
 
     console.log('Hello ConviteServiceProvider Provider');
@@ -40,8 +40,8 @@ export class ConviteServiceProvider {
     var listaEmailsNaoCadastrados = [];
 
     return this.buscarUsuariosPorEmail(listaEmails, listaKeyUsuarios, listaEmailsNaoCadastrados).then(data => {
-      return this.equipeService.getEquipe(equipeId).subscribe((equipe: any) => {
-        var listaMembrosEquipeKey = Object.keys(equipe.membros)
+      return this.equipeService.getEquipe(equipeId).subscribe((equipe: Equipe) => {
+        var listaMembrosEquipeKey = Object.keys(equipe.keyMembros);
 
         listaKeyUsuarios = this.RetornaItensDeAqueNaoExistemEmB(listaKeyUsuarios, listaMembrosEquipeKey);
 

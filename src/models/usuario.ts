@@ -1,9 +1,9 @@
 export class Usuario {
 	$key: string;
 
-	nome: string;
-	email: string;
-	fotoUrl: string;
+	nome: string = "";
+	email: string = "";
+	fotoUrl: string = "";
 	tags: {};
 	equipes: {};	
 }

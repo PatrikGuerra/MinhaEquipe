@@ -4,10 +4,11 @@ import { Observable } from "rxjs/Observable";
 
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 
+import * as firebase from 'firebase';
+import { dataBaseStorage } from "../../app/app.constants";
+
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-
-import * as firebase from 'firebase';
 
 //Models
 import { Usuario } from "../../models/usuario";
@@ -16,11 +17,9 @@ import { Credencial } from "../../models/credencial";
 //Services
 import { AuthServiceProvider } from "../auth-service/auth-service";
 
-import { dataBaseStorage } from "../../app/app.constants";
 
 @Injectable()
 export class UsuarioServiceProvider {
-  private usuario: FirebaseObjectObservable<Usuario>;
 
   constructor(
     public db: AngularFireDatabase,
@@ -28,41 +27,103 @@ export class UsuarioServiceProvider {
     private camera: Camera,
     private authProvider: AuthServiceProvider) {
 
-    //this.getuid().then(uid => {
-    this.storage.get("uid").then(uid => {
-      this.usuario = <FirebaseObjectObservable<Usuario>>this.db.object(`${dataBaseStorage.Usuario}/${uid}`);
-    });
+    console.log('Hello UsuarioServiceProvider Provider');
   }
 
-  // getuid() {
-  //   return this.storage.get("uid");
-  // }
+
+  private firebaseToUsuario(objeto: any) {
+    let usuario: Usuario = Object.assign(new Usuario(), JSON.parse(JSON.stringify(objeto)))
+    usuario.$key = objeto.$key;
+
+    return usuario;
+  }
+
+  getuid() {
+    return this.storage.get("uid");
+  }
 
   getUser() {
-    return this.usuario;
+    return this.getuid().then(uid => {
+      return <FirebaseObjectObservable<Usuario>>this.db.object(`${dataBaseStorage.Usuario}/${uid}`).map((item) => {
+        return this.firebaseToUsuario(item);
+      })
+    });
   }
 
-  updateCurrentUser(usuario): Promise<any> {
-    return new Promise((resolve, reject) => {
-      try {
-        this.getUser().subscribe((dataUsuario: Usuario) => {
 
-          let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${dataUsuario.$key}`);
-          usuarioAtual.update(usuario).then((data) => {
-            resolve(data);
-          });
+
+  public getUsuario(key: string) {
+    return this.db.object(`${dataBaseStorage.Usuario}/${key}`);
+  }
+
+
+  public buscarUsuariosPorKey(keysUsuario: string[]) {
+    var promises = [];
+
+    keysUsuario.forEach(key => {
+      var promise = new Promise((resolve, reject) => {
+        return this.getUsuario(key).subscribe((data: Usuario) => {
+          resolve(data);
+        }, (error: any) => {
+          reject(error);
         });
+      });
 
+      promises.push(promise);
+    });
+
+    return Promise.all(promises);
+  }
+
+
+
+
+
+
+
+
+
+  //ok
+  public getUsuariosPorEquipe(keyEquipe: string) {
+    return this.db.list(`${dataBaseStorage.Usuario}`, {
+      query: {
+        orderByChild: `equipes/${keyEquipe}`,
+        equalTo: true
       }
-      catch (ex) {
-        reject(ex);
+    }).map((items) => {
+      console.log(items)
+      return items.map(item => {
+        return this.firebaseToUsuario(item);
+      });
+    })
+  }
+
+  public getUsuarioByEmail(email: string) {
+    return this.db.list(`${dataBaseStorage.Usuario}`, {
+      query: {
+        orderByChild: `email`,
+
+        equalTo: email
       }
     });
   }
 
-  public criarUsuario(email: string, key: string) {
+  public save(usuario: Usuario) {
+    var dataUsuario = {
+      nome: usuario.nome,
+      //email: usuario.email,
+      fotoUrl: usuario.fotoUrl,
+      tags: usuario.tags,
+      equipes: usuario.equipes,
+    }
+
+    return this.db.database.ref(`${dataBaseStorage.Usuario}/${usuario.$key}`).update(dataUsuario)
+  }
+
+  public criarUsuario(key: string, nome: string, email: string) {
     var usuario: Usuario = new Usuario();
     usuario.email = email;
+    usuario.nome = nome;
 
     let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${key}`);
     return usuarioAtual.set(usuario);
@@ -70,16 +131,15 @@ export class UsuarioServiceProvider {
 
   public atualizarEmail(novoEmail: string, senha: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      //this.getuid().then(uid => {
-      this.getUser().subscribe((dataUsuario: Usuario) => {
+      this.getuid().then(uid => {
         this.authProvider.reauthenticateWithCredential(senha).then((dataReautenticacao) => {
 
           this.authProvider.updateEmailAndsendEmailVerification(novoEmail).then((data) => {
-            let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${dataUsuario.$key}`);
+            let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${uid}`);
 
-            usuarioAtual.update(
-              { email: novoEmail }
-            ).then(function (hue) {
+            usuarioAtual.update({
+              email: novoEmail
+            }).then(function (hue) {
               resolve(hue);
             }, function (error) {
               console.error("Erro ao alterar email no db.");
@@ -95,44 +155,42 @@ export class UsuarioServiceProvider {
           console.error("Erro ao reautenticar.");
           reject(erro);
         });
+
+      }).catch((erro: any) => {
+        console.error("Erro do pegar uid.");
+        reject(erro);
       });
-      // }).catch((erro: any) => {
-      //   console.error("Erro do pegar uid.");
-      //   reject(erro);
-      // });
     });
   }
 
   public atualizarSenha(novaSenha: string, senhaAtual: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      // this.getuid().then(uid => {
-      this.authProvider.reauthenticateWithCredential(senhaAtual).then((dataReautenticacao) => {
-        this.authProvider.updatePassword(novaSenha).then((data) => {
-          resolve(data);
+      this.getuid().then(uid => {
+        this.authProvider.reauthenticateWithCredential(senhaAtual).then((dataReautenticacao) => {
+          this.authProvider.updatePassword(novaSenha).then((data) => {
+            resolve(data);
+
+          }).catch((erro: any) => {
+            console.error("Erro ao alterar senha no auth.");
+            reject(erro);
+          });
 
         }).catch((erro: any) => {
-          console.error("Erro ao alterar senha no auth.");
+          console.error("Erro ao reautenticar.");
           reject(erro);
         });
 
       }).catch((erro: any) => {
-        console.error("Erro ao reautenticar.");
+        console.error("Erro do pegar uid.");
         reject(erro);
       });
-
-      // }).catch((erro: any) => {
-      //   console.error("Erro do pegar uid.");
-      //   reject(erro);
-      // });
-
     });
   }
   atualizarImagem(image: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      //this.getuid().then(usuarioUid => {
-      this.getUser().subscribe((dataUsuario: Usuario) => {
-        this.uploadImage(image, dataUsuario.$key).then((firebaseImage: any) => {
-          let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${dataUsuario.$key}`);
+      this.getuid().then(usuarioUid => {
+        this.uploadImage(image, usuarioUid).then((firebaseImage: any) => {
+          let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${usuarioUid}`);
 
           usuarioAtual.update(
             { fotoUrl: firebaseImage.downloadURL }
@@ -144,10 +202,8 @@ export class UsuarioServiceProvider {
 
         });
       });
-      //});
     });
   }
-
 
   uploadImage(imageString: string, uid: string): Promise<any> {
     let storageRef: any;
@@ -178,10 +234,21 @@ export class UsuarioServiceProvider {
     };
 
     return this.camera.getPicture(cameraOptions);
+    /*.then((imageData) => {
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64:
+      var stringzaum = 'data:image/jpeg;base64,' + imageData;
+      console.log(stringzaum);
+   //   this.captureDataUrl = 
+    }, (err) => {
+      // Handle error
+    });*/
   }
   pictureFromLibray() {
     const cameraOptions: CameraOptions = {
       // quality: 50,
+      targetHeight: 500,
+      targetWidth: 500,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
@@ -189,6 +256,15 @@ export class UsuarioServiceProvider {
     };
 
     return this.camera.getPicture(cameraOptions);
+    /*
+    .then((imageData) => {
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64:
+      var stringzaum = 'data:image/jpeg;base64,' + imageData;
+      console.log(stringzaum);
+   //   this.captureDataUrl = 
+    }, (err) => {
+      // Handle error
+    });*/
   }
-
 }

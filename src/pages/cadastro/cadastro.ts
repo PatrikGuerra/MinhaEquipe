@@ -7,7 +7,7 @@ import { LoginPage } from "../login/login";
 
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
 
 //Models
@@ -27,7 +27,7 @@ export class CadastroPage {
     private formBuilder: FormBuilder,
     private loadingCtrl: LoadingController,
     private authService: AuthServiceProvider,
-    private userService: UserServiceProvider,
+    private usuarioService: UsuarioServiceProvider,
     private conviteProvider: ConviteServiceProvider) {
 
     this.cadastroForm = this.formBuilder.group({
@@ -55,7 +55,7 @@ export class CadastroPage {
     this.authService.criarUsuario(this.credencial).then((firebaseUser: any) => {
       firebaseUser.sendEmailVerification();
 
-      this.userService.criarUsuario(firebaseUser.uid, this.credencial.nome, this.credencial.email).then((data) => {
+      this.usuarioService.criarUsuario(firebaseUser.uid, this.credencial.nome, this.credencial.email).then((data) => {
 
         this.conviteProvider.atualizarKeyUsuarioDosConvites(this.credencial.email, firebaseUser.uid);
 

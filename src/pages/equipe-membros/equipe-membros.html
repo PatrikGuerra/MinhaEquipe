@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>{{ sessaoProvider.equipe.nome }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list *ngIf="sessaoProvider.equipe.membros.length > 0">
+    <ion-item-sliding *ngFor="let usuario of sessaoProvider.equipe.membros">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="{{ usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
+        </ion-avatar>
+
+        {{ usuario.nome }}
+      </ion-item>
+
+      <ion-item-options slide="right">
+        <button ion-button color="danger" (click)="recusarConvite(usuario)">
+          <ion-icon name="close"></ion-icon>remover
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

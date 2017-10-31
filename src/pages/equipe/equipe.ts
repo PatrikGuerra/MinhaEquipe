@@ -7,45 +7,58 @@ import { Storage } from '@ionic/storage';
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
 import { ChatPage } from "../chat/chat";
 import { LocaisPage } from "../locais/locais";
+import { TarefasPage } from "../tarefas/tarefas";
+import { EquipeMembrosPage } from "../equipe-membros/equipe-membros";
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
+import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
 import { Usuario } from "../../models/usuario";
-
 
 @Component({
   selector: 'page-equipe',
   templateUrl: 'equipe.html',
 })
 export class EquipePage {
-  key: string = "";
-  equipe: Equipe = new Equipe();
+  private equipe: Equipe = new Equipe();
   private imagemBase64: string = "";
+
+  private usuario: Usuario;
 
   constructor(
     public navCtrl: NavController,
-    private alertCtrl: AlertController,
-    private platform: Platform,
     private actionsheetCtrl: ActionSheetController,
     private loadingCtrl: LoadingController,
-    public modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private navParams: NavParams,
     private equipeService: EquipeServiceProvider,
-    private userService: UserServiceProvider) {
+    private usuarioService: UsuarioServiceProvider,
+    private sessaoService: SessaoServiceProvider) {
+
+    this.usuarioService.getUser().then(userObservable => {
+      userObservable.subscribe((usuarioData: Usuario) => {
+        this.usuario = usuarioData;
+      });
+    });
 
     if (this.navParams.data.equipe) {
-      this.equipe = this.navParams.data.equipe;
-      this.key = this.navParams.data.equipe.$key;
+      let loading = this.loadingCtrl.create({
+        content: 'Carregando equipe...'
+      });
+      loading.present();
 
-      console.log("---- EquipePage");
-      console.log(this.equipe);
-      console.log(this.key);
-      console.log("---- EquipePage");
+      var equipe: Equipe = this.navParams.data.equipe;
+
+      this.equipeService.getEquipe(equipe.$key).subscribe(dataEquipe => {
+        this.sessaoService.setEquipe(dataEquipe);
+        this.equipe = sessaoService.equipe;
+
+        loading.dismiss();
+      });
     }
   }
 
@@ -54,8 +67,6 @@ export class EquipePage {
   }
 
   private save() {
-    let isUpdate = (this.key.length > 0);
-
     let toast = this.toastCtrl.create({
       duration: 3000,
       position: 'bottom'
@@ -63,17 +74,17 @@ export class EquipePage {
 
     let loading = this.loadingCtrl.create();
 
-    if (isUpdate) {
-      toast.setMessage("Equipe alterada.");
-      loading.setContent('Alterando equipe...');
-    } else {
+    if (this.equipe.$key) {
       toast.setMessage("Equipe criada.");
       loading.setContent('Criando equipe...');
+    } else {
+      toast.setMessage("Equipe alterada.");
+      loading.setContent('Alterando equipe...');
     }
 
     loading.present();
 
-    this.equipeService.save(this.equipe, this.key, this.imagemBase64).then((data) => {
+    this.equipeService.save(this.equipe, this.imagemBase64).then((data) => {
       loading.dismiss();
       this.navCtrl.pop();
       toast.present();
@@ -142,30 +153,32 @@ export class EquipePage {
   }
 
   private abrirChat() {
-    this.userService.getUser().then(userObservable => {
-      userObservable.subscribe((usuarioData: Usuario) => {
+    // this.usuarioService.getUser().then(userObservable => {
+    //   userObservable.subscribe((usuarioData: Usuario) => {
 
-        this.navCtrl.push(ChatPage, {
-          equipe: this.equipe,
-          usuario: usuarioData
-        });
-
-      });
+    this.navCtrl.push(ChatPage, {
+      equipe: this.equipe,
+      usuario: this.usuario
     });
+
+    //   });
+    // });
   }
 
   private abrirLocais() {
-    console.log("Abrindo")
-    //this.userService.getUser().then(userObservable => {
-    //userObservable.subscribe((usuarioData: Usuario) => {
-
     this.navCtrl.push(LocaisPage, {
       equipe: this.equipe,
-      //usuario: usuarioData
     });
+  }
 
-    //});
-    //});
+  private abrirTarefas() {
+    this.navCtrl.push(TarefasPage, {
+      equipe: this.equipe,
+    });
+  }
+
+  private abrirMembrosDaEquipe() {
+    this.navCtrl.push(EquipeMembrosPage);
   }
 
   /*

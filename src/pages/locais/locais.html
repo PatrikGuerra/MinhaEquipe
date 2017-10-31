@@ -9,22 +9,22 @@
     <button ion-button block color="primary" (click)="novoLocal()">+</button>
   </div>
 
-  <ion-card *ngIf="locais.length == 0">
+  <ion-card *ngIf="equipe.locais.length == 0">
     <ion-card-content>
       Parece que a equipe não possui nenhum local...
     </ion-card-content>
   </ion-card>
 
-  <ion-list *ngIf="locais.length > 0">
-    <button ion-item *ngFor="let local of locais" (click)="editarLocal(local)">
-    <!--
-      <ion-avatar item-start>
-        <img src="{{ equipe.fotoUrl ? equipe.fotoUrl : '../../assets/images/no-image.gif'}}">
-      </ion-avatar>
-    -->
-
-      <h2>{{ local.nome }}</h2>
-      <p>{{ local.descricao }}</p>
-   </button>
-  </ion-list>
+  <ion-list *ngIf="equipe.locais.length > 0">
+      <button ion-item *ngFor="let local of equipe.locais" (click)="editarLocal(local)">
+      <!--
+        <ion-avatar item-start>
+          <img src="{{ equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
+        </ion-avatar>
+      -->
+  
+        <h2>{{ local.nome }}</h2>
+        <p>{{ local.descricao }}</p>
+     </button>
+    </ion-list>
 </ion-content>

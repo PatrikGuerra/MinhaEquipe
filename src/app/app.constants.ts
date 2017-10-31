@@ -13,4 +13,14 @@ export const dataBaseStorage = {
 	Usuario: 'usuarios',
 	Convite: 'convites',
 	Local: 'locais',
+	Tarefa: 'tarefas',
+	TarefaResponsavel: 'tarefaResponsaveis',
 };
+
+export enum TarefaSituacao	 {
+	Pendente = 0,
+	Andamento = 1,
+	Finalizado = 2,
+	
+	Cancelada = 3
+}

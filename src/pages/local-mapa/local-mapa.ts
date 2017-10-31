@@ -24,7 +24,6 @@ export class LocalMapaPage {
   marker: google.maps.Marker;
   private geocoder = new google.maps.Geocoder();
 
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -32,8 +31,8 @@ export class LocalMapaPage {
     private viewCtrl: ViewController,
     public geolocation: Geolocation) {
 
-      console.log("this.navParams.data")
-      console.log(this.navParams.data)
+    console.log("this.navParams.data")
+    console.log(this.navParams.data)
   }
 
   ngOnInit() {
@@ -41,9 +40,7 @@ export class LocalMapaPage {
   }
 
   ionViewWillEnter() {
-    this.carregarMapa();
-
-
+    this.carregarMapa()
   }
 
   valida() {
@@ -51,7 +48,6 @@ export class LocalMapaPage {
     console.log(this.marker.getPosition());
     console.log(this.marker.getPosition().lat());
     console.log(this.marker.getPosition().lng());
-
   }
 
   ionViewDidLoad() {
@@ -65,24 +61,24 @@ export class LocalMapaPage {
       coordenada: coordenada
     });
   }
+
   cancelar() {
     this.viewCtrl.dismiss();
   }
-
-
 
   setMapOnAll(map) {
     if (this.marker) {
       this.marker.setMap(map);
     }
   }
+
   clearMarkers() {
     this.setMapOnAll(null);
   }
+
   showMarkers() {
     this.setMapOnAll(this.map);
   }
-
 
   setMarker(location) {
     var self = this;
@@ -92,9 +88,6 @@ export class LocalMapaPage {
       map: self.map
     });
   }
-
-
-
 
   pesquisaLocal() {
     let mapsAutoCompletePage = this.modalCtrl.create(MapsAutoCompletePage);
@@ -114,10 +107,6 @@ export class LocalMapaPage {
     mapsAutoCompletePage.present();
   }
 
-
-
-
-
   //https://developers.google.com/maps/documentation/javascript/examples/geocoding-reverse?hl=pt-br
   geocodePlaceId(latlng: any) {//: Promise<google.maps.LatLng> {
     var self = this;
@@ -131,25 +120,18 @@ export class LocalMapaPage {
     });
   }
 
-
-
-
   carregarMapa() {
     this.geolocation.getCurrentPosition().then((geoPosition) => {
-      console.log("minha geoPosition")
-      console.log(geoPosition)
+
 
       let latLng = null;
       console.log(this.navParams.data.coordenadas)
       if (this.navParams.data.coordenadas) {
-        latLng =new google.maps.LatLng(this.navParams.data.coordenadas.lat, this.navParams.data.coordenadas.lng)
-        
+        latLng = new google.maps.LatLng(this.navParams.data.coordenadas.lat, this.navParams.data.coordenadas.lng)
+
       } else {
         latLng = new google.maps.LatLng(geoPosition.coords.latitude, geoPosition.coords.longitude);
       }
-
-      //let latLng = new google.maps.LatLng(-34.9290, 138.6010);
-       
 
       let mapOptions = {
         center: latLng,
@@ -166,57 +148,12 @@ export class LocalMapaPage {
         console.log(e.latLng)
         self.clearMarkers()
         self.setMarker(e.latLng)
-        
-        //self.geocodePlaceId(e.latLng);
       });
-      
-      self.setMarker(latLng)
 
+      self.setMarker(latLng)
 
     }, (error) => {
       console.error(error)
     });
-
-
   }
-
-  /*setMarker() {
-    let marker = new google.maps.Marker({
-      map: this.map,
-      animation: google.maps.Animation.DROP,
-      position: this.map.getCenter()
-    });
-
-    let content = "<h4>Information!</h4>";
-
-    this.addInfoWindow(marker, content);
-  }
-  */
-
-  // addInfoWindow(marker, content) {
-  //   let infoWindow = new google.maps.InfoWindow({
-  //     content: content
-  //   });
-
-  //   google.maps.event.addListener(marker, 'click', () => {
-  //     infoWindow.open(this.map, marker);
-  //   });
-  // }
 }
-
-/*
-export class LocalMapaPage implements OnInit {
-
-
-
-  constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    private viewCtrl: ViewController,
-    public geolocation: Geolocation) {
-  }
-
-
-
-}
-*/

@@ -37,7 +37,7 @@
           <!-- <p *ngIf="msg.keyUsuario != usuario.$key && (msg.tipo == 0 || !msg.tipo)"> -->
           <p *ngIf="msg.keyUsuario != usuario.$key">
             <ion-avatar>
-              <img class="user-image" [src]="msg.usuario?.fotoUrl || '../../assets/images/no-image.jpg'" />
+              <img class="user-image" [src]="msg.usuario?.fotoUrl || 'assets/images/no-image.jpg'" />
             </ion-avatar>
             <span class="message-text left">
               <span class="author">{{ msg.usuario?.name || msg.usuario?.email }}</span>

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
 //Providers
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
 @Component({
   selector: 'page-perfil-alterar-senha',
@@ -21,7 +21,7 @@ export class PerfilAlterarSenhaPage {
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
-    private userService: UserServiceProvider) {
+    private usuarioService: UsuarioServiceProvider) {
 
     this.alterarSenhaForm = formBuilder.group({
       senhaAtual: ['', Validators.compose([Validators.required])],
@@ -67,7 +67,7 @@ export class PerfilAlterarSenhaPage {
     var senhaAtual = this.alterarSenhaForm.value.senhaAtual;
     var novaSenha = this.alterarSenhaForm.value.novaSenha;
 
-    this.userService.atualizarSenha(novaSenha, senhaAtual).then((data) => {
+    this.usuarioService.atualizarSenha(novaSenha, senhaAtual).then((data) => {
       loading.dismiss();
 
       alert.onDidDismiss((data) => {

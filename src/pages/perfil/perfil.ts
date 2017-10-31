@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ToastController, Platform, ActionS
 import { Storage } from '@ionic/storage';
 
 //Providers
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
 //Components
 import { TagsInputComponent } from "../../components/tags-input/tags-input.component";
@@ -27,7 +27,7 @@ export class PerfilPage {
     private actionsheetCtrl: ActionSheetController,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
-    private userProvider: UserServiceProvider,
+    private userProvider: UsuarioServiceProvider,
     public popoverCtrl: PopoverController) {
 
     let loading = this.loadingCtrl.create({
@@ -134,7 +134,7 @@ export class PerfilPage {
 
     loading.present();
 
-    this.userProvider.updateCurrentUser(this.usuario).then((data) => {
+    this.userProvider.save(this.usuario).then((data) => {
       loading.dismiss();
       toast.present();
     });

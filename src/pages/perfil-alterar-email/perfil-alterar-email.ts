@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
 //Service
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
 //Pages
@@ -25,7 +25,7 @@ export class PerfilAlterarEmailPage {
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
-    private userService: UserServiceProvider,
+    private usuarioService: UsuarioServiceProvider,
     private authService: AuthServiceProvider) {
 
     this.alterarEmailForm = formBuilder.group({
@@ -56,7 +56,7 @@ export class PerfilAlterarEmailPage {
     var novoEmail = this.alterarEmailForm.value.novoEmail;
     var senha = this.alterarEmailForm.value.password;
 
-    this.userService.atualizarEmail(novoEmail, senha).then((data) => {
+    this.usuarioService.atualizarEmail(novoEmail, senha).then((data) => {
       alert.setMessage("Você irá receber um e-mail solicitando confirmação de seu endereço.");
 
       loading.dismiss();

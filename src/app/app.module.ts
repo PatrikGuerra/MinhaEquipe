@@ -18,7 +18,7 @@ import { IonicStorageModule } from "@ionic/storage";
 import { AngularFireModule } from "angularfire2";
 import { AngularFireAuthModule } from "angularfire2/auth";
 import { AngularFireDatabaseModule } from 'angularfire2/database';
-  
+
 //Paginas
 import { HomePage } from '../pages/home/home';
 import { CadastroPage } from "../pages/cadastro/cadastro";
@@ -28,12 +28,16 @@ import { PerfilPage } from "../pages/perfil/perfil";
 import { EquipePage } from "../pages/equipe/equipe";
 import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
+import { EquipeMembrosPage } from "../pages/equipe-membros/equipe-membros";
 import { ConvitesPage } from "../pages/convites/convites";
 import { ChatPage } from "../pages/chat/chat";
 import { LocalPage } from "../pages/local/local";
 import { LocalMapaPage } from "../pages/local-mapa/local-mapa";
 import { MapsAutoCompletePage } from "../pages/maps-auto-complete/maps-auto-complete";
 import { LocaisPage } from "../pages/locais/locais";
+import { TarefasPage } from "../pages/tarefas/tarefas";
+import { TarefaPage } from "../pages/tarefa/tarefa";
+
 //Maps
 import { Geolocation } from '@ionic-native/geolocation';
 
@@ -43,15 +47,17 @@ import { PerfilPopoverPage } from "../pages/perfil-popover/perfil-popover";
 //Modals
 import { PerfilAlterarEmailPage } from "../pages/perfil-alterar-email/perfil-alterar-email";
 import { PerfilAlterarSenhaPage } from "../pages/perfil-alterar-senha/perfil-alterar-senha";
+import { LocalSelectPage } from "../pages/local-select/local-select";
+import { UsuarioSelectPage } from "../pages/usuario-select/usuario-select";
 
 //Providers
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
-import { UserServiceProvider } from "../providers/user-service/user-service";
+import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
 import { EquipeServiceProvider } from "../providers/equipe-service/equipe-service";
 import { ConviteServiceProvider } from "../providers/convite-service/convite-service";
 import { ChatServiceProvider } from "../providers/chat-service/chat-service";
-
-import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
+import { LocalServiceProvider } from '../providers/local-service/local-service';
+import { TarefaServiceProvider } from '../providers/tarefa-service/tarefa-service';
 
 //import { IonTagsInputModule } from "../components/ion-tags-input/index";
 import { TagsInputModule } from "../components/tags-input/index";
@@ -59,7 +65,7 @@ import { TagsInputModule } from "../components/tags-input/index";
 import { firebaseConfig } from "./app.constants";
 
 import { ElasticDirective } from "../directives/elastic/elastic";
-import { LocalServiceProvider } from '../providers/local-service/local-service';
+import { SessaoServiceProvider } from '../providers/sessao-service/sessao-service';
 
 @NgModule({
   declarations: [
@@ -75,12 +81,17 @@ import { LocalServiceProvider } from '../providers/local-service/local-service';
       EquipePage,
       EquipeListaPage,
       EquipeConvidarPage,
+      EquipeMembrosPage,
       ConvitesPage,
       ChatPage, ElasticDirective,
       LocalPage,
       LocaisPage,
       LocalMapaPage,
-      MapsAutoCompletePage
+      MapsAutoCompletePage,
+      TarefasPage,
+      TarefaPage,
+      LocalSelectPage,
+      UsuarioSelectPage
   ],
   imports: [
     BrowserModule,
@@ -112,12 +123,17 @@ import { LocalServiceProvider } from '../providers/local-service/local-service';
       EquipePage,
       EquipeListaPage,
       EquipeConvidarPage,
+      EquipeMembrosPage,
       ConvitesPage,
       ChatPage,
       LocalPage,
       LocaisPage,
       LocalMapaPage,
-      MapsAutoCompletePage
+      MapsAutoCompletePage,
+      TarefasPage,
+      TarefaPage,
+      LocalSelectPage,
+      UsuarioSelectPage
   ],
   providers: [
     StatusBar,
@@ -126,13 +142,14 @@ import { LocalServiceProvider } from '../providers/local-service/local-service';
     Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthServiceProvider,
-    UserServiceProvider,
-    EquipeServiceProvider,
     UsuarioServiceProvider,
+    EquipeServiceProvider,
     ConviteServiceProvider,
     ChatServiceProvider,
     Geolocation,
-    LocalServiceProvider
+    LocalServiceProvider,
+    TarefaServiceProvider,
+    SessaoServiceProvider
   ]
 })
 export class AppModule {}

@@ -9,12 +9,14 @@
 
   <div id="content">
     <div id="profile-info" padding-horizontal>
-      <img id="profile-image" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : '../../assets/images/no-image.gif'}}">
+      <img id="profile-image" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
     </div>
   </div>
 
   <div text-center>
-    <button ion-button icon-only (click)="menuAlterarImagem()"><ion-icon name="camera"></ion-icon></button>
+    <button ion-button icon-only (click)="menuAlterarImagem()">
+      <ion-icon name="camera"></ion-icon>
+    </button>
   </div>
 
   <ion-item>
@@ -24,7 +26,7 @@
 
   <ion-item>
     <ion-label>Inicio</ion-label>
-    <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="equipe.dataInicio" ></ion-datetime>
+    <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="equipe.dataInicio"></ion-datetime>
   </ion-item>
 
   <ion-item>
@@ -34,11 +36,25 @@
 
   <div padding>
     <button ion-button (click)="save()" block>Salvar</button>
-    <button ion-button (click)="convidar()" block icon-only><ion-icon name="person-add"></ion-icon></button>
-    <button ion-button (click)="abrirChat()" block icon-only><ion-icon name="chatboxes"></ion-icon></button>
-    <button ion-button (click)="abrirLocais()" block icon-only><ion-icon name="pin"></ion-icon></button>
+    <button ion-button (click)="convidar()" block icon-only>
+      <ion-icon name="person-add"></ion-icon>
+    </button>
+    <button ion-button (click)="abrirChat()" block icon-only>
+      <ion-icon name="chatboxes"></ion-icon>
+    </button>
+    <button ion-button (click)="abrirLocais()" block icon-only>
+      <ion-icon name="pin"></ion-icon>
+    </button>
+    <button ion-button (click)="abrirTarefas()" block icon-only>
+      <ion-icon name="document"></ion-icon>
+    </button>
+    <button ion-button (click)="abrirMembrosDaEquipe()" block icon-only>
+      <ion-icon name="document"></ion-icon>
+    </button>
+
   </div>
 
+  <!-- 
   <ion-fab right bottom *ngIf="key.length > 1">
     <button ion-fab color="primary"><ion-icon name="arrow-dropup"></ion-icon></button>
     <ion-fab-list side="top">
@@ -46,4 +62,5 @@
       <button ion-fab><ion-icon name="chatboxes" (click)="abrirChat()"></ion-icon></button>
     </ion-fab-list>
   </ion-fab>
+  -->
 </ion-content>

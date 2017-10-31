@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController,ToastController } from 'ionic-angular';
 
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
 
 import { ConviteUsuario } from "../../models/conviteUsuario";
@@ -14,6 +14,7 @@ import { Local } from "../../models/local";
 import { Equipe } from "../../models/equipe";
 
 //Service
+import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 import { LocalServiceProvider } from "../../providers/local-service/local-service";
 
 @Component({
@@ -22,29 +23,16 @@ import { LocalServiceProvider } from "../../providers/local-service/local-servic
 })
 export class LocaisPage {
   private equipe: Equipe;
-  private locais: Local[] = [];
-  private usuarioUid: string = "";
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController,
+    //private loadingCtrl: LoadingController,
+    public sessaoService: SessaoServiceProvider,
     private localService: LocalServiceProvider) {
 
-    let loading = this.loadingCtrl.create({
-      content: 'Carregando locais...'
-    });
-
-    loading.present();
-
-    this.equipe = this.navParams.data.equipe;
-
-    this.localService.getLocais(this.equipe.$key).subscribe((data: Local[]) => {
-      this.locais = data;
-      loading.dismiss();
-    });
-
+    this.equipe = this.sessaoService.equipe;
   }
 
   ionViewDidLoad() {
@@ -52,18 +40,12 @@ export class LocaisPage {
   }
 
   novoLocal() {
-    this.navCtrl.push(LocalPage, {
-     // local: local,
-      equipe: this.equipe,
-     // key: local.$key
-    });
+    this.navCtrl.push(LocalPage);
   }
 
   editarLocal(local: Local) {
     this.navCtrl.push(LocalPage, {
       local: local,
-      equipe: this.equipe,
-      key: local.$key
     });
   }
 

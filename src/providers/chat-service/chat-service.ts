@@ -5,7 +5,7 @@ import * as firebase from 'firebase/app';
 import { dataBaseStorage } from "../../app/app.constants";
 
 //Services
-import { UserServiceProvider } from "../user-service/user-service";
+import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
 
 //Models
 import { Usuario } from "../../models/usuario";
@@ -15,7 +15,7 @@ import { ChatMensagemData } from './../../models/data/chatMensagemData';
 export class ChatServiceProvider {
   constructor(
     public db: AngularFireDatabase,
-    public userService: UserServiceProvider) {
+    public usuarioService: UsuarioServiceProvider) {
   }
 
   // Este método retorna um objeto do tipo "Mensagem" e então é 
@@ -27,7 +27,7 @@ export class ChatServiceProvider {
         item.day = new Date(item.timestamp || Date.now()).getDate();
 
         if (item.keyUsuario) {
-          this.userService.getUsuario(item.keyUsuario).subscribe(data => {
+          this.usuarioService.getUsuario(item.keyUsuario).subscribe(data => {
             item.usuario = <FirebaseObjectObservable<Usuario>>data;
           });
         }
@@ -46,7 +46,7 @@ export class ChatServiceProvider {
     }).subscribe(data => {
       data.map(messages => messages.reverse().map((item) => {
         if (item.keyUsuario) {
-          this.userService.getUsuario(item.keyUsuario).subscribe(data => {
+          this.usuarioService.getUsuario(item.keyUsuario).subscribe(data => {
             item.usuario = <FirebaseObjectObservable<Usuario>>data;
           });
         }

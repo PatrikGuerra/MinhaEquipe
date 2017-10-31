@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-an
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
 //Pages
 import { EquipePage } from "../equipe/equipe";
@@ -23,7 +23,7 @@ export class EquipeListaPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
-    private userService: UserServiceProvider,
+    private usuarioService: UsuarioServiceProvider,
     private equipeService: EquipeServiceProvider) {
 
     let loading = this.loadingCtrl.create({
@@ -32,14 +32,15 @@ export class EquipeListaPage {
 
     loading.present();
 
-    this.userService.getuid().then((usuarioUid) => {
+    this.usuarioService.getuid().then((usuarioUid) => {
       this.usuarioUid = usuarioUid;
 
       this.equipeService.getAll(usuarioUid).subscribe((data: Equipe[]) => {
+        console.log("data")
         this.equipes = data;
+        loading.dismiss();
       });
 
-      loading.dismiss();
     });
   }
 

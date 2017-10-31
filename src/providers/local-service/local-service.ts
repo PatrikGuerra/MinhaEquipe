@@ -12,26 +12,49 @@ import { ChatServiceProvider } from "../chat-service/chat-service";
 @Injectable()
 export class LocalServiceProvider {
   constructor(
-    public db: AngularFireDatabase, 
+    public db: AngularFireDatabase,
     private chatService: ChatServiceProvider) {
   }
 
-  public getLocais(keyEquipe: string) {
-    return this.db.list(`${dataBaseStorage.Local}/${keyEquipe}`);
+  private firebaseToLocal(objeto: any) {
+    let loacl: Local = Object.assign(new Local(), JSON.parse(JSON.stringify(objeto)))
+    loacl.$key = objeto.$key;
+
+    return loacl;
+  }
+
+  public getLocal(keyEquipe: string, keyLocal: string) {
+    return this.db.object(`${dataBaseStorage.Local}/${keyEquipe}/${keyLocal}`).map(item => {
+      return this.firebaseToLocal(item);
+    });
+  }
+
+  public getLocaisPorEquipe(keyEquipe: string) {
+    return this.db.list(`${dataBaseStorage.Local}/${keyEquipe}`).map((items) => {
+      return items.map(item => {
+        return this.firebaseToLocal(item);
+      });
+    })
   }
 
   public remove(key: string) {
-    return this.db.database.ref(key).remove();
+    //Tarefa Service
+    //getTarefasPorLocalId(keyEquipe: string, keyLocal: string)
+    return this.db.database.ref(`${dataBaseStorage.Local}/${key}`).remove();
   }
 
-  public save(local: Local, key: string, keyEquipe: string) {
+  public save(local: Local, keyEquipe: string) {
     var ref = this.db.database.ref(`${dataBaseStorage.Local}/${keyEquipe}`);
 
-    if (!key) {
-      key = ref.push().key;
+    if (!local.$key) {
+      local.$key = ref.push().key;
       //Envia notificação no chat
     }
 
-    return ref.child(key).update(local);
+    return ref.child(local.$key).update({
+      'nome': local.nome,
+      'descricao': local.descricao,
+      'coordenadas': local.coordenadas,
+    });
   }
 }

@@ -10,6 +10,8 @@ import { Local } from "../../models/local";
 import { Equipe } from "../../models/equipe";
 import { Coordenadas } from "../../models/coordenadas";
 
+//Providers
+import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 import { LocalServiceProvider } from "../../providers/local-service/local-service";
 
 @Component({
@@ -17,10 +19,9 @@ import { LocalServiceProvider } from "../../providers/local-service/local-servic
   templateUrl: 'local.html',
 })
 export class LocalPage {
-  localForm: FormGroup;
-  local: Local = new Local();
-  equipe: Equipe;
-  key: string = ""
+  private localForm: FormGroup;
+  private local: Local = new Local();
+  private equipe: Equipe;
 
   constructor(
     public navCtrl: NavController,
@@ -29,6 +30,7 @@ export class LocalPage {
     private formBuilder: FormBuilder,
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
+    public sessaoService: SessaoServiceProvider,
     private localService: LocalServiceProvider) {
 
     this.localForm = this.formBuilder.group({
@@ -36,16 +38,10 @@ export class LocalPage {
       descricao: ['', Validators.compose([Validators.required])],
     });
 
-    console.log("this.navParams.data")
-    console.log(this.navParams.data)
+    this.equipe = this.sessaoService.equipe;
 
-    if (this.navParams.data.equipe) {
-      this.equipe = this.navParams.data.equipe;
-    }
-
-    if (this.navParams.data.key) {
+    if (this.navParams.data.local) {
       this.local = this.navParams.data.local;
-      this.key = this.navParams.data.key;
     }
   }
 
@@ -53,10 +49,7 @@ export class LocalPage {
     console.log('ionViewDidLoad LocalPage');
   }
 
-
   save() {
-    let isUpdate = (this.key.length > 0);
-
     let toast = this.toastCtrl.create({
       duration: 3000,
       position: 'bottom'
@@ -64,17 +57,17 @@ export class LocalPage {
 
     let loading = this.loadingCtrl.create();
 
-    if (isUpdate) {
-      toast.setMessage("Local alterado.");
-      loading.setContent('Alterando Local...');
-    } else {
+    if (this.local.$key) {
       toast.setMessage("Local criado.");
       loading.setContent('Criando Local...');
+    } else {
+      toast.setMessage("Local alterado.");
+      loading.setContent('Alterando Local...');
     }
 
     loading.present();
 
-    this.localService.save(this.local, this.key, this.equipe.$key).then((data) => {
+    this.localService.save(this.local, this.equipe.$key).then((data) => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();
@@ -87,15 +80,11 @@ export class LocalPage {
   }
 
   selecionarLocal() {
-
     let localMapaPage = this.modalCtrl.create(LocalMapaPage, {
       coordenadas: (this.local && this.local.coordenadas) ? this.local.coordenadas : null
     });
 
-
     localMapaPage.onDidDismiss((data) => {
-      console.log(data)
-
       if (data) {
         this.local.coordenadas = <Coordenadas>data.coordenada
       }

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+//Providers
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
 
+//Models
 import { ConviteUsuario } from "../../models/conviteUsuario";
 
 @Component({
@@ -19,7 +21,7 @@ export class ConvitesPage {
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private conviteService: ConviteServiceProvider,
-    private userService: UserServiceProvider) {
+    private usuarioService: UsuarioServiceProvider) {
 
     let loading = this.loadingCtrl.create({
       content: 'Carregando convites...'
@@ -27,7 +29,7 @@ export class ConvitesPage {
 
     loading.present();
 
-    this.userService.getuid().then((usuarioUid) => {
+    this.usuarioService.getuid().then((usuarioUid) => {
       this.conviteService.meusConvites(usuarioUid).subscribe((convitesData: ConviteUsuario[]) => {
         this.convites = convitesData;
 

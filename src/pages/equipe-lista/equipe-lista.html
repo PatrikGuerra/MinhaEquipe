@@ -19,7 +19,7 @@
     <button ion-item *ngFor="let equipe of equipes" (click)="editarEquipe(equipe)">
     <!--<ion-item *ngFor="let equipe of equipes" (click)="editarEquipe(equipe)">-->
       <ion-avatar item-start>
-        <img src="{{ equipe.fotoUrl ? equipe.fotoUrl : '../../assets/images/no-image.gif'}}">
+        <img src="{{ equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
       </ion-avatar>
       {{ equipe.nome }}
       <!-- 
