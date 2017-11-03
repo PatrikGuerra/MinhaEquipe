@@ -1,159 +1,159 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
+// https://ionicthemes.com/tutorials/about/ionic-2-google-maps-google-places-geolocation
+// https://github.com/ionicthemes/ionic-2-google-maps-google-places-geolocation
+
+import { Component, NgZone, ElementRef, ViewChild } from '@angular/core';
+import { Geolocation } from '@ionic-native/geolocation';
+import { LoadingController, NavController, NavParams, ViewController } from 'ionic-angular';
 
 import { } from '@types/googlemaps';
-import { Geolocation } from '@ionic-native/geolocation';
 
-///import {Component} from '@angular/core';
-//import {NavController, ModalController} from 'ionic-angular';
-import { MapsAutoCompletePage } from '../maps-auto-complete/maps-auto-complete';
-
-import { GoogleMapsLocal } from "../../models/google-maps/googleMapsLocal";
+//Models
 import { Coordenadas } from "../../models/coordenadas";
+
 @Component({
   selector: 'page-local-mapa',
   templateUrl: 'local-mapa.html',
 })
-
 export class LocalMapaPage {
-  //https://stackoverflow.com/questions/36064697/how-to-install-typescript-typings-for-google-maps#answer-42733315
-  //https://www.joshmorony.com/ionic-2-how-to-use-google-maps-geolocation-video-tutorial/
-
   @ViewChild('map') mapElement: ElementRef;
-  map: google.maps.Map;
-  marker: google.maps.Marker;
-  private geocoder = new google.maps.Geocoder();
+  private map: google.maps.Map;
+  private marker: google.maps.Marker;
+  autocomplete: any;
+  private mapsAutocompleteService = new google.maps.places.AutocompleteService();
+  private mapsGeocoder = new google.maps.Geocoder;
+  private autocompleteItems = [];
 
   constructor(
+    public zone: NgZone,
+    public geolocation: Geolocation,
+    public loadingCtrl: LoadingController,
     public navCtrl: NavController,
     public navParams: NavParams,
-    private modalCtrl: ModalController,
-    private viewCtrl: ViewController,
-    public geolocation: Geolocation) {
+    public viewCtrl: ViewController) {
 
-    console.log("this.navParams.data")
-    console.log(this.navParams.data)
+    this.autocomplete = {
+      input: ''
+    };
   }
 
-  ngOnInit() {
-    console.log('ngOnInit LocalMapaPage');
-  }
-
-  ionViewWillEnter() {
-    this.carregarMapa()
-  }
-
-  valida() {
-    console.log(this.marker);
-    console.log(this.marker.getPosition());
-    console.log(this.marker.getPosition().lat());
-    console.log(this.marker.getPosition().lng());
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LocalMapaPage');
-  }
-
-  confirmar() {
-    var coordenada: Coordenadas = new Coordenadas(this.marker.getPosition().lat(), this.marker.getPosition().lng());
-    console.log(Coordenadas)
-    this.viewCtrl.dismiss({
-      coordenada: coordenada
+  private setMarker(latLng: google.maps.LatLng) {
+    let newMarker = new google.maps.Marker({
+      position: latLng,
+      map: this.map
     });
+
+    this.marker = newMarker;
+  }
+
+  ionViewDidEnter() {
+    this.map = new google.maps.Map(this.mapElement.nativeElement, {
+      center: {
+        lat: 0,
+        lng: 0
+      },
+      zoom: 15, //https://developers.google.com/maps/documentation/static-maps/intro#Zoomlevels
+      disableDefaultUI: true //https://developers.google.com/maps/documentation/javascript/examples/control-disableUI?hl=pt-br
+    });
+
+    if (this.navParams.get('coordenadas')) {
+      let coordenadas = this.navParams.get('coordenadas');
+      let loadedMarket = new google.maps.LatLng(coordenadas.lat, coordenadas.lng);
+
+      this.setMarker(loadedMarket);
+      this.map.setCenter(loadedMarket);
+    } else {
+      this.centerMapOnCurrentPosition();
+    }
+
+    this.map.addListener('click', (e => {
+      this.clearMarkers();
+      this.setMarker(e.latLng);
+    }));
+  }
+
+  centerMapOnCurrentPosition() {
+    let loadingGeo = this.loadingCtrl.create({
+      content: "Buscando sua localização.."
+    });
+
+    loadingGeo.present();
+
+    this.currentPosition().then(data => {
+      this.map.setCenter(data);
+      loadingGeo.dismiss();
+    }).catch(error => {
+      loadingGeo.dismiss();
+    })
+  }
+
+  private currentPosition(): Promise<google.maps.LatLng> {
+    return new Promise((resolve, reject) => {
+      this.geolocation.getCurrentPosition().then((resp) => {
+        let pos = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
+
+        resolve(pos);
+      }).catch((error) => {
+        console.log('Error getting location', error);
+        reject(error);
+      });
+    });
+  }
+
+  updateSearchResults() {
+    if (this.autocomplete.input == '') {
+      this.autocompleteItems = [];
+      return;
+    }
+
+    this.mapsAutocompleteService.getPlacePredictions({
+      input: this.autocomplete.input
+    },
+      (predictions, status) => {
+        this.autocompleteItems = [];
+        if (predictions) {
+          this.zone.run(() => {
+            predictions.forEach((prediction) => {
+              this.autocompleteItems.push(prediction);
+            });
+          });
+        }
+      });
+  }
+
+  selectSearchResult(item) {
+    this.clearMarkers();
+    this.autocompleteItems = [];
+
+    this.mapsGeocoder.geocode({
+      'placeId': item.place_id
+    }, (results, status) => {
+      if (status == google.maps.GeocoderStatus.OK && results[0]) {
+        let novoMarcador = new google.maps.Marker({
+          position: results[0].geometry.location,
+          map: this.map
+        });
+
+        this.marker = novoMarcador;
+        this.map.setCenter(results[0].geometry.location);
+      }
+    })
+  }
+
+  clearMarkers() {
+    if (this.marker) {
+      this.marker.setMap(null);
+    }
   }
 
   cancelar() {
     this.viewCtrl.dismiss();
   }
 
-  setMapOnAll(map) {
-    if (this.marker) {
-      this.marker.setMap(map);
-    }
-  }
+  confirmar() {
+    var coordenada: Coordenadas = new Coordenadas(this.marker.getPosition().lat(), this.marker.getPosition().lng());
 
-  clearMarkers() {
-    this.setMapOnAll(null);
-  }
-
-  showMarkers() {
-    this.setMapOnAll(this.map);
-  }
-
-  setMarker(location) {
-    var self = this;
-
-    this.marker = new google.maps.Marker({
-      position: location,
-      map: self.map
-    });
-  }
-
-  pesquisaLocal() {
-    let mapsAutoCompletePage = this.modalCtrl.create(MapsAutoCompletePage);
-
-    mapsAutoCompletePage.onDidDismiss((data: GoogleMapsLocal) => {
-      if (data) {
-        this.clearMarkers()
-
-        this.setMarker(new google.maps.LatLng(data.lat, data.lng))
-
-        console.log(data);
-      } else {
-        console.log("veio nada");
-      }
-    });
-
-    mapsAutoCompletePage.present();
-  }
-
-  //https://developers.google.com/maps/documentation/javascript/examples/geocoding-reverse?hl=pt-br
-  geocodePlaceId(latlng: any) {//: Promise<google.maps.LatLng> {
-    var self = this;
-
-    self.geocoder.geocode({ 'location': latlng }, function (results, status) {
-      console.log("results");
-      console.log(results);
-      console.log("status");
-      console.log(status);
-
-    });
-  }
-
-  carregarMapa() {
-    this.geolocation.getCurrentPosition().then((geoPosition) => {
-
-
-      let latLng = null;
-      console.log(this.navParams.data.coordenadas)
-      if (this.navParams.data.coordenadas) {
-        latLng = new google.maps.LatLng(this.navParams.data.coordenadas.lat, this.navParams.data.coordenadas.lng)
-
-      } else {
-        latLng = new google.maps.LatLng(geoPosition.coords.latitude, geoPosition.coords.longitude);
-      }
-
-      let mapOptions = {
-        center: latLng,
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      }
-
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-
-      var self = this;
-
-      this.map.addListener('click', function (e) {
-        console.log(e)
-        console.log(e.latLng)
-        self.clearMarkers()
-        self.setMarker(e.latLng)
-      });
-
-      self.setMarker(latLng)
-
-    }, (error) => {
-      console.error(error)
+    this.viewCtrl.dismiss({
+      coordenada: coordenada
     });
   }
 }

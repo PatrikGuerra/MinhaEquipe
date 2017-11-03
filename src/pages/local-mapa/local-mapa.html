@@ -1,24 +1,33 @@
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-toolbar color="primary">
     <ion-buttons start left>
-      <button ion-button icon-only (click)="cancelar()"><ion-icon name="arrow-back"></ion-icon></button>
+      <button ion-button icon-only (click)="cancelar()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
     </ion-buttons>
 
-    <ion-title>Mapa</ion-title>
+    <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Pesquise por um lugar"></ion-searchbar>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="confirmar()"><ion-icon name="checkmark"></ion-icon></button>
+      <button ion-button icon-only (click)="confirmar()"  [disabled]="!this.marker">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
     </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content no-bounce>
-  <div #map id="map"></div>
-  <!--
+<ion-content>
+  <ion-list [hidden]="autocompleteItems.length == 0">
+    <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+      {{ item.description }}
+    </ion-item>
+  </ion-list>
+
+  <div #map id='map'></div>
+
   <ion-fab right bottom>
-    <button ion-fab (click)="pesquisaLocal()">
-      <ion-icon name="search"></ion-icon>
+    <button ion-fab color="primary" (click)="centerMapOnCurrentPosition()">
+      <ion-icon name="locate"></ion-icon>
     </button>
   </ion-fab>
--->
 </ion-content>

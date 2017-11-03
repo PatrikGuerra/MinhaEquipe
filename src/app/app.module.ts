@@ -30,10 +30,9 @@ import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 import { EquipeMembrosPage } from "../pages/equipe-membros/equipe-membros";
 import { ConvitesPage } from "../pages/convites/convites";
-import { ChatPage } from "../pages/chat/chat";
+import { ChatPage } from "../pages/chat/chat";   
 import { LocalPage } from "../pages/local/local";
 import { LocalMapaPage } from "../pages/local-mapa/local-mapa";
-import { MapsAutoCompletePage } from "../pages/maps-auto-complete/maps-auto-complete";
 import { LocaisPage } from "../pages/locais/locais";
 import { TarefasPage } from "../pages/tarefas/tarefas";
 import { TarefaPage } from "../pages/tarefa/tarefa";
@@ -59,7 +58,6 @@ import { ChatServiceProvider } from "../providers/chat-service/chat-service";
 import { LocalServiceProvider } from '../providers/local-service/local-service';
 import { TarefaServiceProvider } from '../providers/tarefa-service/tarefa-service';
 
-//import { IonTagsInputModule } from "../components/ion-tags-input/index";
 import { TagsInputModule } from "../components/tags-input/index";
 
 import { firebaseConfig } from "./app.constants";
@@ -85,9 +83,8 @@ import { SessaoServiceProvider } from '../providers/sessao-service/sessao-servic
       ConvitesPage,
       ChatPage, ElasticDirective,
       LocalPage,
-      LocaisPage,
       LocalMapaPage,
-      MapsAutoCompletePage,
+      LocaisPage,
       TarefasPage,
       TarefaPage,
       LocalSelectPage,
@@ -127,9 +124,8 @@ import { SessaoServiceProvider } from '../providers/sessao-service/sessao-servic
       ConvitesPage,
       ChatPage,
       LocalPage,
-      LocaisPage,
       LocalMapaPage,
-      MapsAutoCompletePage,
+      LocaisPage,
       TarefasPage,
       TarefaPage,
       LocalSelectPage,
