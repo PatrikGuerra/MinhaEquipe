@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { Observable } from "rxjs/Observable";
 
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 
 import * as firebase from 'firebase';
 import { dataBaseStorage } from "../../app/app.constants";
@@ -12,7 +11,6 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Models
 import { Usuario } from "../../models/usuario";
-import { Credencial } from "../../models/credencial";
 
 //Services
 import { AuthServiceProvider } from "../auth-service/auth-service";

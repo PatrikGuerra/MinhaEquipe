@@ -1,23 +1,16 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
+import { NavParams, Platform, ViewController } from 'ionic-angular';
 
 @Component({
   selector: 'page-local-select',
   templateUrl: 'local-select.html',
 })
 export class LocalSelectPage {
-  items: any[];
-  displayProperty: string;
-  title: string;
-  selectedItem: any;
-  searchQuery: string;
-
-  keySelected:string;
-
-
-  // navParams.get('displayProperty');
-  // navParams.get('title');
-  // navParams.get('items');
+  private items: any[];
+  private displayProperty: string;
+  private title: string;
+  private selectedItem: any;
+  private keySelected:string;
 
   constructor(
     public navCtrl: ViewController,
@@ -37,7 +30,7 @@ export class LocalSelectPage {
       this.title = 'Pesquisar...';
     }
 
-    platform.registerBackButtonAction(() => {
+    this.platform.registerBackButtonAction(() => {
       this.cancel();
     });
   }
@@ -47,13 +40,10 @@ export class LocalSelectPage {
   }
 
   getItems(ev: any) {
-    // Reset items back to all of the items
     this.initializeItems();
 
-    // set val to the value of the searchbar
     let val = ev.target.value;
 
-    // if the value is an empty string don't filter the items
     if (val && val.trim() != '') {
       this.items = this.items.filter((item) => {
         return (item[this.displayProperty].toLowerCase().indexOf(val.toLowerCase()) > -1);

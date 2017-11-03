@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, ToastController, ViewController, AlertController, LoadingController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, NavParams, ViewController, AlertController, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
@@ -14,16 +14,13 @@ export class PerfilAlterarSenhaPage {
   alterarSenhaForm: FormGroup;
 
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
     private viewCtrl: ViewController,
-    private toastCtrl: ToastController,
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private usuarioService: UsuarioServiceProvider) {
 
-    this.alterarSenhaForm = formBuilder.group({
+    this.alterarSenhaForm = this.formBuilder.group({
       senhaAtual: ['', Validators.compose([Validators.required])],
       novaSenha: ['', Validators.compose([Validators.required])],
       novaSenhaConfirmar: ['', Validators.compose([Validators.required])]

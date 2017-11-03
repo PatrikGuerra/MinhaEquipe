@@ -32,7 +32,7 @@ export class LoginPage {
     private loadingCtrl: LoadingController,
     private authService: AuthServiceProvider) {
 
-    this.loginForm = formBuilder.group({
+    this.loginForm = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required])],
       senha: ['', Validators.compose([Validators.required])]
     });
@@ -48,17 +48,17 @@ export class LoginPage {
     console.log('ionViewDidLoad LoginPage');
   }
 
-  private criarConta() {
+  criarConta() {
     this.navCtrl.push(CadastroPage);
   }
 
-  private esqueciSenha() {
+  esqueciSenha() {
     this.navCtrl.push(EsqueciSenhaPage, {
       email: this.credencial.email
     });
   }
 
-  private entrar() {
+  entrar() {
     let toast = this.toastCtrl.create({
       position: 'bottom',
       dismissOnPageChange: true

@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, ToastController, ViewController, AlertController, LoadingController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, ViewController, AlertController, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 
@@ -19,16 +19,14 @@ export class PerfilAlterarEmailPage {
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     private viewCtrl: ViewController,
-    private toastCtrl: ToastController,
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private usuarioService: UsuarioServiceProvider,
     private authService: AuthServiceProvider) {
 
-    this.alterarEmailForm = formBuilder.group({
+    this.alterarEmailForm = this.formBuilder.group({
       novoEmail: ['', Validators.compose([Validators.required])],
       password: ['', Validators.compose([Validators.required])]
     });

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
+import {  NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 
 //Providers
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
@@ -42,7 +42,7 @@ export class ConvitesPage {
     console.log('ionsViewDidLoad ConvitesPage');
   }
 
-  private recusarConvite(convite: ConviteUsuario) {
+  recusarConvite(convite: ConviteUsuario) {
     let loading = this.loadingCtrl.create();
 
     let toast = this.toastCtrl.create({
@@ -59,7 +59,7 @@ export class ConvitesPage {
     });
   }
 
-  private aceitarConvite(convite: ConviteUsuario) {
+  aceitarConvite(convite: ConviteUsuario) {
     let loading = this.loadingCtrl.create();
 
     let toast = this.toastCtrl.create({

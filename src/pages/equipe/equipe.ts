@@ -1,7 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, Platform, ActionSheetController, LoadingController, AlertController, ModalController } from 'ionic-angular';
-
-import { Storage } from '@ionic/storage';
+import { Component } from '@angular/core';
+import { NavController, NavParams, ToastController, ActionSheetController, LoadingController } from 'ionic-angular';
 
 //Modal
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
@@ -66,7 +64,7 @@ export class EquipePage {
     console.log('ionViewDidLoad EquipePage');
   }
 
-  private save() {
+  save() {
     let toast = this.toastCtrl.create({
       duration: 3000,
       position: 'bottom'
@@ -96,7 +94,7 @@ export class EquipePage {
     toast.dismiss();
   }
 
-  private menuAlterarImagem() {
+  menuAlterarImagem() {
     let actionSheet = this.actionsheetCtrl.create({
       buttons: [
         {
@@ -145,39 +143,32 @@ export class EquipePage {
     loading.dismiss();
   }
 
-  private convidar() {
-    console.log("abrir Convidar");
+  abrirConvidar() {
     this.navCtrl.push(EquipeConvidarPage, {
       equipe: this.equipe
     });
   }
 
-  private abrirChat() {
-    // this.usuarioService.getUser().then(userObservable => {
-    //   userObservable.subscribe((usuarioData: Usuario) => {
-
+  abrirChat() {
     this.navCtrl.push(ChatPage, {
       equipe: this.equipe,
       usuario: this.usuario
     });
-
-    //   });
-    // });
   }
 
-  private abrirLocais() {
+  abrirLocais() {
     this.navCtrl.push(LocaisPage, {
       equipe: this.equipe,
     });
   }
 
-  private abrirTarefas() {
+  abrirTarefas() {
     this.navCtrl.push(TarefasPage, {
       equipe: this.equipe,
     });
   }
 
-  private abrirMembrosDaEquipe() {
+  abrirMembrosDaEquipe() {
     this.navCtrl.push(EquipeMembrosPage);
   }
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ModalController, AlertController } from 'ionic-angular';
+import { NavController, ViewController, ModalController, AlertController } from 'ionic-angular';
 
 //Page
 import { LoginPage } from "../login/login";
@@ -20,7 +20,6 @@ export class PerfilPopoverPage {
   constructor(
     public viewCtrl: ViewController,
     public navCtrl: NavController,
-    public navParams: NavParams,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private authService: AuthServiceProvider) {

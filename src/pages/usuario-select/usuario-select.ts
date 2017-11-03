@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
+import { NavParams, Platform, ViewController } from 'ionic-angular';
 
 @Component({
   selector: 'page-usuario-select',
@@ -8,30 +8,18 @@ import { IonicPage, NavController, NavParams, Platform, ViewController } from 'i
 export class UsuarioSelectPage {
   private items: any[] = [];
   private displayProperty: string = "";
-  private title: string  = "";
+  private title: string = "";
   private selectedItens: string[] = [];
-  private searchQuery: string  = "";
 
-  // navParams.get('displayProperty');
-  // navParams.get('items');
-  // navParams.get('selectedItens')) {
-  // navParams.get('title');
+  // 'selectedItens'
+  // 'displayProperty'
+  // 'title'
+  // 'items'
 
   constructor(
     public navCtrl: ViewController,
     public navParams: NavParams,
     private platform: Platform) {
-
-console.log("items")
-console.log(this.items)
-console.log("displayProperty")
-console.log(this.displayProperty)
-console.log("title")
-console.log(this.title)
-console.log("selectedItens")
-console.log(this.selectedItens)
-console.log("searchQuery")
-console.log(this.searchQuery)
 
     console.log("navParams.data")
     console.log(navParams.data)
@@ -49,7 +37,7 @@ console.log(this.searchQuery)
       this.title = 'Pesquisar...';
     }
 
-    platform.registerBackButtonAction(() => {
+    this.platform.registerBackButtonAction(() => {
       this.cancel();
     });
   }
@@ -59,13 +47,10 @@ console.log(this.searchQuery)
   }
 
   getItems(ev: any) {
-    // Reset items back to all of the items
     this.initializeItems();
 
-    // set val to the value of the searchbar
     let val = ev.target.value;
 
-    // if the value is an empty string don't filter the items
     if (val && val.trim() != '') {
       this.items = this.items.filter((item) => {
         return (item[this.displayProperty].toLowerCase().indexOf(val.toLowerCase()) > -1);
@@ -92,5 +77,4 @@ console.log(this.searchQuery)
   cancel() {
     this.navCtrl.dismiss();
   }
-
 }

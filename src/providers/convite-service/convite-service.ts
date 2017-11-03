@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { Observable } from "rxjs/Observable";
 
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
-import * as firebase from 'firebase';
 import { dataBaseStorage } from "../../app/app.constants";
 
 //Services
@@ -21,7 +19,6 @@ import { ConviteEquipeData } from "../../models/data/ConviteEquipeData";
 
 @Injectable()
 export class ConviteServiceProvider {
-  private listaConvites: FirebaseListObservable<any[]>
 
   constructor(
     public db: AngularFireDatabase,

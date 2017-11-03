@@ -1,7 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 
-import { NgForm } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 //Providers
@@ -25,7 +24,7 @@ export class EsqueciSenhaPage {
       this.email = this.navParams.data.email;
     }
 
-    this.esqueciSenhaForm = formBuilder.group({
+    this.esqueciSenhaForm = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required])]
     });
   }
@@ -34,7 +33,7 @@ export class EsqueciSenhaPage {
     console.log('ionViewDidLoad EsqueciSenhaPage');
   }
 
-  private esqueciSenha() {
+  esqueciSenha() {
     let toast = this.toastCtrl.create({
       duration: 5000,
       position: 'bottom'
@@ -57,5 +56,4 @@ export class EsqueciSenhaPage {
       toast.present();
     });
   }
-
 }

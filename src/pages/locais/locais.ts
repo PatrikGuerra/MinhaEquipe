@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController,ToastController } from 'ionic-angular';
-
-import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
-import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
-
-import { ConviteUsuario } from "../../models/conviteUsuario";
+import { NavController, NavParams } from 'ionic-angular';
 
 //Pages
 import { LocalPage } from "../local/local";
@@ -27,8 +22,6 @@ export class LocaisPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private toastCtrl: ToastController,
-    //private loadingCtrl: LoadingController,
     public sessaoService: SessaoServiceProvider,
     private localService: LocalServiceProvider) {
 

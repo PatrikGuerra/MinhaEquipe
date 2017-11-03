@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
 
 //Pages
 import { TarefaPage } from "../tarefa/tarefa";
 
 //Services
-import { TarefaServiceProvider } from "../../providers/tarefa-service/tarefa-service";
-import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 
 //Models
@@ -24,9 +22,7 @@ export class TarefasPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
-    private sessaoService: SessaoServiceProvider,
-    private tarefaService: TarefaServiceProvider,
-    private usuarioService: UsuarioServiceProvider) {
+    private sessaoService: SessaoServiceProvider) {
 
     this.equipe = this.sessaoService.equipe;
   }
