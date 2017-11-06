@@ -11,6 +11,8 @@ import { LocalMapaPage } from "../../pages/local-mapa/local-mapa";
 
 import { dataBaseStorage } from "../../app/app.constants";
 
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -18,16 +20,15 @@ import { dataBaseStorage } from "../../app/app.constants";
 export class HomePage {
   constructor(
     public navCtrl: NavController,
-    public storage: Storage) {
+    public storage: Storage,
+    public usuarioProvider: UsuarioServiceProvider) {
   }
 
   ionViewDidLoad() {
     this.storage.get("uid").then(uuid => {
       console.log(uuid)
     })
-    
-    console.log("dataBaseStorage[0]")
-    console.log(dataBaseStorage[0])
+    console.log(this.usuarioProvider.usuario);
   }
 
   verPerfil() {

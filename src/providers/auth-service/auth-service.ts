@@ -8,9 +8,12 @@ import * as firebase from 'firebase/app';
 //Models
 import { Credencial } from "../../models/credencial";
 
+//Providers
+import { EmailNaoConfirmadoException } from "../../customError/emailNaoConfirmadoException";
+
 @Injectable()
 export class AuthServiceProvider {
-  user: Observable<firebase.User>;
+  public user: Observable<firebase.User>;
 
   constructor(private angularFireAuth: AngularFireAuth) {
     this.user = angularFireAuth.authState;
@@ -21,12 +24,27 @@ export class AuthServiceProvider {
     return this.angularFireAuth.auth.createUserWithEmailAndPassword(credencial.email, credencial.senha);
   }
 
-  sair() {
+  public sair() {
     return this.angularFireAuth.auth.signOut();
   }
 
-  entrar(credencial: Credencial) {
-    return this.angularFireAuth.auth.signInWithEmailAndPassword(credencial.email, credencial.senha);
+  public entrar(credencial: Credencial): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.angularFireAuth.auth.signInWithEmailAndPassword(credencial.email, credencial.senha).then(firebaseUser => {
+
+        if (!firebaseUser.emailVerified) {
+          throw new EmailNaoConfirmadoException("Você deve confirmar seu e-mail.");
+        };
+
+        resolve(firebaseUser);
+      }).catch(error => {
+        if (error instanceof EmailNaoConfirmadoException) {
+          this.sair();
+        }
+
+        reject(error);
+      });
+    });
   }
 
   esqueciSenha(email: string) {

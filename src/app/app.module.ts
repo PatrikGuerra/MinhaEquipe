@@ -8,8 +8,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { MyApp } from './app.component';
 
 //Camera
-import { Camera } from '@ionic-native/camera';
-//https://github.com/apache/cordova-plugin-camera#module_camera.CameraOptions
+import { Camera } from '@ionic-native/camera'; //https://github.com/apache/cordova-plugin-camera#module_camera.CameraOptions
 
 //Storage
 import { IonicStorageModule } from "@ionic/storage";
@@ -37,6 +36,8 @@ import { LocaisPage } from "../pages/locais/locais";
 import { TarefasPage } from "../pages/tarefas/tarefas";
 import { TarefaPage } from "../pages/tarefa/tarefa";
 
+import { firebaseConfig } from "./app.constants";
+
 //Maps
 import { Geolocation } from '@ionic-native/geolocation';
 
@@ -50,20 +51,20 @@ import { LocalSelectPage } from "../pages/local-select/local-select";
 import { UsuarioSelectPage } from "../pages/usuario-select/usuario-select";
 
 //Providers
+import { SessaoServiceProvider } from '../providers/sessao-service/sessao-service';
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
 import { EquipeServiceProvider } from "../providers/equipe-service/equipe-service";
 import { ConviteServiceProvider } from "../providers/convite-service/convite-service";
 import { ChatServiceProvider } from "../providers/chat-service/chat-service";
+  import { ElasticDirective } from "../directives/elastic/elastic";
 import { LocalServiceProvider } from '../providers/local-service/local-service';
 import { TarefaServiceProvider } from '../providers/tarefa-service/tarefa-service';
 
+//Components
 import { TagsInputModule } from "../components/tags-input/index";
-
-import { firebaseConfig } from "./app.constants";
-
-import { ElasticDirective } from "../directives/elastic/elastic";
-import { SessaoServiceProvider } from '../providers/sessao-service/sessao-service';
+import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/tarefa-status-label";
+// import { SessaoUsuarioServiceProvider } from '../providers/sessao-usuario-service/sessao-usuario-service';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,9 @@ import { SessaoServiceProvider } from '../providers/sessao-service/sessao-servic
       TarefasPage,
       TarefaPage,
       LocalSelectPage,
-      UsuarioSelectPage
+      UsuarioSelectPage,
+
+      TarefaStatusLabelComponent
   ],
   imports: [
     BrowserModule,
@@ -103,7 +106,6 @@ import { SessaoServiceProvider } from '../providers/sessao-service/sessao-servic
     AngularFireAuthModule,
     AngularFireDatabaseModule, //Novo -- Firebase
     
-    //IonTagsInputModule,
     TagsInputModule
   ],
   bootstrap: [IonicApp],
@@ -145,7 +147,8 @@ import { SessaoServiceProvider } from '../providers/sessao-service/sessao-servic
     Geolocation,
     LocalServiceProvider,
     TarefaServiceProvider,
-    SessaoServiceProvider
+    SessaoServiceProvider,
+    // SessaoUsuarioServiceProvider
   ]
 })
 export class AppModule {}

@@ -12,6 +12,10 @@
   </ion-fab>
 
   <form [formGroup]="tarefaForm">
+    <div *ngIf="tarefa.$key">
+      <tarefa-status-label [status]="tarefa.situacao" [buttonBlock]="true"></tarefa-status-label>
+    </div>
+
     <ion-item>
       <ion-label floating>Nome</ion-label>
       <ion-input type="text" [(ngModel)]="tarefa.nome" minlength="5" maxlength="30" formControlName="nome"></ion-input>
@@ -22,51 +26,56 @@
       <ion-textarea [(ngModel)]="tarefa.descricao" maxlength="140" formControlName="descricao"></ion-textarea>
     </ion-item>
 
-    <div padding>
-      <button ion-button (click)="selecionarResponsaveis()" block icon-only>
-        <ion-icon name="person-add"></ion-icon>
-      </button>
-    </div>
+    <ion-card>
+      <ion-list>
+        <ion-item>
+          <h2>Responsáveis</h2>
+          <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarResponsaveis()">
+            <ion-icon name="person-add"></ion-icon>
+          </button>
+        </ion-item>
 
-    <ion-list *ngIf="tarefa.responsaveis.length">
-      <ion-item *ngFor="let responsavel of tarefa.responsaveis">
-        <ion-avatar item-start>
-          <img src="{{ responsavel.fotoUrl ? responsavel.fotoUrl : 'assets/images/no-image.jpg'}}">
-        </ion-avatar>
-        {{ responsavel.nome }}
-      </ion-item>
-    </ion-list>
+        <ion-item *ngFor="let responsavel of tarefa.responsaveis">
+          <ion-avatar item-start>
+            <img src="{{ responsavel.fotoUrl ? responsavel.fotoUrl : 'assets/images/no-image.jpg'}}">
+          </ion-avatar>
+          {{ responsavel.nome }}
+        </ion-item>
+
+      </ion-list>
+    </ion-card>
 
     <ion-card *ngIf="tarefa.keyLocal">
       <div style="position: relative">
         <img src="https://maps.googleapis.com/maps/api/staticmap?autoscale=2&size=600x600&maptype=roadmap&format=png&visual_refresh=true&markers=icon:http://www.clker.com/cliparts/e/3/F/I/0/A/google-maps-marker-for-residencelamontagne-hi.png|{{ tarefa.local.coordenadas.lat }},{{ tarefa.local.coordenadas.lng }}">
 
-        <ion-fab right top>
+        <ion-fab right top *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)">
           <button ion-fab class="fab-map" (click)="selecionarLocal()">
             <ion-icon name='create'></ion-icon>
           </button>
         </ion-fab>
       </div>
     </ion-card>
-<!-- {{enumTarefaSituacao.Pendente}} -->
-
-
 
     <div padding>
       <div *ngIf="tarefa.$key">
-        <div *ngIf="tarefa.situacao == enumTarefaSituacao.Pendente">
+        <div *ngIf="isSituacao(enumTarefaSituacao.Pendente) && isResponsavel()">
           <button ion-button block color="primary" (click)="comecarTarefa()">Começar</button>
         </div>
 
-        <div *ngIf="tarefa.situacao == enumTarefaSituacao.Andamento && ((tarefa.keyResponsaveis.indexOf(sessaoService.usuario.$key) > -1) ||  (equipe.keyResponsavel == sessaoService.usuario.$key))">
+        <div *ngIf=" isSituacao(enumTarefaSituacao.Andamento) && (isResponsavel() || isAdministradorEquipe())">
           <button ion-button block color="primary" (click)="finalizarTarefa()">Finalizar</button>
         </div>
 
-        <div *ngIf="equipe.keyResponsavel == sessaoService.usuario.$key && (tarefa.situacao == enumTarefaSituacao.Pendente || tarefa.situacao == enumTarefaSituacao.Andamento)">
+        <div *ngIf="isAdministradorEquipe() && (isSituacao(enumTarefaSituacao.Pendente) || isSituacao(enumTarefaSituacao.Andamento))">
           <button ion-button block color="primary" (click)="cancelarTarefa()">Cancelar</button>
         </div>
       </div>
-      <button ion-button block color="primary" [disabled]="!tarefaForm.valid  || !tarefa.local" (click)="save()">Salvar</button>
+
+      <div *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)">
+        <button ion-button block color="primary" [disabled]="!tarefaForm.valid || !tarefa.local" (click)="save()">Salvar</button>
+      </div>
     </div>
+
   </form>
 </ion-content>

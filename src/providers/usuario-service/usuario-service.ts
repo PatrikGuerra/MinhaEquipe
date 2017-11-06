@@ -11,13 +11,17 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Models
 import { Usuario } from "../../models/usuario";
+import { Credencial } from "../../models/credencial";
 
 //Services
 import { AuthServiceProvider } from "../auth-service/auth-service";
 
+//Others
+import { LocalStorage } from "../../app/app.constants";
 
 @Injectable()
 export class UsuarioServiceProvider {
+  public usuario: Usuario;
 
   constructor(
     public db: AngularFireDatabase,
@@ -27,6 +31,35 @@ export class UsuarioServiceProvider {
 
     console.log('Hello UsuarioServiceProvider Provider');
   }
+
+  public setUsuarioAplicacao(key: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+      this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
+        return this.firebaseToUsuario(item);
+      }).subscribe(dataUsuario => {
+        this.usuario = dataUsuario;
+        resolve(dataUsuario);
+      });
+
+    });
+  }
+
+  public entrar(credencial: Credencial): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.authProvider.entrar(credencial).then(firebaseUser => {
+
+        this.setUsuarioAplicacao(firebaseUser.uid).then(dataUsuario => {
+          this.storage.set(LocalStorage.UsuarioUid, dataUsuario.$key);
+          resolve(true);
+        });
+
+      }).catch(error => {
+        reject(error);
+      });
+    });
+  }
+
 
 
   private firebaseToUsuario(objeto: any) {

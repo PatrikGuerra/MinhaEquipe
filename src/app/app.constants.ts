@@ -18,9 +18,13 @@ export const dataBaseStorage = {
 };
 
 export enum TarefaSituacao	 {
-	Pendente = 0,
-	Andamento = 1,
+	Andamento = 0,
+	Pendente = 1,
 	Finalizado = 2,
-	
 	Cancelada = 3
 }
+
+export const LocalStorage = {
+	UsuarioUid: 'uid',
+	LoginEmail: 'loginEmail',
+};

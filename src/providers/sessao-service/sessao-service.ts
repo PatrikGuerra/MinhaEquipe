@@ -15,7 +15,6 @@ import { TarefaServiceProvider } from "../tarefa-service/tarefa-service";
 @Injectable()
 export class SessaoServiceProvider {
   public equipe: Equipe = new Equipe();
-  public usuario: Usuario = new Usuario();
 
   constructor(
     private equipeService: EquipeServiceProvider,
@@ -26,10 +25,6 @@ export class SessaoServiceProvider {
     console.log('Hello SessaoServiceProvider Provider');
   }
 
-  // this.sessaoService.setEquipeKey(equipe.$key).then(data => {
-  //   this.equipe = sessaoService.equipe;
-  //   loading.dismiss();
-  // })
   public setEquipeKey(keyEquipe: string): Promise<any> {
 
     return new Promise((resolve, reject) => {
@@ -93,9 +88,40 @@ export class SessaoServiceProvider {
     });
   }
 
+  private sort(a, b) {
+    if (a.situacao < b.situacao) {
+      return -1;
+    }
+
+    if (a.situacao > b.situacao) {
+      return 1;
+    }
+
+    return 0;
+  }
+
+  private dynamicSort(property) {
+    // var data = [];
+    // data = arrayOfSomething(...);
+    // data.sort(this.dynamicSort('property')); //crescente
+    // data.sort(this.dynamicSort('-property')); //Decrescente
+
+    var sortOrder = 1;
+    if (property[0] === "-") {
+      sortOrder = -1;
+      property = property.substr(1);
+    }
+    return function (a, b) {
+      var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+      return result * sortOrder;
+    }
+  }
+
   private sincronizarTarefas() {
     return new Promise((resolve, reject) => {
       this.tarefaService.getTarefasPorEquipe(this.equipe.$key).subscribe((data: Tarefa[]) => {
+
+        data.sort(this.dynamicSort('situacao'))
 
         data.forEach(tarefa => {
           tarefa.setReponsaveis(this.equipe.membros);

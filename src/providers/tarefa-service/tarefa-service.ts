@@ -1,30 +1,18 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
-import * as firebase from 'firebase/app';
 import { dataBaseStorage } from "../../app/app.constants";
+import { TarefaSituacao } from "../../app/app.constants";
 
 //Models
 import { Tarefa } from "../../models/tarefa";
-import { TarefaData } from "../../models/data/tarefaData";
-import { Usuario } from "../../models/usuario";
-import { Equipe } from "../../models/equipe";
-import { Local } from "../../models/local";
-
-
-//Servie
-import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
-import { LocalServiceProvider } from "../local-service/local-service";
 
 @Injectable()
 export class TarefaServiceProvider {
-  membros: any[];
+  private enumTarefaSituacao = TarefaSituacao;
 
   constructor(
-    public db: AngularFireDatabase,
-    private usuarioService: UsuarioServiceProvider,
-    private localService: LocalServiceProvider
-  ) {
+    public db: AngularFireDatabase) {
     console.log('Hello TarefaServiceProvider Provider');
   }
 
@@ -82,7 +70,7 @@ export class TarefaServiceProvider {
       'keyEquipe': tarefa.keyEquipe,
       'nome': tarefa.nome,
       'descricao': tarefa.descricao,
-      //'situacao': tarefa.situacao,
+      'situacao': tarefa.situacao,
     });
   }
 
@@ -93,6 +81,15 @@ export class TarefaServiceProvider {
 
     return this.db.database.ref(`${dataBaseStorage.Tarefa}/${tarefa.keyEquipe}/${tarefa.$key}`).remove();
   }
+
+  public alterarStatus(tarefa: Tarefa, eSituacao: TarefaSituacao) {
+    var refPai = this.db.database.ref(`${dataBaseStorage.Tarefa}/${tarefa.keyEquipe}`);
+
+    return refPai.child(tarefa.$key).update({
+      'situacao': eSituacao,
+    });
+  }
+
   // public getTarefasUsuario(keyEquipe: string): FirebaseListObservable<ConviteUsuario[]> {
   //   return <FirebaseListObservable<Tarefa[]>>this.db.list(`${dataBaseStorage.Tarefa}/${keyEquipe}`, {
   //     query: {

@@ -10,7 +10,7 @@ import { LoginPage } from "../pages/login/login";
 //import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 //import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 
-//import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
+import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
 
 
 @Component({
@@ -23,14 +23,23 @@ export class MyApp {
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
-    //usuarioService: UsuarioServiceProvider,
+    public usuarioService: UsuarioServiceProvider,
     afAuth: AngularFireAuth) {
+
 
     const authObserver = afAuth.authState.subscribe(user => {
       if (user) {
-        this.rootPage = HomePage;
+        console.log("logado")
+        console.log(user);
+
+        this.usuarioService.setUsuarioAplicacao(user.uid).then(data => {
+          this.rootPage = HomePage;
+          console.log(this.usuarioService.usuario)
+        });
+
         //authObserver.unsubscribe();
       } else {
+        console.log("Não logado")
         this.rootPage = LoginPage;
         //authObserver.unsubscribe();
       }

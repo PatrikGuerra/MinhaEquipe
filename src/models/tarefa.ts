@@ -20,7 +20,7 @@ export class Tarefa {
 
 	nome: string;
 	descricao: string;
-	situacao: TarefaSituacao;
+	situacao: TarefaSituacao = TarefaSituacao.Pendente;
 
 	public setReponsaveis(membrosEquipe: Usuario[]) {
 		this.responsaveis = [];

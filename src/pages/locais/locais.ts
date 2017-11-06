@@ -10,6 +10,7 @@ import { Equipe } from "../../models/equipe";
 
 //Service
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { LocalServiceProvider } from "../../providers/local-service/local-service";
 
 @Component({
@@ -23,6 +24,7 @@ export class LocaisPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public sessaoService: SessaoServiceProvider,
+    private usuarioProvider: UsuarioServiceProvider,
     private localService: LocalServiceProvider) {
 
     this.equipe = this.sessaoService.equipe;
@@ -44,5 +46,10 @@ export class LocaisPage {
 
   removerLocal(local: Local) {
     this.localService.remove(local.$key);
+  }
+
+  isAdministradorEquipe() {
+    let retorno = this.equipe.keyResponsavel == this.usuarioProvider.usuario.$key;
+    return retorno;
   }
 }

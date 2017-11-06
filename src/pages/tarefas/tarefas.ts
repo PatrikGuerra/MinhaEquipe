@@ -6,6 +6,7 @@ import { TarefaPage } from "../tarefa/tarefa";
 
 //Services
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
@@ -22,7 +23,8 @@ export class TarefasPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
-    private sessaoService: SessaoServiceProvider) {
+    private sessaoService: SessaoServiceProvider,
+    private usuarioProvider: UsuarioServiceProvider) {
 
     this.equipe = this.sessaoService.equipe;
   }
@@ -40,4 +42,10 @@ export class TarefasPage {
       tarefa: tarefa
     });
   }
+
+  isAdministradorEquipe() {
+    let retorno = this.equipe.keyResponsavel == this.usuarioProvider.usuario.$key;
+    return retorno;
+  }
+
 }

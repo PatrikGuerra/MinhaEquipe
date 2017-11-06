@@ -5,9 +5,11 @@
 </ion-header>
 
 <ion-content>
-  <div padding>
-    <button ion-button block color="primary" (click)="novoLocal()">+</button>
-  </div>
+  <ion-fab right bottom *ngIf="isAdministradorEquipe()">
+      <button ion-fab color="primary" (click)="novoLocal()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-fab>
 
   <ion-card *ngIf="equipe.locais.length == 0">
     <ion-card-content>
