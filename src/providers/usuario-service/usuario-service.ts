@@ -19,15 +19,19 @@ import { AuthServiceProvider } from "../auth-service/auth-service";
 //Others
 import { LocalStorage } from "../../app/app.constants";
 
+import { Geolocation } from '@ionic-native/geolocation';
+
 @Injectable()
 export class UsuarioServiceProvider {
   public usuario: Usuario;
+  private geolocationSubscription: any;
 
   constructor(
     public db: AngularFireDatabase,
     public storage: Storage,
     private camera: Camera,
-    private authProvider: AuthServiceProvider) {
+    private authProvider: AuthServiceProvider,
+    private geolocation: Geolocation) {
 
     console.log('Hello UsuarioServiceProvider Provider');
   }
@@ -36,9 +40,12 @@ export class UsuarioServiceProvider {
     return new Promise((resolve, reject) => {
 
       this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
+        this.monitorar();
         return this.firebaseToUsuario(item);
       }).subscribe(dataUsuario => {
         this.usuario = dataUsuario;
+        console.log("this.usuario")
+        console.log(this.usuario)
         resolve(dataUsuario);
       });
 
@@ -51,6 +58,7 @@ export class UsuarioServiceProvider {
 
         this.setUsuarioAplicacao(firebaseUser.uid).then(dataUsuario => {
           this.storage.set(LocalStorage.UsuarioUid, dataUsuario.$key);
+
           resolve(true);
         });
 
@@ -60,6 +68,31 @@ export class UsuarioServiceProvider {
     });
   }
 
+
+  private monitorar() {
+    this.geolocationSubscription = this.geolocation.watchPosition()
+      .filter((p) => p.coords !== undefined) //Filter Out Errors
+      .subscribe(position => {
+
+        this.atualizarLocalizacao(position);
+
+        console.log(position);
+      });
+  }
+
+
+  private atualizarLocalizacao(position: any) {
+    var updates = {};
+
+    Object.keys(this.usuario.equipes).forEach(element => {
+      updates[`${dataBaseStorage.UsuarioLocalizacao}/${element}/${this.usuario.$key}`] = {
+        'lat': position.coords.latitude,
+        'lng': position.coords.longitude
+      };
+    });
+
+    return this.db.database.ref().update(updates);
+  }
 
 
   private firebaseToUsuario(objeto: any) {

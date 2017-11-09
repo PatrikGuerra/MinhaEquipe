@@ -8,6 +8,9 @@ import { LocaisPage } from "../locais/locais";
 import { TarefasPage } from "../tarefas/tarefas";
 import { EquipeMembrosPage } from "../equipe-membros/equipe-membros";
 
+
+import { EquipeContextoPage } from "../equipe-contexto/equipe-contexto";
+
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
@@ -170,6 +173,10 @@ export class EquipePage {
 
   abrirMembrosDaEquipe() {
     this.navCtrl.push(EquipeMembrosPage);
+  }
+
+  abrirContexto() {
+    this.navCtrl.push(EquipeContextoPage);
   }
 
   /*

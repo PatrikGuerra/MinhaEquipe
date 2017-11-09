@@ -66,6 +66,8 @@ import { TagsInputModule } from "../components/tags-input/index";
 import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/tarefa-status-label";
 // import { SessaoUsuarioServiceProvider } from '../providers/sessao-usuario-service/sessao-usuario-service';
 
+import { EquipeContextoPage } from "../pages/equipe-contexto/equipe-contexto";
+
 @NgModule({
   declarations: [
     MyApp,
@@ -88,6 +90,7 @@ import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/ta
       LocaisPage,
       TarefasPage,
       TarefaPage,
+      EquipeContextoPage,
       LocalSelectPage,
       UsuarioSelectPage,
 
@@ -130,6 +133,7 @@ import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/ta
       LocaisPage,
       TarefasPage,
       TarefaPage,
+      EquipeContextoPage,
       LocalSelectPage,
       UsuarioSelectPage
   ],
