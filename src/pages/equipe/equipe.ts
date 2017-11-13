@@ -89,11 +89,11 @@ export class EquipePage {
     let loading = this.loadingCtrl.create();
 
     if (this.equipe.$key) {
-      toast.setMessage("Equipe criada.");
-      loading.setContent('Criando equipe...');
-    } else {
       toast.setMessage("Equipe alterada.");
       loading.setContent('Alterando equipe...');
+    } else {
+      toast.setMessage("Equipe criada.");
+      loading.setContent('Criando equipe...');
     }
 
     loading.present();
