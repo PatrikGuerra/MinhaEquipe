@@ -14,13 +14,13 @@
 
   <div id="content">
     <div id="profile-info" padding-horizontal>
-      <img id="profile-image" src="{{ usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
+      <img id="profile-image" (click)="menuAlterarFoto()" src="{{ usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
     </div>
   </div>
 
-  <div text-center>
+  <!-- <div text-center>
     <button ion-button icon-only (click)="menuAlterarFoto()"><ion-icon name="camera"></ion-icon></button>
-  </div>
+  </div> -->
 
   <ion-item>
     <ion-label>Nome</ion-label>
