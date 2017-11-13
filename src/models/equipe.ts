@@ -18,6 +18,10 @@ export class Equipe {
 
 		this.keyMembros = {}; 
 		this.membros = new Array<Usuario>();
+		//this.dataInicio = new Date();
+		this.dataInicio = null;
+		//this.dataFim = new Date();
+		this.dataFim = null;
 	}
 	$key: string;
 

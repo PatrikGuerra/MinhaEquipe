@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, ActionSheetController, LoadingController } from 'ionic-angular';
+import { Renderer } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 //Modal
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
@@ -20,6 +22,8 @@ import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-ser
 import { Equipe } from "../../models/equipe";
 import { Usuario } from "../../models/usuario";
 
+import { DatePicker } from '@ionic-native/date-picker';
+
 @Component({
   selector: 'page-equipe',
   templateUrl: 'equipe.html',
@@ -29,6 +33,7 @@ export class EquipePage {
   private imagemBase64: string = "";
 
   private usuario: Usuario;
+  private form: FormGroup;
 
   constructor(
     public navCtrl: NavController,
@@ -38,12 +43,20 @@ export class EquipePage {
     private navParams: NavParams,
     private equipeService: EquipeServiceProvider,
     private usuarioService: UsuarioServiceProvider,
-    private sessaoService: SessaoServiceProvider) {
+    private sessaoService: SessaoServiceProvider,
+
+    private formBuilder: FormBuilder,
+    private datePicker: DatePicker,
+    private renderer: Renderer) {
 
     this.usuarioService.getUser().then(userObservable => {
       userObservable.subscribe((usuarioData: Usuario) => {
         this.usuario = usuarioData;
       });
+    });
+    
+    this.form = this.formBuilder.group({
+      nome: ['', Validators.compose([Validators.minLength(3), Validators.required])],
     });
 
     if (this.navParams.data.equipe) {
@@ -179,32 +192,92 @@ export class EquipePage {
     this.navCtrl.push(EquipeContextoPage);
   }
 
-  /*
-  private dataInicioMudou(value) {
-    //(ionChange)="dataInicioMudou($event)"
-    console.clear();
+  public alterarDataIncio() {
+    this.getInicioData().then(data => {
+      this.getInicioHora().then(horario => {
+        data.setHours(horario.getHours());
+        data.setMinutes(horario.getMinutes());
 
-    console.log("-----------")
-    console.log("this.equipe")
-    console.log(this.equipe)
-    console.log("-----------")
-    console.log("value")
-    console.log(value)
-    console.log("-----------")
-    var novaData = new Date(value.year, value.month, value.day, value.hour, value.minute, 0, 0)
-    console.log("new Date(value)")
-    console.log(novaData)
-    console.log("-----------")
-    console.log("novaData.toString()")
-    console.log(novaData.toString())
-    console.log("-----------")
-    console.log("novaData.toISOString()")
-    console.log(novaData.toISOString())
-
-    if (!this.equipe.dataFim) {
-      this.equipe.dataFim = novaData.toISOString();
-    }
-    //  if (!this.equipe.$key && ) {}
+        this.equipe.dataInicio = data;
+      }).catch(error => {
+        console.log(error);
+      });
+    }).catch(error => {
+      console.log(error);
+    })
   }
-  */
+  private getInicioData() {
+    return this.datePicker.show({
+      mode: 'date',
+      date: ((this.equipe.dataInicio == null) ? new Date() : this.equipe.dataInicio),
+      //minDate: new Date(),
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT,
+      titleText: "Início",
+    });
+  }
+  private getInicioHora() {
+    return this.datePicker.show({
+      mode: 'time',
+      date: ((this.equipe.dataInicio == null) ? new Date() : this.equipe.dataInicio),
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT,
+      is24Hour: true,
+      titleText: "Início",
+    });
+  }
+
+  public alterarDataTermino() {
+    this.getTerminoData().then(data => {
+      this.getTerminoHora().then(horario => {
+        data.setHours(horario.getHours());
+        data.setMinutes(horario.getMinutes());
+
+        this.equipe.dataFim = data;
+      }).catch(error => {
+        console.log(error);
+      });
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+  private getTerminoData() {
+    return this.datePicker.show({
+      mode: 'date',
+      date: ((this.equipe.dataFim == null) ? new Date() : this.equipe.dataFim),
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT,
+      titleText: "Término",
+    })
+  }
+  private getTerminoHora() {
+    return this.datePicker.show({
+      mode: 'time',
+      date: ((this.equipe.dataFim == null) ? new Date() : this.equipe.dataFim),
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT,
+      is24Hour: true,
+      titleText: "Término",
+    });
+
+  }
+
+  dataFormatada(date: Date) {
+    //dd/mm/yyyy hh:mm
+
+    if (date == null) {
+      return "Selecione uma data e hora";
+    }
+
+    // var date = new Date();
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString();
+    let formatedMonth = (month.length === 1) ? ("0" + month) : month;
+    let day = date.getDate().toString();
+    let formatedDay = (day.length === 1) ? ("0" + day) : day;
+    let hour = date.getHours().toString();
+    let formatedHour = (hour.length === 1) ? ("0" + hour) : hour;
+    let minute = date.getMinutes().toString();
+    let formatedMinute = (minute.length === 1) ? ("0" + minute) : minute;
+    //let second = date.getSeconds().toString();
+    //let formatedSecond = (second.length === 1) ? ("0" + second) : second;
+
+    return formatedDay + "/" + formatedMonth + "/" + year + " " + formatedHour + ':' + formatedMinute //+ ':' + formatedSecond;
+  }
 }

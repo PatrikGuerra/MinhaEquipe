@@ -32,6 +32,8 @@ export class EquipeServiceProvider {
   private firebaseToEquipe(objeto: any) {
     let equipe: Equipe = Object.assign(new Equipe(), JSON.parse(JSON.stringify(objeto)))
     equipe.$key = objeto.$key;
+    equipe.dataFim = new Date(objeto.dataFim);
+    equipe.dataInicio = new Date(objeto.dataInicio);
 
     return equipe;
   }

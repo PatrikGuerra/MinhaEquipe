@@ -84,6 +84,7 @@
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="IGWorkshops requires access to the photo library for selecting images which will be added to the users in-app library" />
     </plugin>
     <plugin name="cordova-plugin-console" spec="^1.0.5" />
+    <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />
     <plugin name="cordova-plugin-device" spec="^1.1.4" />
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />

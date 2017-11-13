@@ -67,7 +67,7 @@ import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/ta
 // import { SessaoUsuarioServiceProvider } from '../providers/sessao-usuario-service/sessao-usuario-service';
 
 import { EquipeContextoPage } from "../pages/equipe-contexto/equipe-contexto";
-
+import { DatePicker } from '@ionic-native/date-picker';
 @NgModule({
   declarations: [
     MyApp,
@@ -153,6 +153,7 @@ import { EquipeContextoPage } from "../pages/equipe-contexto/equipe-contexto";
     TarefaServiceProvider,
     SessaoServiceProvider,
     // SessaoUsuarioServiceProvider
+    DatePicker
   ]
 })
 export class AppModule {}

@@ -9,39 +9,52 @@
 
   <div id="content">
     <div id="profile-info" padding-horizontal>
-      <img id="profile-image" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
+      <img id="profile-image"(click)="menuAlterarImagem()" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
     </div>
   </div>
-
+<!-- 
   <div text-center>
     <button ion-button icon-only (click)="menuAlterarImagem()">
       <ion-icon name="camera"></ion-icon>
     </button>
-  </div>
+  </div> -->
 
-  <ion-item>
-    <ion-label>Nome</ion-label>
-    <ion-input type="text" [(ngModel)]="equipe.nome" name="Nome"></ion-input>
-  </ion-item>
+  <form [formGroup]="form" novalidate>
+    <ion-item>
+      <ion-label>Nome</ion-label>
+      <ion-input type="text" formControlName="nome" maxlength="25" [(ngModel)]="equipe.nome" name="Nome"></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label>Início</ion-label>
+      <ion-input type="text" text-right [value]="dataFormatada(equipe.dataInicio)" [disabled]="true" ></ion-input>
+      <button ion-button item-right (click)="alterarDataIncio()"><ion-icon name="create"></ion-icon></button>
+    </ion-item>   
 
-  <ion-item>
-    <ion-label>Inicio</ion-label>
-    <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="equipe.dataInicio"></ion-datetime>
-  </ion-item>
-
-  <ion-item>
-    <ion-label>Final</ion-label>
-    <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="equipe.dataFim"></ion-datetime>
-  </ion-item>
+    <ion-item>
+      <ion-label>Término</ion-label>
+      <ion-input type="text" text-right [value]="dataFormatada(equipe.dataFim)" [disabled]="true" ></ion-input>
+      <button ion-button item-right (click)="alterarDataTermino()"><ion-icon name="create"></ion-icon></button>
+    </ion-item>
+    
+    <div padding>
+      <button ion-button (click)="save()" [disabled]="!form.valid" block>Salvar</button>
+    </div>
+  </form>
 
   <div padding>
-    <button ion-button (click)="save()" block>Salvar</button>
+    <button ion-button (click)="abrirContexto()" block>
+      Contexto
+    </button>
+
     <button ion-button (click)="abrirConvidar()" block icon-only>
       <ion-icon name="person-add"></ion-icon>
     </button>
+
     <button ion-button (click)="abrirChat()" block icon-only>
       <ion-icon name="chatboxes"></ion-icon>
     </button>
+
     <button ion-button (click)="abrirLocais()" block icon-only>
       <ion-icon name="pin"></ion-icon>
     </button>
