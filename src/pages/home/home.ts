@@ -21,7 +21,7 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     public storage: Storage,
-    public usuarioProvider: UsuarioServiceProvider,
+    public usuarioService: UsuarioServiceProvider,
     private app: App) {
   }
 
@@ -30,7 +30,7 @@ export class HomePage {
       console.log(uuid)
     })
 
-    console.log(this.usuarioProvider.usuario);
+    console.log(this.usuarioService.usuario);
   }
 
   verPerfil() {

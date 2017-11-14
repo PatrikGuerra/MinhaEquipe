@@ -23,7 +23,7 @@ export class EquipeConvidarPage {
     private formBuilder: FormBuilder,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
-    private conviteServiceProvider: ConviteServiceProvider) {
+    private conviteService: ConviteServiceProvider) {
 
     if (this.navParams.data.equipe) {
       this.equipe = this.navParams.data.equipe;
@@ -74,7 +74,7 @@ export class EquipeConvidarPage {
       emails.push(element['email']);
     });
 
-    this.conviteServiceProvider.enviarConvites(emails, this.equipe.$key).then(data => {
+    this.conviteService.enviarConvites(emails, this.equipe.$key).then(data => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();

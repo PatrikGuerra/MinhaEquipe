@@ -1,21 +1,20 @@
 import { Component, NgZone, ElementRef, ViewChild } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation';
-import { LoadingController, NavController, NavParams, ViewController } from 'ionic-angular';
+import { App, LoadingController, NavController, NavParams, ViewController, PopoverController } from 'ionic-angular';
 
 import { } from '@types/googlemaps';
 
-//Models
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+import * as firebase from 'firebase';
+
+import { dataBaseStorage } from "../../app/app.constants";
 
 //Service
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
-import { } from '@types/googlemaps';
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
-
-import * as firebase from 'firebase';
-import { dataBaseStorage } from "../../app/app.constants";
-
+// Popover
+import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
 
 @Component({
   selector: 'page-equipe-contexto',
@@ -30,11 +29,14 @@ export class EquipeContextoPage {
     public db: AngularFireDatabase,
     public navCtrl: NavController,
     public navParams: NavParams,
-        public geolocation: Geolocation,
+    private loadingCtrl: LoadingController,
+    
+    public geolocation: Geolocation,
     public sessaoService: SessaoServiceProvider,
-    private usuarioProvider: UsuarioServiceProvider,
-    private loadingCtrl: LoadingController
-  ) {
+    private usuarioService: UsuarioServiceProvider,
+
+    private app: App,
+    public popoverCtrl: PopoverController) {
 
   }
 
@@ -54,7 +56,13 @@ export class EquipeContextoPage {
     this.carregarLocalizacoes();
   }
 
+  abrirPopover(myEvent) {
+    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
 
+    contextoPopoverPage.present({
+      ev: myEvent
+    });
+  }
   centerMapOnCurrentPosition() {
     let loadingGeo = this.loadingCtrl.create({
       content: "Buscando sua localização.."

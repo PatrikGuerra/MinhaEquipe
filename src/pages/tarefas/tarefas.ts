@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
+import { App, NavController, NavParams, LoadingController, PopoverController } from 'ionic-angular';
 
 //Pages
 import { TarefaPage } from "../tarefa/tarefa";
+
+// Popover
+import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
 
 //Services
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
@@ -24,7 +27,10 @@ export class TarefasPage {
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
     private sessaoService: SessaoServiceProvider,
-    private usuarioProvider: UsuarioServiceProvider) {
+    private usuarioService: UsuarioServiceProvider,
+
+    private app: App,
+    public popoverCtrl: PopoverController) {
 
     this.equipe = this.sessaoService.equipe;
   }
@@ -33,18 +39,31 @@ export class TarefasPage {
     console.log('ionViewDidLoad TarefasPage');
   }
 
-  novaTarefa() {
-    this.navCtrl.push(TarefaPage);
-  }
+  abrirPopover(myEvent) {
+    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
 
-  editarTarefa(tarefa: Tarefa) {
-    this.navCtrl.push(TarefaPage, {
-      tarefa: tarefa
+    contextoPopoverPage.present({
+      ev: myEvent
     });
   }
 
+  novaTarefa() {
+    this.app.getRootNav().push(TarefaPage)
+    // this.navCtrl.push(TarefaPage);
+  }
+
+  editarTarefa(tarefa: Tarefa) {
+    this.app.getRootNav().push(TarefaPage, {
+      tarefa: tarefa
+    });
+    
+    // this.navCtrl.push(TarefaPage, {
+    //   tarefa: tarefa
+    // });
+  }
+
   isAdministradorEquipe() {
-    let retorno = this.equipe.keyResponsavel == this.usuarioProvider.usuario.$key;
+    let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
     return retorno;
   }
 

@@ -25,7 +25,7 @@ export class EquipeServiceProvider {
     public db: AngularFireDatabase,
     public storage: Storage,
     private camera: Camera,
-    private userProvider: UsuarioServiceProvider) {
+    private userService: UsuarioServiceProvider) {
     console.log('Hello EquipeServiceProvider Provider');
   }
 
@@ -86,7 +86,7 @@ export class EquipeServiceProvider {
 
   public save(equipe: Equipe, imagem: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.userProvider.getuid().then((usuarioUid) => {
+      this.userService.getuid().then((usuarioUid) => {
 
         if (!equipe.$key) {
           //Se é Push

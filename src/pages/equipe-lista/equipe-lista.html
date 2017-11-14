@@ -5,9 +5,15 @@
 </ion-header>
 
 <ion-content>
-  <div padding>
+  <!-- <div padding>
     <button ion-button block color="primary" (click)="novaEquipe()">+</button>
-  </div>
+  </div> -->
+
+    <ion-fab right bottom>
+      <button ion-fab color="primary" (click)="novaEquipe()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-fab>
 
   <ion-card *ngIf="equipes.length == 0">
     <ion-card-content>

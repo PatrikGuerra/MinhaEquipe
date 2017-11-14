@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, Platform } from 'ionic-angular';
+import { App, IonicPage, NavController, NavParams, LoadingController, Platform, PopoverController } from 'ionic-angular';
 import { Keyboard } from '@ionic-native/keyboard';
 
 import { ChatServiceProvider } from "../../providers/chat-service/chat-service";
@@ -12,6 +12,8 @@ import { ElasticDirective } from "../../directives/elastic/elastic";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 
+// Popover
+import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
 
 @Component({
   selector: 'page-chat',
@@ -35,7 +37,9 @@ export class ChatPage implements OnInit, OnDestroy {
     public chatService: ChatServiceProvider,
 
     private usuarioService: UsuarioServiceProvider,
-    private sessaoService: SessaoServiceProvider) {
+    private sessaoService: SessaoServiceProvider,
+    private app: App,
+    public popoverCtrl: PopoverController) {
 
     this.usuario = this.usuarioService.usuario;
     this.equipe = this.sessaoService.equipe;
@@ -57,6 +61,15 @@ export class ChatPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.autoScroller.disconnect();
+  }
+
+
+  abrirPopover(myEvent) {
+    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
+
+    contextoPopoverPage.present({
+      ev: myEvent
+    });
   }
 
   sendMessage(event: any) {

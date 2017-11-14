@@ -58,11 +58,11 @@ export class LocalPage {
     let loading = this.loadingCtrl.create();
 
     if (this.local.$key) {
-      toast.setMessage("Local criado.");
-      loading.setContent('Criando Local...');
-    } else {
-      toast.setMessage("Local alterado.");
       loading.setContent('Alterando Local...');
+      toast.setMessage("Local alterado.");
+    } else {
+      loading.setContent('Criando Local...');
+      toast.setMessage("Local criado.");
     }
 
     loading.present();

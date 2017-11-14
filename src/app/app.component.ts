@@ -4,15 +4,13 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireAuth } from "angularfire2/auth";
 
-//pages
-import { HomePage } from '../pages/home/home';
+//Pages
+import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from "../pages/login/login";
-//import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
-//import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
 
+//Providers
 import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
-
 
 @Component({
   templateUrl: 'app.html'
@@ -34,8 +32,8 @@ export class MyApp {
         console.log(user);
 
         this.usuarioService.setUsuarioAplicacao(user.uid).then(data => {
-          //this.rootPage = HomePage;
-          this.rootPage = TabsPage;
+          //this.rootPage = ;
+          this.rootPage = EquipeListaPage;
           console.log(this.usuarioService.usuario)
         });
 
@@ -43,7 +41,7 @@ export class MyApp {
       } else {
         console.log("Não logado")
         this.rootPage = LoginPage;
-        //authObserver.unsubscribe();
+        authObserver.unsubscribe();
       }
     //  authObserver.unsubscribe();
     });

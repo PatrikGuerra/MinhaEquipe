@@ -1,17 +1,14 @@
 import { Component } from '@angular/core';
-import { App, NavController, NavParams, ToastController, ActionSheetController, LoadingController } from 'ionic-angular';
+import { App, NavController, NavParams, ToastController, ActionSheetController, LoadingController, PopoverController } from 'ionic-angular';
 import { Renderer } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+import { DatePicker } from '@ionic-native/date-picker';
+
 //Modal
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
-import { ChatPage } from "../chat/chat";
-import { LocaisPage } from "../locais/locais";
-import { TarefasPage } from "../tarefas/tarefas";
-import { EquipeMembrosPage } from "../equipe-membros/equipe-membros";
-
-
-import { EquipeContextoPage } from "../equipe-contexto/equipe-contexto";
+// Popover
+import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
@@ -21,8 +18,6 @@ import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-ser
 //Models
 import { Equipe } from "../../models/equipe";
 import { Usuario } from "../../models/usuario";
-
-import { DatePicker } from '@ionic-native/date-picker';
 
 @Component({
   selector: 'page-equipe',
@@ -48,7 +43,8 @@ export class EquipePage {
     private formBuilder: FormBuilder,
     private datePicker: DatePicker,
     private renderer: Renderer,
-    private app: App) {
+    private app: App,
+    public popoverCtrl: PopoverController) {
 
     this.usuarioService.getUser().then(userObservable => {
       userObservable.subscribe((usuarioData: Usuario) => {
@@ -61,7 +57,11 @@ export class EquipePage {
       nome: ['', Validators.compose([Validators.minLength(3), Validators.required])],
     });
 
-    this.equipe = sessaoService.equipe;
+    if (this.navParams.data.nova) {
+    } else {
+      this.equipe = sessaoService.equipe;
+    }
+
 
     // if (this.navParams.data.equipe) {
     //   let loading = this.loadingCtrl.create({
@@ -82,6 +82,14 @@ export class EquipePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipePage');
+  }
+
+  abrirPopover(myEvent) {
+    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
+
+    contextoPopoverPage.present({
+      ev: myEvent
+    });
   }
 
   save() {
@@ -164,41 +172,14 @@ export class EquipePage {
   }
 
   abrirConvidar() {
-    // this.navCtrl.push(EquipeConvidarPage, {
-    //   equipe: this.equipe
-    // });
-
     this.app.getRootNav().push(EquipeConvidarPage, {
       equipe: this.equipe
     });
+    // this.navCtrl.push(EquipeConvidarPage, {
+    //   equipe: this.equipe
+    // });
   }
 
-  abrirChat() {
-    this.navCtrl.push(ChatPage, {
-      equipe: this.equipe,
-      usuario: this.usuario
-    });
-  }
-
-  abrirLocais() {
-    this.navCtrl.push(LocaisPage, {
-      equipe: this.equipe,
-    });
-  }
-
-  abrirTarefas() {
-    this.navCtrl.push(TarefasPage, {
-      equipe: this.equipe,
-    });
-  }
-
-  abrirMembrosDaEquipe() {
-    this.navCtrl.push(EquipeMembrosPage);
-  }
-
-  abrirContexto() {
-    this.navCtrl.push(EquipeContextoPage);
-  }
 
   public alterarDataIncio() {
     this.getInicioData().then(data => {
@@ -287,5 +268,11 @@ export class EquipePage {
     //let formatedSecond = (second.length === 1) ? ("0" + second) : second;
 
     return formatedDay + "/" + formatedMonth + "/" + year + " " + formatedHour + ':' + formatedMinute //+ ':' + formatedSecond;
+  }
+
+
+  isAdministradorEquipe() {
+    let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
+    return retorno;
   }
 }

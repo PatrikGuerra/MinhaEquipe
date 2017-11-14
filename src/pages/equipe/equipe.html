@@ -1,18 +1,30 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>Equipe</ion-title>
+        <ion-buttons end *ngIf="equipe.$key">
+          <button ion-button icon-only (click)="abrirPopover($event)">
+            <ion-icon name="more"></ion-icon>
+          </button>
+        </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content no-bounce>
+
+  <ion-fab right bottom *ngIf="equipe.$key && isAdministradorEquipe()">
+    <button ion-fab color="primary" (click)="abrirConvidar()">
+      <ion-icon name="person-add"></ion-icon>
+    </button>
+  </ion-fab>
+
   <div id="profile-bg"></div>
 
   <div id="content">
     <div id="profile-info" padding-horizontal>
-      <img id="profile-image"(click)="menuAlterarImagem()" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
+      <img id="profile-image" (click)="menuAlterarImagem()" src="{{ imagemBase64 ? imagemBase64 : equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
     </div>
   </div>
-<!-- 
+  <!-- 
   <div text-center>
     <button ion-button icon-only (click)="menuAlterarImagem()">
       <ion-icon name="camera"></ion-icon>
@@ -24,64 +36,68 @@
       <ion-label>Nome</ion-label>
       <ion-input type="text" formControlName="nome" maxlength="25" [(ngModel)]="equipe.nome" name="Nome"></ion-input>
     </ion-item>
-    
+
     <ion-item>
       <ion-label>Início</ion-label>
-      <ion-input type="text" text-right [value]="dataFormatada(equipe.dataInicio)" [disabled]="true" ></ion-input>
-      <button ion-button item-right (click)="alterarDataIncio()"><ion-icon name="create"></ion-icon></button>
-    </ion-item>   
+      <ion-input type="text" text-right [value]="dataFormatada(equipe.dataInicio)" [disabled]="true"></ion-input>
+      <button ion-button item-right (click)="alterarDataIncio()" *ngIf="isAdministradorEquipe()">
+        <ion-icon name="create"></ion-icon>
+      </button>
+    </ion-item>
 
     <ion-item>
       <ion-label>Término</ion-label>
-      <ion-input type="text" text-right [value]="dataFormatada(equipe.dataFim)" [disabled]="true" ></ion-input>
-      <button ion-button item-right (click)="alterarDataTermino()"><ion-icon name="create"></ion-icon></button>
+      <ion-input type="text" text-right [value]="dataFormatada(equipe.dataFim)" [disabled]="true"></ion-input>
+      <button ion-button item-right (click)="alterarDataTermino()" *ngIf="isAdministradorEquipe()">
+        <ion-icon name="create"></ion-icon>
+      </button>
     </ion-item>
-    
-    <div padding>
+{{equipe.membros.length}}
+    <ion-card *ngIf="equipe.$key">
+      <ion-list>
+        <ion-item>
+          <h2>Membros</h2>
+        </ion-item>
+        <ion-item-sliding *ngFor="let usuario of equipe.membros">
+          <ion-item>
+            <ion-avatar item-start>
+              <img src="{{ usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
+            </ion-avatar>
+
+            {{ usuario.nome }}
+          </ion-item>
+
+          <ion-item-options slide="right" *ngIf="usuario.$key != this.usuarioService.usuario.$key && isAdministradorEquipe()">
+            <button ion-button color="danger" (click)="recusarConvite(usuario)">
+              <ion-icon name="close"></ion-icon>remover
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </ion-card>
+
+    <div padding-vertical *ngIf="isAdministradorEquipe()">
       <button ion-button (click)="save()" [disabled]="!form.valid" block>Salvar</button>
     </div>
   </form>
 
 
-   
-  <ion-fab right bottom>
-    <button ion-fab color="primary" (click)="abrirConvidar()">
-      <ion-icon name="person-add"></ion-icon>
-    </button>
-  </ion-fab>
 
-  <div padding>
-    <button ion-button (click)="abrirContexto()" block>
-      Contexto
-    </button>
 
-    <!-- <button ion-button (click)="abrirConvidar()" block icon-only>
-      <ion-icon name="person-add"></ion-icon>
-    </button> -->
 
-    <!-- <button ion-button (click)="abrirChat()" block icon-only>
-      <ion-icon name="chatboxes"></ion-icon>
-    </button> -->
 
-    <button ion-button (click)="abrirLocais()" block icon-only>
-      <ion-icon name="pin"></ion-icon>
-    </button>
-    <button ion-button (click)="abrirTarefas()" block icon-only>
-      <ion-icon name="document"></ion-icon>
-    </button>
+
+
+
+
+
+
+
+
+
+  <!-- <div padding>
     <button ion-button (click)="abrirMembrosDaEquipe()" block icon-only>
       <ion-icon name="document"></ion-icon>
     </button>
-
-  </div>
-
-  <!-- 
-  <ion-fab right bottom *ngIf="key.length > 1">
-    <button ion-fab color="primary"><ion-icon name="arrow-dropup"></ion-icon></button>
-    <ion-fab-list side="top">
-      <button ion-fab><ion-icon name="person-add" (click)="convidar()"></ion-icon></button>
-      <button ion-fab><ion-icon name="chatboxes" (click)="abrirChat()"></ion-icon></button>
-    </ion-fab-list>
-  </ion-fab>
-  -->
+  </div> -->
 </ion-content>

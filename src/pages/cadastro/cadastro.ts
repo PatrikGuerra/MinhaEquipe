@@ -28,7 +28,7 @@ export class CadastroPage {
     private loadingCtrl: LoadingController,
     private authService: AuthServiceProvider,
     private usuarioService: UsuarioServiceProvider,
-    private conviteProvider: ConviteServiceProvider) {
+    private conviteService: ConviteServiceProvider) {
 
     this.cadastroForm = this.formBuilder.group({
       nome: ['', Validators.compose([Validators.required])],
@@ -57,7 +57,7 @@ export class CadastroPage {
 
       this.usuarioService.criarUsuario(firebaseUser.uid, this.credencial.nome, this.credencial.email).then((data) => {
 
-        this.conviteProvider.atualizarKeyUsuarioDosConvites(this.credencial.email, firebaseUser.uid);
+        this.conviteService.atualizarKeyUsuarioDosConvites(this.credencial.email, firebaseUser.uid);
 
         toast.setShowCloseButton(true);
         toast.setMessage('Usuário criado com sucesso. Verifique seu e-mail.');

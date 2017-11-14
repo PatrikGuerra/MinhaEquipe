@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, ViewController, ModalController, AlertController } from 'ionic-angular';
 import { IonicPage, App, NavParams, Nav } from 'ionic-angular';
-//Page
-import { LoginPage } from "../login/login";
 
-//Modal
+//Pages
+import { EquipeListaPage } from "../equipe-lista/equipe-lista";
+import { ConvitesPage } from "../convites/convites";
 import { PerfilAlterarEmailPage } from "../perfil-alterar-email/perfil-alterar-email";
 import { PerfilAlterarSenhaPage } from "../perfil-alterar-senha/perfil-alterar-senha";
-import { EquipeListaPage } from "../equipe-lista/equipe-lista";
+import { LoginPage } from "../login/login";
 
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
@@ -36,9 +36,16 @@ export class PerfilPopoverPage {
     this.viewCtrl.dismiss();
   }
 
-  listarEquipes() {
+  abrirListaEquipes() {
     this.close();
     this.app.getRootNav().setRoot(EquipeListaPage);
+  }
+
+  abrirConvites() {
+    // this.viewCtrl.dismiss().then(a => {
+    this.app.getRootNav().push(ConvitesPage);
+    this.viewCtrl.dismiss()
+    // })
   }
 
   alterarEmail() {

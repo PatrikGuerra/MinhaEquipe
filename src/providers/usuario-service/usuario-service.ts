@@ -30,7 +30,7 @@ export class UsuarioServiceProvider {
     public db: AngularFireDatabase,
     public storage: Storage,
     private camera: Camera,
-    private authProvider: AuthServiceProvider,
+    private authService: AuthServiceProvider,
     private geolocation: Geolocation) {
 
     console.log('Hello UsuarioServiceProvider Provider');
@@ -54,7 +54,7 @@ export class UsuarioServiceProvider {
 
   public entrar(credencial: Credencial): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.authProvider.entrar(credencial).then(firebaseUser => {
+      this.authService.entrar(credencial).then(firebaseUser => {
 
         this.setUsuarioAplicacao(firebaseUser.uid).then(dataUsuario => {
           this.storage.set(LocalStorage.UsuarioUid, dataUsuario.$key);
@@ -196,9 +196,9 @@ export class UsuarioServiceProvider {
   public atualizarEmail(novoEmail: string, senha: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getuid().then(uid => {
-        this.authProvider.reauthenticateWithCredential(senha).then((dataReautenticacao) => {
+        this.authService.reauthenticateWithCredential(senha).then((dataReautenticacao) => {
 
-          this.authProvider.updateEmailAndsendEmailVerification(novoEmail).then((data) => {
+          this.authService.updateEmailAndsendEmailVerification(novoEmail).then((data) => {
             let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${uid}`);
 
             usuarioAtual.update({
@@ -230,8 +230,8 @@ export class UsuarioServiceProvider {
   public atualizarSenha(novaSenha: string, senhaAtual: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getuid().then(uid => {
-        this.authProvider.reauthenticateWithCredential(senhaAtual).then((dataReautenticacao) => {
-          this.authProvider.updatePassword(novaSenha).then((data) => {
+        this.authService.reauthenticateWithCredential(senhaAtual).then((dataReautenticacao) => {
+          this.authService.updatePassword(novaSenha).then((data) => {
             resolve(data);
 
           }).catch((erro: any) => {

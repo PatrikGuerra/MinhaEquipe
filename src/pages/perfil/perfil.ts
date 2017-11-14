@@ -27,7 +27,7 @@ export class PerfilPage {
     private actionsheetCtrl: ActionSheetController,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
-    private userProvider: UsuarioServiceProvider,
+    private userService: UsuarioServiceProvider,
     public popoverCtrl: PopoverController) {
 
     let loading = this.loadingCtrl.create({
@@ -36,7 +36,7 @@ export class PerfilPage {
 
     loading.present();
 
-    this.userProvider.getUser().then(userObservable => {
+    this.userService.getUser().then(userObservable => {
       userObservable.subscribe((usuarioData: Usuario) => {
         this.usuario = usuarioData;
 
@@ -90,11 +90,11 @@ export class PerfilPage {
       content: 'Alterando foto de perfil...'
     });
 
-    this.userProvider.pictureFromCamera().then((imageData) => {
+    this.userService.pictureFromCamera().then((imageData) => {
       loading.present();
       var imagem = 'data:image/jpeg;base64,' + imageData;
 
-      this.userProvider.atualizarImagem(imagem).then((hue) => {
+      this.userService.atualizarImagem(imagem).then((hue) => {
         loading.dismiss();
       })
     }, (erro) => {
@@ -107,12 +107,12 @@ export class PerfilPage {
       content: 'Alterando foto de perfil...'
     });
 
-    this.userProvider.pictureFromLibray().then((imageData) => {
+    this.userService.pictureFromLibray().then((imageData) => {
       loading.present();
 
       var imagem = 'data:image/jpeg;base64,' + imageData;
 
-      this.userProvider.atualizarImagem(imagem).then((hue) => {
+      this.userService.atualizarImagem(imagem).then((hue) => {
         loading.dismiss();
       })
     }, (erro) => {
@@ -134,7 +134,7 @@ export class PerfilPage {
 
     loading.present();
 
-    this.userProvider.save(this.usuario).then((data) => {
+    this.userService.save(this.usuario).then((data) => {
       loading.dismiss();
       toast.present();
     });

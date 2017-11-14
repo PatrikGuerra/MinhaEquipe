@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
-import { IonicPage, App,  Nav } from 'ionic-angular';
+import { IonicPage, App, Nav } from 'ionic-angular';
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
@@ -26,7 +26,7 @@ export class EquipeListaPage {
     private loadingCtrl: LoadingController,
     private usuarioService: UsuarioServiceProvider,
     private equipeService: EquipeServiceProvider,
-  
+
     private sessaoService: SessaoServiceProvider,
     private app: App) {
 
@@ -53,28 +53,26 @@ export class EquipeListaPage {
   }
 
   novaEquipe() {
-    this.navCtrl.push(EquipePage);
+    this.navCtrl.push(EquipePage, {
+      nova: true
+    });
   }
 
   editarEquipe(equipe: Equipe) {
-    console.log(equipe)
-      let loading = this.loadingCtrl.create({
-        content: 'Carregando equipe...'
-      });
+    let loading = this.loadingCtrl.create({
+      content: 'Carregando equipe...'
+    });
 
-      loading.present();
+    loading.present();
 
-     // var equipe: Equipe = this.navParams.data.equipe;
-      // this.equipeService.getEquipe(equipe.$key).subscribe(dataEquipe => {
-      this.sessaoService.setEquipeKey(equipe.$key).then(dataEquipe => {
-        loading.dismiss();
-        this.app.getRootNav().setRoot(TabsPage);
-      });
+    // var equipe: Equipe = this.navParams.data.equipe;
+    // this.equipeService.getEquipe(equipe.$key).subscribe(dataEquipe => {
+    this.sessaoService.setEquipeKey(equipe.$key).then(dataEquipe => { //this.sessaoService.setEquipe(equipe).then(dataEquipe => {
+      loading.dismiss();
+      this.app.getRootNav().setRoot(TabsPage);
+    });
+    // });
 
-      // });
-
-
-    
     // this.app.getRootNav().setRoot(TabsPage, { 
     //   equipe: equipe
     // });

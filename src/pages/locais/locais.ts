@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { App, NavController, NavParams, PopoverController } from 'ionic-angular';
 
 //Pages
 import { LocalPage } from "../local/local";
@@ -13,6 +13,9 @@ import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-ser
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { LocalServiceProvider } from "../../providers/local-service/local-service";
 
+// Popover
+import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
+
 @Component({
   selector: 'page-locais',
   templateUrl: 'locais.html',
@@ -24,24 +27,40 @@ export class LocaisPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public sessaoService: SessaoServiceProvider,
-    private usuarioProvider: UsuarioServiceProvider,
-    private localService: LocalServiceProvider) {
+    private usuarioService: UsuarioServiceProvider,
+    private localService: LocalServiceProvider,
+    
+    private app: App,
+    public popoverCtrl: PopoverController) {
 
     this.equipe = this.sessaoService.equipe;
+    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LocaisPage');
   }
 
+  abrirPopover(myEvent) {
+    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
+
+    contextoPopoverPage.present({
+      ev: myEvent
+    });
+  }
+
   novoLocal() {
-    this.navCtrl.push(LocalPage);
+    this.app.getRootNav().push(LocalPage);
+    // this.navCtrl.push(LocalPage);
   }
 
   editarLocal(local: Local) {
-    this.navCtrl.push(LocalPage, {
+    this.app.getRootNav().push(LocalPage, {
       local: local,
     });
+    // this.navCtrl.push(LocalPage, {
+    //   local: local,
+    // });
   }
 
   removerLocal(local: Local) {
@@ -49,7 +68,7 @@ export class LocaisPage {
   }
 
   isAdministradorEquipe() {
-    let retorno = this.equipe.keyResponsavel == this.usuarioProvider.usuario.$key;
+    let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
     return retorno;
   }
 }

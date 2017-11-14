@@ -19,7 +19,6 @@ import { AngularFireAuthModule } from "angularfire2/auth";
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 //Paginas
-import { HomePage } from '../pages/home/home';
 import { CadastroPage } from "../pages/cadastro/cadastro";
 import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
 import { LoginPage } from "../pages/login/login";
@@ -27,7 +26,6 @@ import { PerfilPage } from "../pages/perfil/perfil";
 import { EquipePage } from "../pages/equipe/equipe";
 import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
-import { EquipeMembrosPage } from "../pages/equipe-membros/equipe-membros";
 import { ConvitesPage } from "../pages/convites/convites";
 import { ChatPage } from "../pages/chat/chat";   
 import { LocalPage } from "../pages/local/local";
@@ -41,8 +39,9 @@ import { firebaseConfig } from "./app.constants";
 //Maps
 import { Geolocation } from '@ionic-native/geolocation';
 
-//popover
+//Popover
 import { PerfilPopoverPage } from "../pages/perfil-popover/perfil-popover";
+import { ContextoPopoverPage } from "../pages/contexto-popover/contexto-popover";
 
 //Modals
 import { PerfilAlterarEmailPage } from "../pages/perfil-alterar-email/perfil-alterar-email";
@@ -74,18 +73,17 @@ import { DatePicker } from '@ionic-native/date-picker';
   declarations: [
     MyApp,
     TabsPage,
-    HomePage,
       CadastroPage,
       EsqueciSenhaPage,
       LoginPage,
       PerfilPage,
       PerfilPopoverPage,
+      ContextoPopoverPage,
       PerfilAlterarEmailPage,
       PerfilAlterarSenhaPage,
       EquipePage,
       EquipeListaPage,
       EquipeConvidarPage,
-      EquipeMembrosPage,
       ConvitesPage,
       ChatPage, ElasticDirective,
       LocalPage,
@@ -102,10 +100,9 @@ import { DatePicker } from '@ionic-native/date-picker';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp, {
-      mode: 'md',
       //https://forum.ionicframework.com/t/how-to-set-the-whole-app-in-androids-style-even-if-on-ios-in-ionic2/42504/10#post_10
       //http://ionicframework.com/docs/api/config/Config/
-
+      
       tabsPlacement: 'bottom',
       platforms: {
         android: {
@@ -118,7 +115,8 @@ import { DatePicker } from '@ionic-native/date-picker';
         {
           tabsPlacement: 'top'
         }
-      }
+      },
+      mode: 'md',
     }),
     IonicStorageModule.forRoot(), //Storage
     AngularFireModule.initializeApp(firebaseConfig), //Novo -- Firebase
@@ -130,19 +128,18 @@ import { DatePicker } from '@ionic-native/date-picker';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
     TabsPage,
       CadastroPage,
       EsqueciSenhaPage,
       LoginPage,
       PerfilPage,
       PerfilPopoverPage,
+      ContextoPopoverPage,
       PerfilAlterarEmailPage,
       PerfilAlterarSenhaPage,
       EquipePage,
       EquipeListaPage,
       EquipeConvidarPage,
-      EquipeMembrosPage,
       ConvitesPage,
       ChatPage,
       LocalPage,

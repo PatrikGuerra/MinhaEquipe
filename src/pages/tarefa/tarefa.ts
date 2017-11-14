@@ -36,7 +36,7 @@ export class TarefaPage {
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     public sessaoService: SessaoServiceProvider,
-    public usuarioProvider: UsuarioServiceProvider,
+    public usuarioService: UsuarioServiceProvider,
     private tarefaService: TarefaServiceProvider) {
 
     this.tarefaForm = this.formBuilder.group({
@@ -45,34 +45,11 @@ export class TarefaPage {
     });
 
     if (this.navParams.data.tarefa) {
-      console.log("this.navParams.data")
-      console.log(this.navParams.data)
       this.tarefa = this.navParams.data.tarefa;
     }
 
-    console.log("this.usuarioProvider.usuario");
-    console.log(this.usuarioProvider.usuario);
-
     this.equipe = this.sessaoService.equipe;
-    this.tarefa.keyEquipe = this.equipe.$key
-
-
-
-
-    console.log("------------------");
-    console.log("isAdministradorEquipe: " + this.isAdministradorEquipe());
-    console.log("this.equipe.keyResponsavel");
-    console.log(this.equipe.keyResponsavel);
-    console.log("this.usuarioProvider.usuario.$key");
-    console.log(this.usuarioProvider.usuario.$key);
-    
-    console.log("isResponsavel: " + this.isResponsavel());
-    
-    console.log("isSituacao Andamento: " + this.isSituacao(this.enumTarefaSituacao.Andamento));
-    console.log("isSituacao Cancelada: " + this.isSituacao(this.enumTarefaSituacao.Cancelada));
-    console.log("isSituacao Finalizado: " + this.isSituacao(this.enumTarefaSituacao.Finalizado));
-    console.log("isSituacao Pendente: " + this.isSituacao(this.enumTarefaSituacao.Pendente));
-    console.log("------------------");
+    this.tarefa.keyEquipe = this.equipe.$key;
   }
 
   ionViewDidLoad() {
@@ -88,11 +65,11 @@ export class TarefaPage {
     let loading = this.loadingCtrl.create();
 
     if (this.tarefa.$key) {
-      toast.setMessage("Tarefa criada.");
-      loading.setContent('Criando Tarefa...');
-    } else {
-      toast.setMessage("Tarefa alterada.");
       loading.setContent('Alterando Tarefa...');
+      toast.setMessage("Tarefa alterada.");
+    } else {
+      loading.setContent('Criando Tarefa...');
+      toast.setMessage("Tarefa criada.");
     }
 
     loading.present();
@@ -216,12 +193,12 @@ export class TarefaPage {
   }
 
   isAdministradorEquipe() {
-    let retorno = this.equipe.keyResponsavel == this.usuarioProvider.usuario.$key;
+    let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
     return retorno;
   }
   
   isResponsavel() {
-    let retorno = this.tarefa.keyResponsaveis.indexOf(this.usuarioProvider.usuario.$key) > -1;
+    let retorno = this.tarefa.keyResponsaveis.indexOf(this.usuarioService.usuario.$key) > -1;
     return retorno;
   }
 

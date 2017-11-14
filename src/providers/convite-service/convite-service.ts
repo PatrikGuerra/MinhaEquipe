@@ -22,7 +22,7 @@ export class ConviteServiceProvider {
 
   constructor(
     public db: AngularFireDatabase,
-    public userProvider: UsuarioServiceProvider,
+    public userService: UsuarioServiceProvider,
     public equipeService: EquipeServiceProvider) {
 
     console.log('Hello ConviteServiceProvider Provider');
@@ -70,7 +70,7 @@ export class ConviteServiceProvider {
 
     listaEmails.forEach(email => {
       var promise = new Promise((resolve, reject) => {
-        this.userProvider.getUsuarioByEmail(email).subscribe((data: any) => {
+        this.userService.getUsuarioByEmail(email).subscribe((data: any) => {
           if (data.length > 0) {
             listaKeyUsuarios.push(<Usuario>data[0].$key);
           } else {

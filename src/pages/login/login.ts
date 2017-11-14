@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage';
 //Pages
 import { CadastroPage } from "../cadastro/cadastro";
 import { EsqueciSenhaPage } from "../esqueci-senha/esqueci-senha";
-import { HomePage } from "../home/home";
+import { EquipeListaPage } from "../equipe-lista/equipe-lista";
 
 //Providers
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
@@ -32,7 +32,7 @@ export class LoginPage {
     private storage: Storage,
     private formBuilder: FormBuilder,
     private loadingCtrl: LoadingController,
-    private usuarioProvider: UsuarioServiceProvider) {
+    private usuarioService: UsuarioServiceProvider) {
 
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required])],
@@ -67,10 +67,10 @@ export class LoginPage {
 
     loading.present();
 
-    this.usuarioProvider.entrar(this.credencial).then(data => {
-      console.log(this.usuarioProvider.usuario);
+    this.usuarioService.entrar(this.credencial).then(data => {
+      console.log(this.usuarioService.usuario);
 
-      this.navCtrl.setRoot(HomePage);
+      this.navCtrl.setRoot(EquipeListaPage);
       loading.dismiss();
     }).catch((error: any) => {
       let toast = this.toastCtrl.create({
