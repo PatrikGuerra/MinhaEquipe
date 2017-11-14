@@ -61,6 +61,8 @@ import { ChatServiceProvider } from "../providers/chat-service/chat-service";
 import { LocalServiceProvider } from '../providers/local-service/local-service';
 import { TarefaServiceProvider } from '../providers/tarefa-service/tarefa-service';
 
+import { TabsPage } from '../pages/tabs/tabs';
+
 //Components
 import { TagsInputModule } from "../components/tags-input/index";
 import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/tarefa-status-label";
@@ -71,6 +73,7 @@ import { DatePicker } from '@ionic-native/date-picker';
 @NgModule({
   declarations: [
     MyApp,
+    TabsPage,
     HomePage,
       CadastroPage,
       EsqueciSenhaPage,
@@ -98,11 +101,24 @@ import { DatePicker } from '@ionic-native/date-picker';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp, 
-    {
-      mode: 'md' 
+    IonicModule.forRoot(MyApp, {
+      mode: 'md',
       //https://forum.ionicframework.com/t/how-to-set-the-whole-app-in-androids-style-even-if-on-ios-in-ionic2/42504/10#post_10
       //http://ionicframework.com/docs/api/config/Config/
+
+      tabsPlacement: 'bottom',
+      platforms: {
+        android: {
+          tabsPlacement: 'top'
+        },
+        ios: {
+          tabsPlacement: 'top'
+        },
+        windows:
+        {
+          tabsPlacement: 'top'
+        }
+      }
     }),
     IonicStorageModule.forRoot(), //Storage
     AngularFireModule.initializeApp(firebaseConfig), //Novo -- Firebase
@@ -115,6 +131,7 @@ import { DatePicker } from '@ionic-native/date-picker';
   entryComponents: [
     MyApp,
     HomePage,
+    TabsPage,
       CadastroPage,
       EsqueciSenhaPage,
       LoginPage,

@@ -42,18 +42,26 @@
     </div>
   </form>
 
+
+   
+  <ion-fab right bottom>
+    <button ion-fab color="primary" (click)="abrirConvidar()">
+      <ion-icon name="person-add"></ion-icon>
+    </button>
+  </ion-fab>
+
   <div padding>
     <button ion-button (click)="abrirContexto()" block>
       Contexto
     </button>
 
-    <button ion-button (click)="abrirConvidar()" block icon-only>
+    <!-- <button ion-button (click)="abrirConvidar()" block icon-only>
       <ion-icon name="person-add"></ion-icon>
-    </button>
+    </button> -->
 
-    <button ion-button (click)="abrirChat()" block icon-only>
+    <!-- <button ion-button (click)="abrirChat()" block icon-only>
       <ion-icon name="chatboxes"></ion-icon>
-    </button>
+    </button> -->
 
     <button ion-button (click)="abrirLocais()" block icon-only>
       <ion-icon name="pin"></ion-icon>

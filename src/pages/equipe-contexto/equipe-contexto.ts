@@ -138,104 +138,109 @@ export class EquipeContextoPage {
 
 
 
-/*
 
 
 
-// Map Initilize function 
-function initMap() {
-  var options = {
-    timeout: 10000,
-    enableHighAccuracy: true
-  };
-  $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
-    var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-    var mapOptions = {
-      center: latLng,
-      zoom: 15,
-      disableDefaultUI: true,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    //Wait until the map is loaded
-    //Load the markers
-    loadMarkers();
-    //});
-  }, function(error) {
-    console.log(error);
-    console.log("Could not get location");
-    //Load the markers
-    loadMarkers();
-  });
-}
 
-//load marker using rest api
-function loadMarkers() {
-  CommonService.ShowLoader();
-  YOUR REST API SERVICE.then(function(res) {
-    angular.forEach(res, function(value, key) {
-      var record = value;
-      console.log(record);
-      var image = {
-        url: 'img/ic_map_pin_gray.png', // custom background image (marker pin)
-        scaledSize: new google.maps.Size(70, 70),
-      };
-      var markerPos = new google.maps.LatLng(record.lat, record.long);
-      //Add the markerto the map
-      var marker = new google.maps.Marker({
-        map: map,
-        animation: google.maps.Animation.DROP,
-        position: markerPos,
-        icon: image,
-      });
-      var img_src = record.profilePic;
-      var overlay = new CustomMarker(
-        markerPos,
-        map, {image: img_src}
-      );
-    });
-  }).catch(function(error, status, headers, config) {
-    console.log(error);
-  });
-}
+                      // Map Initilize function 
+                      // function initMap() {
+                      //   var options = {
+                      //     timeout: 10000,
+                      //     enableHighAccuracy: true
+                      //   };
+                      //   $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
+                      //     var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+                      //     var mapOptions = {
+                      //       center: latLng,
+                      //       zoom: 15,
+                      //       disableDefaultUI: true,
+                      //       mapTypeId: google.maps.MapTypeId.ROADMAP
+                      //     };
+                      //     map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                      //     //Wait until the map is loaded
+                      //     //Load the markers
+                      //     loadMarkers();
+                      //     //});
+                      //   }, function(error) {
+                      //     console.log(error);
+                      //     console.log("Could not get location");
+                      //     //Load the markers
+                      //     loadMarkers();
+                      //   });
+                      // }
+
+                      //load marker using rest api
 
 
-//CustomMarker function 
-function CustomMarker(latlng, map, args) {
-  this.latlng = latlng;
-  this.args = args;
-  this.setMap(map);
-}
-CustomMarker.prototype = new google.maps.OverlayView();
-CustomMarker.prototype.draw = function() {
-  var self = this;
-  var div = this.div;
-  if (!div) {
-    div = this.div = document.createElement('img');
-    div.src = self.args.image;
-    div.className = 'marker';
-    div.style.position = 'absolute';
-    div.style.cursor = 'pointer';
-    div.style.width = '35px';
-    div.style.height = '35px';
-    div.style.borderRadius  = '50%';
+                      /*
+                      EDITANDO
+                      function loadMarkers() {
+                        CommonService. ();
+                        YOUR REST API SERVICE.then(function(res) {
+                          angular.forEach(res, function(value, key) {
+                            var record = value;
+                            console.log(record);
+                            var image = {
+                              url: 'img/ic_map_pin_gray.png', // custom background image (marker pin)
+                              scaledSize: new google.maps.Size(70, 70),
+                            };
+                            var markerPos = new google.maps.LatLng(record.lat, record.long);
+                            //Add the markerto the map
+                            var marker = new google.maps.Marker({
+                              map: map,
+                              animation: google.maps.Animation.DROP,
+                              position: markerPos,
+                              icon: image,
+                            });
+                            var img_src = record.profilePic;
+                            var overlay = new CustomMarker(
+                              markerPos,
+                              map, {image: img_src}
+                            );
+                          });
+                        }).catch(function(error, status, headers, config) {
+                          console.log(error);
+                        });
+                      }
 
-    if (typeof(self.args.marker_id) !== 'undefined') {
-      div.dataset.marker_id = self.args.marker_id;
-    }
 
-    google.maps.event.addDomListener(div, "click", function(event) {
-      google.maps.event.trigger(self, "click");
-    });
+                      //CustomMarker function 
+                      function CustomMarker(latlng, map, args) {
+                        this.latlng = latlng;
+                        this.args = args;
+                        this.setMap(map);
+                      }
+                      CustomMarker.prototype = new google.maps.OverlayView();
 
-    var panes = this.getPanes();
-    panes.overlayImage.appendChild(div);
-  }
-  var point = this.getProjection().fromLatLngToDivPixel(this.latlng);
+                      CustomMarker.prototype.draw = function() {
+                        var self = this;
+                        var div = this.div;
+                        if (!div) {
+                          div = this.div = document.createElement('img');
+                          div.src = self.args.image;
+                          div.className = 'marker';
+                          div.style.position = 'absolute';
+                          div.style.cursor = 'pointer';
+                          div.style.width = '35px';
+                          div.style.height = '35px';
+                          div.style.borderRadius  = '50%';
 
-  if (point) {
-    div.style.left = (point.x - 18) + 'px'; // set custom (i set it as i want to set in map )
-    div.style.top = (point.y - 56) + 'px'; //set custom (i set it as i want to set in map )
-  }
-};
-*/
+                          if (typeof(self.args.marker_id) !== 'undefined') {
+                            div.dataset.marker_id = self.args.marker_id;
+                          }
+
+                          google.maps.event.addDomListener(div, "click", function(event) {
+                            google.maps.event.trigger(self, "click");
+                          });
+
+                          var panes = this.getPanes();
+                          panes.overlayImage.appendChild(div);
+                        }
+                        var point = this.getProjection().fromLatLngToDivPixel(this.latlng);
+
+                        if (point) {
+                          div.style.left = (point.x - 18) + 'px'; // set custom (i set it as i want to set in map )
+                          div.style.top = (point.y - 56) + 'px'; //set custom (i set it as i want to set in map )
+                        }
+                      };
+                      */

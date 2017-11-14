@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, ViewController, ModalController, AlertController } from 'ionic-angular';
-
+import { IonicPage, App, NavParams, Nav } from 'ionic-angular';
 //Page
 import { LoginPage } from "../login/login";
 
 //Modal
 import { PerfilAlterarEmailPage } from "../perfil-alterar-email/perfil-alterar-email";
 import { PerfilAlterarSenhaPage } from "../perfil-alterar-senha/perfil-alterar-senha";
+import { EquipeListaPage } from "../equipe-lista/equipe-lista";
 
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
@@ -22,7 +23,9 @@ export class PerfilPopoverPage {
     public navCtrl: NavController,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private authService: AuthServiceProvider) {
+    private authService: AuthServiceProvider,
+    
+    private app: App) {
   }
 
   ionViewDidLoad() {
@@ -31,6 +34,11 @@ export class PerfilPopoverPage {
 
   close() {
     this.viewCtrl.dismiss();
+  }
+
+  listarEquipes() {
+    this.close();
+    this.app.getRootNav().setRoot(EquipeListaPage);
   }
 
   alterarEmail() {

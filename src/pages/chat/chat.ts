@@ -9,6 +9,10 @@ import { Equipe } from "../../models/equipe";
 
 import { ElasticDirective } from "../../directives/elastic/elastic";
 
+import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
+import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
+
+
 @Component({
   selector: 'page-chat',
   templateUrl: 'chat.html',
@@ -28,10 +32,13 @@ export class ChatPage implements OnInit, OnDestroy {
     public loadingCtrl: LoadingController,
     public platform: Platform,
     public keyboard: Keyboard,
-    public chatService: ChatServiceProvider) {
+    public chatService: ChatServiceProvider,
 
-    this.usuario = navParams.get('usuario');
-    this.equipe = this.navParams.data.equipe;
+    private usuarioService: UsuarioServiceProvider,
+    private sessaoService: SessaoServiceProvider) {
+
+    this.usuario = this.usuarioService.usuario;
+    this.equipe = this.sessaoService.equipe;
   }
 
   ionViewDidLoad() {

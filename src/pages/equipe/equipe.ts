@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, ActionSheetController, LoadingController } from 'ionic-angular';
+import { App, NavController, NavParams, ToastController, ActionSheetController, LoadingController } from 'ionic-angular';
 import { Renderer } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -47,33 +47,37 @@ export class EquipePage {
 
     private formBuilder: FormBuilder,
     private datePicker: DatePicker,
-    private renderer: Renderer) {
+    private renderer: Renderer,
+    private app: App) {
 
     this.usuarioService.getUser().then(userObservable => {
       userObservable.subscribe((usuarioData: Usuario) => {
         this.usuario = usuarioData;
       });
     });
-    
+
+
     this.form = this.formBuilder.group({
       nome: ['', Validators.compose([Validators.minLength(3), Validators.required])],
     });
 
-    if (this.navParams.data.equipe) {
-      let loading = this.loadingCtrl.create({
-        content: 'Carregando equipe...'
-      });
-      loading.present();
+    this.equipe = sessaoService.equipe;
 
-      var equipe: Equipe = this.navParams.data.equipe;
+    // if (this.navParams.data.equipe) {
+    //   let loading = this.loadingCtrl.create({
+    //     content: 'Carregando equipe...'
+    //   });
+    //   loading.present();
 
-      this.equipeService.getEquipe(equipe.$key).subscribe(dataEquipe => {
-        this.sessaoService.setEquipe(dataEquipe);
-        this.equipe = sessaoService.equipe;
+    //   var equipe: Equipe = this.navParams.data.equipe;
 
-        loading.dismiss();
-      });
-    }
+    //   this.equipeService.getEquipe(equipe.$key).subscribe(dataEquipe => {
+    //     this.sessaoService.setEquipe(dataEquipe);
+    //     this.equipe = sessaoService.equipe;
+
+    //     loading.dismiss();
+    //   });
+    // }
   }
 
   ionViewDidLoad() {
@@ -89,11 +93,11 @@ export class EquipePage {
     let loading = this.loadingCtrl.create();
 
     if (this.equipe.$key) {
-      toast.setMessage("Equipe criada.");
-      loading.setContent('Criando equipe...');
-    } else {
-      toast.setMessage("Equipe alterada.");
       loading.setContent('Alterando equipe...');
+      toast.setMessage("Equipe alterada.");
+    } else {
+      loading.setContent('Criando equipe...');
+      toast.setMessage("Equipe criada.");
     }
 
     loading.present();
@@ -160,7 +164,11 @@ export class EquipePage {
   }
 
   abrirConvidar() {
-    this.navCtrl.push(EquipeConvidarPage, {
+    // this.navCtrl.push(EquipeConvidarPage, {
+    //   equipe: this.equipe
+    // });
+
+    this.app.getRootNav().push(EquipeConvidarPage, {
       equipe: this.equipe
     });
   }

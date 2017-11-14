@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { IonicPage, App, NavParams, Nav, NavController } from 'ionic-angular';
 
 import { Storage } from '@ionic/storage';
 
@@ -21,18 +21,20 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     public storage: Storage,
-    public usuarioProvider: UsuarioServiceProvider) {
+    public usuarioProvider: UsuarioServiceProvider,
+    private app: App) {
   }
 
   ionViewDidLoad() {
     this.storage.get("uid").then(uuid => {
       console.log(uuid)
     })
+
     console.log(this.usuarioProvider.usuario);
   }
 
   verPerfil() {
-    this.navCtrl.push(PerfilPage);
+    this.app.getRootNav().setRoot(PerfilPage);
   }
 
   verEquipes() {
@@ -40,6 +42,8 @@ export class HomePage {
   }
 
   verConvites() {
-    this.navCtrl.push(ConvitesPage);
+    this.app.getRootNav().push(ConvitesPage)
+
+   // this.navCtrl.push(ConvitesPage);
   }
 }

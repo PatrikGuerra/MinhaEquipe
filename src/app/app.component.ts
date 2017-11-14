@@ -6,6 +6,7 @@ import { AngularFireAuth } from "angularfire2/auth";
 
 //pages
 import { HomePage } from '../pages/home/home';
+import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from "../pages/login/login";
 //import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 //import { EquipeConvidarPage } from "../pages/equipe-convidar/equipe-convidar";
@@ -33,7 +34,8 @@ export class MyApp {
         console.log(user);
 
         this.usuarioService.setUsuarioAplicacao(user.uid).then(data => {
-          this.rootPage = HomePage;
+          //this.rootPage = HomePage;
+          this.rootPage = TabsPage;
           console.log(this.usuarioService.usuario)
         });
 
