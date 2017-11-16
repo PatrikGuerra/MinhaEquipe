@@ -84,7 +84,7 @@ export class EquipePage {
     console.log('ionViewDidLoad EquipePage');
   }
 
-  abrirPopover(myEvent) {
+  public abrirPopover(myEvent) {
     let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
 
     contextoPopoverPage.present({

@@ -53,7 +53,7 @@ export class PerfilPage {
     console.log('ionViewDidLoad PerfilPage');
   }
 
-  abrirPopover(myEvent) {
+  public abrirPopover(myEvent) {
     let perfilPopoverPage = this.popoverCtrl.create(PerfilPopoverPage);
 
     perfilPopoverPage.present({

@@ -31,13 +31,13 @@ export class AuthServiceProvider {
   public entrar(credencial: Credencial): Promise<any> {
     return new Promise((resolve, reject) => {
       this.angularFireAuth.auth.signInWithEmailAndPassword(credencial.email, credencial.senha).then(firebaseUser => {
-
         if (!firebaseUser.emailVerified) {
           throw new EmailNaoConfirmadoException("Você deve confirmar seu e-mail.");
         };
-
+        
         resolve(firebaseUser);
       }).catch(error => {
+        
         if (error instanceof EmailNaoConfirmadoException) {
           this.sair();
         }

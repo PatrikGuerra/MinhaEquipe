@@ -52,7 +52,7 @@
         <ion-icon name="create"></ion-icon>
       </button>
     </ion-item>
-{{equipe.membros.length}}
+
     <ion-card *ngIf="equipe.$key">
       <ion-list>
         <ion-item>
@@ -63,7 +63,6 @@
             <ion-avatar item-start>
               <img src="{{ usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
             </ion-avatar>
-
             {{ usuario.nome }}
           </ion-item>
 

@@ -39,7 +39,7 @@ export class TarefasPage {
     console.log('ionViewDidLoad TarefasPage');
   }
 
-  abrirPopover(myEvent) {
+  public abrirPopover(myEvent) {
     let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
 
     contextoPopoverPage.present({

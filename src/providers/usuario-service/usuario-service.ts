@@ -38,14 +38,11 @@ export class UsuarioServiceProvider {
 
   public setUsuarioAplicacao(key: string): Promise<any> {
     return new Promise((resolve, reject) => {
-
       this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
         this.monitorar();
         return this.firebaseToUsuario(item);
       }).subscribe(dataUsuario => {
         this.usuario = dataUsuario;
-        console.log("this.usuario")
-        console.log(this.usuario)
         resolve(dataUsuario);
       });
 
@@ -58,7 +55,6 @@ export class UsuarioServiceProvider {
 
         this.setUsuarioAplicacao(firebaseUser.uid).then(dataUsuario => {
           this.storage.set(LocalStorage.UsuarioUid, dataUsuario.$key);
-
           resolve(true);
         });
 
@@ -75,11 +71,9 @@ export class UsuarioServiceProvider {
       .subscribe(position => {
 
         this.atualizarLocalizacao(position);
-
         console.log(position);
       });
   }
-
 
   private atualizarLocalizacao(position: any) {
     var updates = {};
@@ -93,7 +87,6 @@ export class UsuarioServiceProvider {
 
     return this.db.database.ref().update(updates);
   }
-
 
   private firebaseToUsuario(objeto: any) {
     let usuario: Usuario = Object.assign(new Usuario(), JSON.parse(JSON.stringify(objeto)))
