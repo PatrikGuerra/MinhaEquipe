@@ -30,7 +30,7 @@ export class EquipeContextoPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
-    
+
     public geolocation: Geolocation,
     public sessaoService: SessaoServiceProvider,
     private usuarioService: UsuarioServiceProvider,
@@ -41,6 +41,7 @@ export class EquipeContextoPage {
   }
 
   ionViewDidEnter() {
+    console.log("ionViewDidEnter")
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: {
         lat: -29.166564,
@@ -49,14 +50,19 @@ export class EquipeContextoPage {
       zoom: 15, //https://developers.google.com/maps/documentation/static-maps/intro#Zoomlevels
       disableDefaultUI: true //https://developers.google.com/maps/documentation/javascript/examples/control-disableUI?hl=pt-br
     });
-  }
 
-  ionViewDidLoad() {
-    this.centerMapOnCurrentPosition();
+    //this.centerMapOnCurrentPosition();
     this.carregarLocalizacoes();
   }
 
-  abrirPopover(myEvent) {
+  ionViewDidLoad() {
+    console.log("ionViewDidLoad")
+    console.log("ionViewDidLoad -- carregou")
+    //  this.centerMapOnCurrentPosition();
+    //  this.carregarLocalizacoes();
+  }
+
+  public abrirPopover(myEvent) {
     let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
 
     contextoPopoverPage.present({
@@ -115,6 +121,15 @@ export class EquipeContextoPage {
       });
     })
   }
+
+  // private aplicaMarcadores(data) {
+  //   console.log(data)
+
+  //   data.forEach(element => {
+  //     console.log(element)
+  //     this.setMarker(new google.maps.LatLng(element.lat, element.lng))
+  //   });
+  // }
 
   private setMarker(latLng: google.maps.LatLng) {
     let newMarker = new google.maps.Marker({
