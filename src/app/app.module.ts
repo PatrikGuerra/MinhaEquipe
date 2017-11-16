@@ -21,7 +21,6 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 //Paginas
 import { CadastroPage } from "../pages/cadastro/cadastro";
 import { EsqueciSenhaPage } from "../pages/esqueci-senha/esqueci-senha";
-import { LoginPage } from "../pages/login/login";
 import { PerfilPage } from "../pages/perfil/perfil";
 import { EquipePage } from "../pages/equipe/equipe";
 import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
@@ -75,7 +74,6 @@ import { DatePicker } from '@ionic-native/date-picker';
     TabsPage,
       CadastroPage,
       EsqueciSenhaPage,
-      LoginPage,
       PerfilPage,
       PerfilPopoverPage,
       ContextoPopoverPage,
@@ -103,19 +101,19 @@ import { DatePicker } from '@ionic-native/date-picker';
       //https://forum.ionicframework.com/t/how-to-set-the-whole-app-in-androids-style-even-if-on-ios-in-ionic2/42504/10#post_10
       //http://ionicframework.com/docs/api/config/Config/
       
-      tabsPlacement: 'bottom',
-      platforms: {
-        android: {
-          tabsPlacement: 'top'
-        },
-        ios: {
-          tabsPlacement: 'top'
-        },
-        windows:
-        {
-          tabsPlacement: 'top'
-        }
-      },
+      tabsPlacement: 'top',
+      // platforms: {
+      //   android: {
+      //     tabsPlacement: 'top'
+      //   },
+      //   ios: {
+      //     tabsPlacement: 'top'
+      //   },
+      //   windows:
+      //   {
+      //     tabsPlacement: 'top'
+      //   }
+      // },
       mode: 'md',
     }),
     IonicStorageModule.forRoot(), //Storage
@@ -131,7 +129,6 @@ import { DatePicker } from '@ionic-native/date-picker';
     TabsPage,
       CadastroPage,
       EsqueciSenhaPage,
-      LoginPage,
       PerfilPage,
       PerfilPopoverPage,
       ContextoPopoverPage,

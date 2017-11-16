@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-//Pages
-import { LoginPage } from "../login/login";
-
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
@@ -62,9 +59,8 @@ export class CadastroPage {
         toast.setShowCloseButton(true);
         toast.setMessage('Usuário criado com sucesso. Verifique seu e-mail.');
         toast.present();
-
         this.authService.sair().then((dataSair) => {
-          this.navCtrl.setRoot(LoginPage);
+          this.navCtrl.setRoot('LoginPage');
         });
       });
     }).catch((error: any) => {

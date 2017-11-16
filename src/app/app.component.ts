@@ -7,7 +7,6 @@ import { AngularFireAuth } from "angularfire2/auth";
 //Pages
 import { EquipeListaPage } from "../pages/equipe-lista/equipe-lista";
 import { TabsPage } from '../pages/tabs/tabs';
-import { LoginPage } from "../pages/login/login";
 
 //Providers
 import { UsuarioServiceProvider } from '../providers/usuario-service//usuario-service';
@@ -32,15 +31,14 @@ export class MyApp {
         console.log(user);
 
         this.usuarioService.setUsuarioAplicacao(user.uid).then(data => {
-          //this.rootPage = ;
           this.rootPage = EquipeListaPage;
           console.log(this.usuarioService.usuario)
         });
 
         //authObserver.unsubscribe();
       } else {
-        console.log("Não logado")
-        this.rootPage = LoginPage;
+        console.log("Não logado")        
+        this.rootPage = 'LoginPage';
         authObserver.unsubscribe();
       }
     //  authObserver.unsubscribe();
@@ -51,6 +49,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
+      
     });
   }
 }

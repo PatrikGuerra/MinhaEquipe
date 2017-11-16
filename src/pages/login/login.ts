@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 
@@ -17,6 +17,7 @@ import { Credencial } from "../../models/credencial";
 import { LocalStorage } from "../../app/app.constants";
 import { EmailNaoConfirmadoException } from "../../customError/emailNaoConfirmadoException";
 
+@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
@@ -43,7 +44,7 @@ export class LoginPage {
       if (credencialEmail) {
         this.credencial.email = credencialEmail;
       }
-    })
+    });
   }
 
   ionViewDidLoad() {
@@ -68,7 +69,7 @@ export class LoginPage {
     loading.present();
 
     this.usuarioService.entrar(this.credencial).then(data => {
-      console.log(this.usuarioService.usuario);
+      this.storage.set(LocalStorage.LoginEmail, this.credencial.email);
 
       this.navCtrl.setRoot(EquipeListaPage);
       loading.dismiss();

@@ -7,7 +7,6 @@ import { EquipeListaPage } from "../equipe-lista/equipe-lista";
 import { ConvitesPage } from "../convites/convites";
 import { PerfilAlterarEmailPage } from "../perfil-alterar-email/perfil-alterar-email";
 import { PerfilAlterarSenhaPage } from "../perfil-alterar-senha/perfil-alterar-senha";
-import { LoginPage } from "../login/login";
 
 //Providers
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
@@ -93,7 +92,7 @@ export class PerfilPopoverPage {
 
   logout() {
     this.authService.sair().then(() => {
-      this.navCtrl.setRoot(LoginPage);
+      this.navCtrl.setRoot('LoginPage');
     }).catch((error) => {
       console.error(error);
     });

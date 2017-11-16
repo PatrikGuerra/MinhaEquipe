@@ -7,9 +7,6 @@ import { NgForm } from '@angular/forms';
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { AuthServiceProvider } from "../../providers/auth-service/auth-service";
 
-//Pages
-import { LoginPage } from "../login/login";
-
 @Component({
   selector: 'page-perfil-alterar-email',
   templateUrl: 'perfil-alterar-email.html',
@@ -61,7 +58,7 @@ export class PerfilAlterarEmailPage {
 
       alert.onDidDismiss((data) => {
         this.authService.sair().then(dataSair => {
-          this.navCtrl.setRoot(LoginPage);
+          this.navCtrl.setRoot('LoginPage');
         });
       });
 
