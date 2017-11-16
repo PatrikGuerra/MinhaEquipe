@@ -41,7 +41,7 @@ export class LocaisPage {
     console.log('ionViewDidLoad LocaisPage');
   }
 
-  abrirPopover(myEvent) {
+  public abrirPopover(myEvent) {
     let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
 
     contextoPopoverPage.present({
