@@ -11,49 +11,44 @@
 
 <ion-content class="messages">
   <ion-list no-padding *ngIf="usuario">
-    <div *ngFor="let msg of chatMessages; let i = index">
+    <div *ngFor="let mensagem of mensagens; let i = index">
 
-      <fieldset *ngIf="i == 0 || (i > 0) && msg.day != chatMessages[i-1].day">
-        <legend align="center" *ngIf="isToday(msg.timestamp)">
+      <fieldset *ngIf="i == 0 || (i > 0) && mensagem.dia != mensagens[i - 1].dia">
+        <legend align="center" *ngIf="isToday(mensagem.timestamp)">
           Hoje
         </legend>
-        <legend align="center" *ngIf="!isToday(msg.timestamp)">
-          {{ msg.timestamp | date: "dd/mm/yyyy" }}
+        <legend align="center" *ngIf="!isToday(mensagem.timestamp)">
+          {{ mensagem.timestamp | date: "dd/mm/yyyy" }}
         </legend>
       </fieldset>
 
-      <ion-item no-lines>
-        <ion-label class="margem">
-
-          <!-- 
-          Tratamento de mensagens do tipo notificação
-          <p style="text-align: center" *ngIf="msg.tipo == 1">
-            <span class="notificacao">{{ msg.conteudo }}</span>
-            <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
-          </p> 
-          -->
-
-          <!-- <p *ngIf="msg.keyUsuario == usuario.$key && (msg.tipo == 0 || !msg.tipo)"> -->
-          <p *ngIf="msg.keyUsuario == usuario.$key">
-            <span class="message-text right">{{ msg.conteudo }}</span>
-            <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
+      <ion-item no-lines >
+        <ion-label class="margem" *ngIf="mensagem.tipo == enumMensagemTipo.Notificacao">
+          <p style="text-align: center">
+            <span class="notificacao">{{ mensagem.conteudo }}</span>
+            <span class="message-time">{{ mensagem.timestamp | date:"hh:mm a" }}</span>
           </p>
-
-          <!-- <p *ngIf="msg.keyUsuario != usuario.$key && (msg.tipo == 0 || !msg.tipo)"> -->
-          <p *ngIf="msg.keyUsuario != usuario.$key">
-            <ion-avatar>
-              <img class="user-image" [src]="msg.usuario?.fotoUrl || 'assets/images/no-image.jpg'" />
-            </ion-avatar>
-            <span class="message-text left">
-              <span class="author">{{ msg.usuario?.name || msg.usuario?.email }}</span>
-              {{ msg.conteudo }}
-            </span>
-            <span class="message-time">{{ msg.timestamp | date:"hh:mm a" }}</span>
-          </p>
-
         </ion-label>
 
-        {{ msg.conteudo }}
+        <ion-label class="margem" *ngIf="mensagem.tipo == enumMensagemTipo.Mensagem">
+          <p *ngIf="mensagem.keyUsuario == usuario.$key">
+            <span class="message-text right">{{ mensagem.conteudo }}</span>
+            <span class="message-time">{{ mensagem.timestamp | date:"hh:mm a" }}</span>
+          </p>
+
+          <p *ngIf="mensagem.keyUsuario != usuario.$key">
+            <ion-avatar>
+              <img class="user-image" [src]="mensagem.usuario?.fotoUrl || 'assets/images/no-image.jpg'" />
+            </ion-avatar>
+            <span class="message-text left">
+              <span class="author">{{ mensagem.usuario?.nome || mensagem.usuario?.email }}</span>
+              {{ mensagem.conteudo }}
+            </span>
+            <span class="message-time">{{ mensagem.timestamp | date:"hh:mm a" }}</span>
+          </p>
+        </ion-label>
+
+        {{ mensagem.conteudo }}
       </ion-item>
 
     </div>
@@ -64,11 +59,11 @@
   <ion-toolbar>
     <ion-row>
       <ion-col col-10 no-padding>
-        <ion-textarea elastic type="text" [(ngModel)]="chatText" (keydown.enter)="sendMessage($event);false" rows="1" [placeholder]="'Digite aqui...'"
+        <ion-textarea elastic type="text" [(ngModel)]="chatText" (keydown.enter)="enviarMensagem($event);false" rows="1" [placeholder]="'Digite aqui...'"
           autocapitalize="off" color="dark" block></ion-textarea>
       </ion-col>
       <ion-col no-padding text-right col-2>
-        <button ion-button (click)="sendMessage($event)" [disabled]="!chatText" color="primary" block clear icon-only>
+        <button ion-button (click)="enviarMensagem($event)" [disabled]="!chatText" color="primary" block clear icon-only>
           <ion-icon name="send"></ion-icon>
         </button>
       </ion-col>

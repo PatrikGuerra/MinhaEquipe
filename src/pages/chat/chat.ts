@@ -2,13 +2,19 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { App, IonicPage, NavController, NavParams, LoadingController, Platform, PopoverController } from 'ionic-angular';
 import { Keyboard } from '@ionic-native/keyboard';
 
-import { ChatServiceProvider } from "../../providers/chat-service/chat-service";
-
-import { Usuario } from "../../models/usuario";
-import { Equipe } from "../../models/equipe";
-
 import { ElasticDirective } from "../../directives/elastic/elastic";
 
+import { MensagemTipo } from "../../app/app.constants";
+
+//Providers
+import { ChatServiceProvider } from "../../providers/chat-service/chat-service";
+
+//Models
+import { Usuario } from "../../models/usuario";
+import { Equipe } from "../../models/equipe";
+import { Mensagem } from "../../models/mensagem";
+
+//Pages
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 
@@ -21,12 +27,14 @@ import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
 })
 export class ChatPage implements OnInit, OnDestroy {
   chatText: string;
-  chatMessages: Array<string>;
   textMaxLength: number = 400;
   usuario: Usuario;
   equipe: Equipe;
 
   private autoScroller: MutationObserver;
+
+  private mensagens: Array<Mensagem>;
+  private enumMensagemTipo = MensagemTipo;
 
   constructor(
     public navCtrl: NavController,
@@ -46,9 +54,9 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   ionViewDidLoad() {
-    this.chatService.getMessages(this.equipe.$key).subscribe((messages =>
-      this.chatMessages = messages
-    ));
+    this.chatService.getMensagens(this.equipe.$key).subscribe((mensagensData) => {
+      this.mensagens = mensagensData;
+    });
 
     if (this.platform.is('cordova')) {
       this.keyboard.onKeyboardShow().subscribe(() => this.scrollDown());
@@ -63,8 +71,7 @@ export class ChatPage implements OnInit, OnDestroy {
     this.autoScroller.disconnect();
   }
 
-
-  abrirPopover(myEvent) {
+  public abrirPopover(myEvent) {
     let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
 
     contextoPopoverPage.present({
@@ -72,7 +79,7 @@ export class ChatPage implements OnInit, OnDestroy {
     });
   }
 
-  sendMessage(event: any) {
+  public enviarMensagem(event: any) {
     var conteudoChat = this.chatText.trim();
 
     if (!conteudoChat) {
@@ -83,7 +90,7 @@ export class ChatPage implements OnInit, OnDestroy {
     this.chatText = ' ';
     this.chatText = '';
 
-    this.chatService.sendMessage(this.usuario.$key, conteudoChat, this.equipe.$key).then(() => {
+    this.chatService.enviarMensagem(this.equipe.$key, this.usuario.$key, this.enumMensagemTipo.Mensagem, conteudoChat).then(() => {
       this.scrollDown();
     }, (error) => {
       console.log(error);

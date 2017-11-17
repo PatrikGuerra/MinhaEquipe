@@ -1,13 +1,23 @@
-export enum MensagemTipo {
-    chat = 0,
-    novoMembro = 1,
-}
+import { Usuario } from "../models/usuario";
+import { MensagemTipo } from "../app/app.constants";
 
 export class Mensagem {
     $key: string;
-    timestamp: any;
+    timestamp: any; //?: string | Object;
+        dia: any;
     
     keyRemetente: string;
+        remetente: Usuario;
+
     conteudo: string;
-    tipo: number;
+    tipo: MensagemTipo = MensagemTipo.Mensagem;
+
+    public setRemetente(usuarios: Usuario[]){
+        for (var index = 0; index < usuarios.length; index++) {
+            if (usuarios[index].$key == this.keyRemetente) {
+                this.remetente = usuarios[index];
+                break;
+            }
+        }
+    }
 }
