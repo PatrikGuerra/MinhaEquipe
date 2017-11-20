@@ -24,3 +24,19 @@ $ ionic cordova run ios
 
 Substitute ios for android if not on a Mac.
 
+
+
+
+
+
+
+https://devdactic.com/ionic-side-menu-tabs/
+
+
+https://humaan.com/blog/custom-html-markers-google-maps/
+
+
+https://www.djamware.com/post/58d4ce1c80aca76428d002b8/integrating-ionic-2-google-maps-and-geolocation-using-ionic-native
+
+
+https://www.joshmorony.com/adding-background-geolocation-to-an-ionic-2-application/

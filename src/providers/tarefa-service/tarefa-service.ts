@@ -100,7 +100,10 @@ export class TarefaServiceProvider {
 
       if (!cadastro) {
         new Promise((resolve, reject) => {
-          this.getTarefa(tarefa.keyEquipe, tarefa.$key).take(1).subscribe((objetoAntigo) => {
+          this.getTarefa(tarefa.keyEquipe, tarefa.$key).take(1).subscribe((objetoAntigo) => { 
+            //https://github.com/angular/angularfire2/issues/456#issuecomment-254464619
+            // https://github.com/angular/angularfire2/issues/456#issuecomment-241509299
+            
             if (objetoAntigo.keyLocal != tarefa.keyLocal) {
               this.db.database.ref(`${dataBaseStorage.LocalTarefas}/${tarefa.keyEquipe}/${objetoAntigo.keyLocal}/${tarefa.$key}`).remove()
             }
