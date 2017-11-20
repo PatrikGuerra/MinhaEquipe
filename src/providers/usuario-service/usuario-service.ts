@@ -19,7 +19,10 @@ import { AuthServiceProvider } from "../auth-service/auth-service";
 //Others
 import { LocalStorage } from "../../app/app.constants";
 
-import { Geolocation } from '@ionic-native/geolocation';
+import { Geolocation, Geoposition } from '@ionic-native/geolocation';
+import {  NgZone } from '@angular/core';
+// import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+import 'rxjs/add/operator/filter';
 
 @Injectable()
 export class UsuarioServiceProvider {
@@ -37,11 +40,21 @@ export class UsuarioServiceProvider {
   }
 
   public setUsuarioAplicacao(key: string): Promise<any> {
+    console.log("Passou aquieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+    console.log("Passou aquieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+    console.log("Passou aquieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+    console.log(key)
+    
+    
     return new Promise((resolve, reject) => {
-      this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
-        this.monitorar();
-        return this.firebaseToUsuario(item);
-      }).subscribe(dataUsuario => {
+      
+      this.getUsuario(key)
+      // this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
+        //   this.monitorar();
+        //   return this.firebaseToUsuario(item);
+        // })
+        .subscribe(dataUsuario => {
+          console.log("Passou aquieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         this.usuario = dataUsuario;
         resolve(dataUsuario);
       });
@@ -64,24 +77,28 @@ export class UsuarioServiceProvider {
     });
   }
 
-
   private monitorar() {
-    this.geolocationSubscription = this.geolocation.watchPosition()
-      .filter((p) => p.coords !== undefined) //Filter Out Errors
-      .subscribe(position => {
+    this.geolocationSubscription = this.geolocation.watchPosition({
+      // frequency: 3000,
+      
+      enableHighAccuracy: true
+    })
+      .filter((p) => p.coords === undefined) //Filter Out Errors
+      .subscribe((geoposition: Geoposition) => {
 
-        this.atualizarLocalizacao(position);
-        console.log(position);
+        this.atualizarLocalizacao(geoposition);
+        console.log(geoposition);
       });
   }
 
-  private atualizarLocalizacao(position: any) {
+  private atualizarLocalizacao(geoposition: Geoposition) {
     var updates = {};
 
     Object.keys(this.usuario.equipes).forEach(element => {
       updates[`${dataBaseStorage.UsuarioLocalizacao}/${element}/${this.usuario.$key}`] = {
-        'lat': position.coords.latitude,
-        'lng': position.coords.longitude
+        'lat': geoposition.coords.latitude,
+        'lng': geoposition.coords.longitude,
+        'timestamp': geoposition.timestamp
       };
     });
 
@@ -110,7 +127,11 @@ export class UsuarioServiceProvider {
 
 
   public getUsuario(key: string) {
-    return this.db.object(`${dataBaseStorage.Usuario}/${key}`);
+    // return this.db.object(`${dataBaseStorage.Usuario}/${key}`);
+
+    return this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
+      return this.firebaseToUsuario(item);
+    })
   }
 
 

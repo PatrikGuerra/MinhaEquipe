@@ -1,5 +1,13 @@
 <ion-header>
   <ion-navbar color="primary">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+
+
+
     <ion-title>Equipes</ion-title>
   </ion-navbar>
 </ion-header>
@@ -9,11 +17,11 @@
     <button ion-button block color="primary" (click)="novaEquipe()">+</button>
   </div> -->
 
-    <ion-fab right bottom>
-      <button ion-fab color="primary" (click)="novaEquipe()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-fab>
+  <ion-fab right bottom>
+    <button ion-fab color="primary" (click)="novaEquipe()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 
   <ion-card *ngIf="equipes.length == 0">
     <ion-card-content>
@@ -23,7 +31,7 @@
 
   <ion-list *ngIf="equipes.length > 0">
     <button ion-item *ngFor="let equipe of equipes" (click)="editarEquipe(equipe)">
-    <!--<ion-item *ngFor="let equipe of equipes" (click)="editarEquipe(equipe)">-->
+      <!--<ion-item *ngFor="let equipe of equipes" (click)="editarEquipe(equipe)">-->
       <ion-avatar item-start>
         <img src="{{ equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
       </ion-avatar>
@@ -32,8 +40,8 @@
       <h2>Nome</h2>
       <p>Descrição</p>
       -->
-     <!--</ion-item>-->
-     <ion-icon item-end *ngIf="equipe.keyResponsavel == usuarioUid" name="star"></ion-icon>
-   </button>
+      <!--</ion-item>-->
+      <ion-icon item-end *ngIf="equipe.keyResponsavel == usuarioUid" name="star"></ion-icon>
+    </button>
   </ion-list>
 </ion-content>

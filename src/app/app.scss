@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,10 +12,33 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
-
-
 //Nas listas, se a imagem nao for de proporção igual, ela é espremida
 ion-avatar img {
-	background-color: #fff;
-	object-fit: cover;
+    background-color: #fff;
+    object-fit: cover;
 }
+
+.corTextoVermelho {
+    // ion-icon {
+    //     color: #f53d3d;
+    // }
+    .button-inner {
+        color: red
+    }
+}
+
+.itemOutline {
+    border: thin solid color($colors, primary, base);
+    border-color: color($colors, primary, base);
+    color: color($colors, primary, base);
+    background-color: transparent;
+}
+
+
+/*
+$colors: (
+  primary:    #488aff,
+  secondary:  #32db64,
+  danger:     #f53d3d,
+  light:      #f4f4f4,
+  dark:       #222,*/

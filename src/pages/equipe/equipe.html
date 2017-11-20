@@ -1,16 +1,22 @@
 <ion-header>
   <ion-navbar color="primary">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+
     <ion-title>Equipe</ion-title>
-        <ion-buttons end *ngIf="equipe.$key">
-          <button ion-button icon-only (click)="abrirPopover($event)">
-            <ion-icon name="more"></ion-icon>
-          </button>
-        </ion-buttons>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="save()" [disabled]="!form.valid">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content no-bounce>
-
   <ion-fab right bottom *ngIf="equipe.$key && isAdministradorEquipe()">
     <button ion-fab color="primary" (click)="abrirConvidar()">
       <ion-icon name="person-add"></ion-icon>
@@ -56,27 +62,24 @@
     <ion-card *ngIf="equipe.$key">
       <ion-list>
         <ion-item>
-          <h2>Membros</h2>
+          <h3>{{ equipe.membros.length }} Membros</h3>
         </ion-item>
-        <ion-item-sliding *ngFor="let usuario of equipe.membros">
-          <ion-item>
+
+        <div *ngFor="let usuario of equipe.membros">
+          <button ion-item (press)="itemPressed(usuario)">
             <ion-avatar item-start>
               <img src="{{ usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
             </ion-avatar>
             {{ usuario.nome }}
-          </ion-item>
 
-          <ion-item-options slide="right" *ngIf="usuario.$key != this.usuarioService.usuario.$key && isAdministradorEquipe()">
-            <button ion-button color="danger" (click)="recusarConvite(usuario)">
-              <ion-icon name="close"></ion-icon>remover
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
+            <ion-badge *ngIf="usuario.$key == equipe.keyResponsavel" class="itemOutline" item-end>Admin</ion-badge>
+          </button>
+        </div>
       </ion-list>
     </ion-card>
 
-    <div padding-vertical *ngIf="isAdministradorEquipe()">
-      <button ion-button (click)="save()" [disabled]="!form.valid" block>Salvar</button>
+    <div padding-bottom *ngIf="isAdministradorEquipe()">
+      <button ion-button color="danger" (click)="remover()" block>Remover Equipe</button>
     </div>
   </form>
 

@@ -71,13 +71,13 @@ export class EquipeServiceProvider {
       return items.map(item => {
         return this.firebaseToEquipe(item);
       });
-    })
+    });
   }
 
   getEquipe(key: string) {
     return this.db.object(`${dataBaseStorage.Equipe}/${key}`).map((item) => {
       return this.firebaseToEquipe(item);
-    })
+    });
   }
 
   public remove(key: string) {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, ViewController, ModalController, AlertController } from 'ionic-angular';
-import { IonicPage, App, NavParams, Nav } from 'ionic-angular';
+import { IonicPage, NavParams, Nav } from 'ionic-angular';
 
 //Pages
 import { EquipeListaPage } from "../equipe-lista/equipe-lista";
@@ -22,9 +22,7 @@ export class PerfilPopoverPage {
     public navCtrl: NavController,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private authService: AuthServiceProvider,
-    
-    private app: App) {
+    private authService: AuthServiceProvider) {
   }
 
   ionViewDidLoad() {
@@ -33,18 +31,6 @@ export class PerfilPopoverPage {
 
   close() {
     this.viewCtrl.dismiss();
-  }
-
-  abrirListaEquipes() {
-    this.close();
-    this.app.getRootNav().setRoot(EquipeListaPage);
-  }
-
-  abrirConvites() {
-    // this.viewCtrl.dismiss().then(a => {
-    this.app.getRootNav().push(ConvitesPage);
-    this.viewCtrl.dismiss()
-    // })
   }
 
   alterarEmail() {
@@ -70,6 +56,8 @@ export class PerfilPopoverPage {
   }
 
   confirmarLogout() {
+    this.close();
+    
     let alert = this.alertCtrl.create({
       title: 'Sair',
       message: 'Você tem certeza que deseja sair?',

@@ -1,6 +1,6 @@
 import { Component, NgZone, ElementRef, ViewChild } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation';
-import { App, LoadingController, NavController, NavParams, ViewController, PopoverController } from 'ionic-angular';
+import { IonicPage, LoadingController, NavController, NavParams, ViewController, PopoverController } from 'ionic-angular';
 
 import { } from '@types/googlemaps';
 
@@ -13,9 +13,7 @@ import { dataBaseStorage } from "../../app/app.constants";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
-// Popover
-import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
-
+@IonicPage()
 @Component({
   selector: 'page-equipe-contexto',
   templateUrl: 'equipe-contexto.html',
@@ -33,11 +31,7 @@ export class EquipeContextoPage {
 
     public geolocation: Geolocation,
     public sessaoService: SessaoServiceProvider,
-    private usuarioService: UsuarioServiceProvider,
-
-    private app: App,
-    public popoverCtrl: PopoverController) {
-
+    private usuarioService: UsuarioServiceProvider) {
   }
 
   ionViewDidEnter() {
@@ -62,13 +56,6 @@ export class EquipeContextoPage {
     //  this.carregarLocalizacoes();
   }
 
-  public abrirPopover(myEvent) {
-    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
-
-    contextoPopoverPage.present({
-      ev: myEvent
-    });
-  }
   centerMapOnCurrentPosition() {
     let loadingGeo = this.loadingCtrl.create({
       content: "Buscando sua localização.."

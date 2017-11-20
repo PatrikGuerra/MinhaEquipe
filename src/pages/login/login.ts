@@ -71,7 +71,7 @@ export class LoginPage {
     this.usuarioService.entrar(this.credencial).then(data => {
       this.storage.set(LocalStorage.LoginEmail, this.credencial.email);
 
-      this.navCtrl.setRoot(EquipeListaPage);
+      this.navCtrl.setRoot('MenuPage');
       loading.dismiss();
     }).catch((error: any) => {
       let toast = this.toastCtrl.create({

@@ -1,11 +1,12 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>{{ equipe.nome }}</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="abrirPopover($event)">
-        <ion-icon name="more"></ion-icon>
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
+
+    <ion-title>{{ equipe.nome }}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -22,7 +23,7 @@
         </legend>
       </fieldset>
 
-      <ion-item no-lines >
+      <ion-item no-lines>
         <ion-label class="margem" *ngIf="mensagem.tipo == enumMensagemTipo.Notificacao">
           <p style="text-align: center">
             <span class="notificacao">{{ mensagem.conteudo }}</span>

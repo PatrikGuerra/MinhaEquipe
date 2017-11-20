@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage';
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
 //Components
-import { TagsInputComponent } from "../../components/tags-input/tags-input.component";
+//  import { TagsInputComponent } from "../../components/tags-input/tags-input.component";
 
 //Popover
 import { PerfilPopoverPage } from "../perfil-popover/perfil-popover";
@@ -14,6 +14,7 @@ import { PerfilPopoverPage } from "../perfil-popover/perfil-popover";
 //Models
 import { Usuario } from './../../models/usuario';
 
+@IonicPage()
 @Component({
   selector: 'page-perfil',
   templateUrl: 'perfil.html',
@@ -27,7 +28,7 @@ export class PerfilPage {
     private actionsheetCtrl: ActionSheetController,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
-    private userService: UsuarioServiceProvider,
+    private usuarioService: UsuarioServiceProvider,
     public popoverCtrl: PopoverController) {
 
     let loading = this.loadingCtrl.create({
@@ -36,7 +37,7 @@ export class PerfilPage {
 
     loading.present();
 
-    this.userService.getUser().then(userObservable => {
+    this.usuarioService.getUser().then(userObservable => {
       userObservable.subscribe((usuarioData: Usuario) => {
         this.usuario = usuarioData;
 
@@ -90,11 +91,11 @@ export class PerfilPage {
       content: 'Alterando foto de perfil...'
     });
 
-    this.userService.pictureFromCamera().then((imageData) => {
+    this.usuarioService.pictureFromCamera().then((imageData) => {
       loading.present();
       var imagem = 'data:image/jpeg;base64,' + imageData;
 
-      this.userService.atualizarImagem(imagem).then((hue) => {
+      this.usuarioService.atualizarImagem(imagem).then((hue) => {
         loading.dismiss();
       })
     }, (erro) => {
@@ -107,12 +108,12 @@ export class PerfilPage {
       content: 'Alterando foto de perfil...'
     });
 
-    this.userService.pictureFromLibray().then((imageData) => {
+    this.usuarioService.pictureFromLibray().then((imageData) => {
       loading.present();
 
       var imagem = 'data:image/jpeg;base64,' + imageData;
 
-      this.userService.atualizarImagem(imagem).then((hue) => {
+      this.usuarioService.atualizarImagem(imagem).then((hue) => {
         loading.dismiss();
       })
     }, (erro) => {
@@ -134,7 +135,7 @@ export class PerfilPage {
 
     loading.present();
 
-    this.userService.save(this.usuario).then((data) => {
+    this.usuarioService.save(this.usuario).then((data) => {
       loading.dismiss();
       toast.present();
     });

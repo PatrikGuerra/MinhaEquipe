@@ -6,4 +6,9 @@ export class Local {
 	nome: string = "";
 	descricao: string = "";
 	coordenadas: Coordenadas;
+	keyTarefas: string[] = [];
+
+	public Copy() {
+		return Object.assign(new Local(), JSON.parse(JSON.stringify(this)))
+	}
 }

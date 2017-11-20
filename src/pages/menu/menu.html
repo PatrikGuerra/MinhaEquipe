@@ -1,0 +1,25 @@
+<ion-menu [content]="content">
+  <ion-content>
+
+    <ion-card no-margin style="width:100%" menuClose (click)="abrirPerfil()">
+      <ion-item color="primary">
+        <ion-avatar item-start>
+           <!-- usuarioService -->
+          <img src="{{ usuarioService.usuario.fotoUrl ? usuarioService.usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
+        </ion-avatar>
+        <h2 style="color:white">{{ usuarioService.usuario.nome }}</h2>
+        <!-- <p>November 5, 1955</p> -->
+      </ion-item>
+    </ion-card>
+
+    <ion-list>
+      <button ion-item menuClose *ngFor="let p of pages" (click)="openPage(p)">
+        <ion-icon item-start [name]="p.icon" [color]="isActive(p)" ></ion-icon>
+        {{ p.title }}
+      </button>
+    </ion-list>
+
+  </ion-content>
+</ion-menu>
+
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

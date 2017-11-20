@@ -1,5 +1,12 @@
 <ion-header>
   <ion-navbar color="primary">
+
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+
     <ion-title>Convites</ion-title>
   </ion-navbar>
 </ion-header>
@@ -26,9 +33,268 @@
       </ion-item>
 
       <ion-item-options slide="right">
-        <button ion-button color="primary" (click)="aceitarConvite(convite)"><ion-icon name="checkmark"></ion-icon>Aceitar</button>
-        <button ion-button color="danger" (click)="recusarConvite(convite)"><ion-icon name="close"></ion-icon>Recusar</button>
+        <button ion-button color="primary" (click)="aceitarConvite(convite)">
+          <ion-icon name="checkmark"></ion-icon>Aceitar</button>
+        <button ion-button color="danger" (click)="recusarConvite(convite)">
+          <ion-icon name="close"></ion-icon>Recusar</button>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+
+
+<!-- 
+  </ion-card>
+    <ion-card *ngIf="tarefa.keyLocal">
+      <div style="position: relative">
+        <img src="https://maps.googleapis.com/maps/api/staticmap?autoscale=2&size=600x600&maptype=roadmap&format=png&visual_refresh=true&markers=icon:http://www.clker.com/cliparts/e/3/F/I/0/A/google-maps-marker-for-residencelamontagne-hi.png|{{ tarefa.local.coordenadas.lat }},{{ tarefa.local.coordenadas.lng }}">
+    
+        <ion-fab right top *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)">
+          <button ion-fab class="fab-map" (click)="selecionarLocal()">
+            <ion-icon name='create'></ion-icon>
+          </button>
+        </ion-fab>
+      </div>
+    </ion-card> -->
+
+
+
+<ion-list>
+  <button ion-item>
+    1
+  </button>
+  <button ion-item>
+    1
+  </button>
+  <button ion-item>
+    1
+  </button>
+</ion-list>
+
+<ion-list no-lines>
+  <button ion-item>
+    1
+  </button>
+  <button ion-item>
+    1
+  </button>
+  <button ion-item>
+    1
+  </button>
+</ion-list>
+
+<ion-list inset>
+  <button ion-item>
+    1
+  </button>
+  <button ion-item>
+    1
+  </button>
+  <button ion-item>
+    1
+  </button>
+  <button ion-item>
+    1
+  </button>
+</ion-list>
+
+<ion-content>
+  <ion-item-group>
+    <ion-item-divider color="light">A</ion-item-divider>
+    <ion-item>Angola</ion-item>
+    <ion-item>Argentina</ion-item>
+  </ion-item-group>
+  <ion-item-group>
+    <ion-item-divider color="light">A</ion-item-divider>
+    <ion-item>Angola</ion-item>
+    <ion-item>Argentina</ion-item>
+  </ion-item-group>
+</ion-content>
+
+<ion-list>
+  <ion-list-header>
+    Action
+  </ion-list-header>
+  <ion-item>Terminator II</ion-item>
+  <ion-item>The Empire Strikes Back</ion-item>
+  <ion-item>Blade Runner</ion-item>
+  <ion-list-header>
+    Action
+  </ion-list-header>
+  <ion-item>Terminator II</ion-item>
+  <ion-item>The Empire Strikes Back</ion-item>
+  <ion-item>Blade Runner</ion-item>
+</ion-list>
+
+<ion-list>
+  <ion-item>
+    <ion-icon name="leaf" item-start></ion-icon>
+    Herbology
+    <ion-icon name="rose" item-end></ion-icon>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="leaf" item-start></ion-icon>
+    Herbology
+    <ion-icon name="rose" item-end></ion-icon>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="leaf" item-start></ion-icon>
+    Herbology
+    <ion-icon name="rose" item-end></ion-icon>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="leaf" item-start></ion-icon>
+    Herbology
+    <ion-icon name="rose" item-end></ion-icon>
+  </ion-item>
+</ion-list>
+
+<ion-list>
+  <ion-item>
+    <ion-avatar item-start>
+      <img src="img/avatar-cher.png">
+    </ion-avatar>
+    <h2>Cher</h2>
+    <p>Ugh. As if.</p>
+  </ion-item>
+  <ion-item>
+    <ion-avatar item-start>
+      <img src="img/avatar-cher.png">
+    </ion-avatar>
+    <h2>Cher</h2>
+    <p>Ugh. As if.</p>
+  </ion-item>
+  <ion-item>
+    <ion-avatar item-start>
+      <img src="img/avatar-cher.png">
+    </ion-avatar>
+    <h2>Cher</h2>
+    <p>Ugh. As if.</p>
+  </ion-item>
+</ion-list>
+
+<ion-list>
+  <ion-item>
+    <ion-avatar item-start>
+      <img src="img/avatar-finn.png">
+    </ion-avatar>
+    <h2>Finn</h2>
+    <h3>Don't Know What To Do!</h3>
+    <p>I've had a pretty messed up day. If we just...</p>
+  </ion-item>
+  <ion-item>
+    <ion-avatar item-start>
+      <img src="img/avatar-finn.png">
+    </ion-avatar>
+    <h2>Finn</h2>
+    <h3>Don't Know What To Do!</h3>
+    <p>I've had a pretty messed up day. If we just...</p>
+  </ion-item>
+  <ion-item>
+    <ion-avatar item-start>
+      <img src="img/avatar-finn.png">
+    </ion-avatar>
+    <h2>Finn</h2>
+    <h3>Don't Know What To Do!</h3>
+    <p>I've had a pretty messed up day. If we just...</p>
+  </ion-item>
+  <ion-item>
+    <ion-avatar item-start>
+      <img src="img/avatar-finn.png">
+    </ion-avatar>
+    <h2>Finn</h2>
+    <h3>Don't Know What To Do!</h3>
+    <p>I've had a pretty messed up day. If we just...</p>
+  </ion-item>
+</ion-list>
+
+<ion-list>
+  <ion-item-sliding>
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="img/slimer.png">
+      </ion-avatar>
+      <h2>Slimer</h2>
+    </ion-item>
+    <ion-item-options side="left">
+      <button ion-button color="primary">
+        <ion-icon name="text"></ion-icon>
+        Text
+      </button>
+      <button ion-button color="secondary">
+        <ion-icon name="call"></ion-icon>
+        Call
+      </button>
+    </ion-item-options>
+    <ion-item-options side="right">
+      <button ion-button color="primary">
+        <ion-icon name="mail"></ion-icon>
+        Email
+      </button>
+    </ion-item-options>
+  </ion-item-sliding>
+  <ion-item-sliding>
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="img/slimer.png">
+      </ion-avatar>
+      <h2>Slimer</h2>
+    </ion-item>
+    <ion-item-options side="left">
+      <button ion-button color="primary">
+        <ion-icon name="text"></ion-icon>
+        Text
+      </button>
+      <button ion-button color="secondary">
+        <ion-icon name="call"></ion-icon>
+        Call
+      </button>
+    </ion-item-options>
+    <ion-item-options side="right">
+      <button ion-button color="primary">
+        <ion-icon name="mail"></ion-icon>
+        Email
+      </button>
+    </ion-item-options>
+  </ion-item-sliding>
+</ion-list>
+
+<ion-list>
+  <ion-item>
+    <ion-thumbnail item-start>
+      <img src="img/thumbnail-totoro.png">
+    </ion-thumbnail>
+    <h2>My Neighbor Totoro</h2>
+    <p>Hayao Miyazaki • 1988</p>
+    <button ion-button clear item-end>View</button>
+  </ion-item>
+  <ion-item>
+    <ion-thumbnail item-start>
+      <img src="img/thumbnail-totoro.png">
+    </ion-thumbnail>
+    <h2>My Neighbor Totoro</h2>
+    <p>Hayao Miyazaki • 1988</p>
+    <button ion-button clear item-end>View</button>
+  </ion-item>
+  <ion-item>
+    <ion-thumbnail item-start>
+      <img src="img/thumbnail-totoro.png">
+    </ion-thumbnail>
+    <h2>My Neighbor Totoro</h2>
+    <p>Hayao Miyazaki • 1988</p>
+    <button ion-button clear item-end>View</button>
+  </ion-item>
+  <ion-item>
+    <ion-thumbnail item-start>
+      <img src="img/thumbnail-totoro.png">
+    </ion-thumbnail>
+    <h2>My Neighbor Totoro</h2>
+    <p>Hayao Miyazaki • 1988</p>
+    <button ion-button clear item-end>View</button>
+  </ion-item>
+</ion-list>
+
+
+
+
+
 </ion-content>

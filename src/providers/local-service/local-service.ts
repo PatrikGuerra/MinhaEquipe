@@ -37,10 +37,23 @@ export class LocalServiceProvider {
     })
   }
 
-  public remove(key: string) {
-    //Tarefa Service
-    //getTarefasPorLocalId(keyEquipe: string, keyLocal: string)
-    return this.db.database.ref(`${dataBaseStorage.Local}/${key}`).remove();
+  public remover(keyEquipe: string, keyLocal: string) {
+    // this.db.object(`${dataBaseStorage.LocalTarefas}/${keyEquipe}/${keyLocal}`).remove();
+    return this.db.object(`${dataBaseStorage.Local}/${keyEquipe}/${keyLocal}`).remove();
+  }
+
+  public getKeyTarefasAssociadas(keyEquipe: string, keyLocal: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.db.object(`${dataBaseStorage.LocalTarefas}/${keyEquipe}/${keyLocal}`).take(1).subscribe(localTarefas => {       
+        if (localTarefas.$value === null) {
+          //not exist
+          resolve([]);
+        } else {
+          // exist 
+          resolve(Object.keys(localTarefas));
+        };
+      });
+    });
   }
 
   public save(local: Local, keyEquipe: string) {

@@ -7,6 +7,14 @@ import { TarefaSituacao } from "../../app/app.constants";
 //Models
 import { Tarefa } from "../../models/tarefa";
 
+// import { Injectable } from '@angular/core';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
+// import { Router } from '@angular/router';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/take';
+// import { Events } from './Events';
+
 @Injectable()
 export class TarefaServiceProvider {
   private enumTarefaSituacao = TarefaSituacao;
@@ -19,6 +27,9 @@ export class TarefaServiceProvider {
   private firebaseToTarefa(objeto: any) {
     let tarefa: Tarefa = Object.assign(new Tarefa(), JSON.parse(JSON.stringify(objeto)))
     tarefa.$key = objeto.$key;
+    tarefa.keyResponsaveis = Object.keys(objeto['keyResponsaveis']);
+
+    console.log(tarefa)
 
     return tarefa;
   }
@@ -29,6 +40,13 @@ export class TarefaServiceProvider {
         return this.firebaseToTarefa(item);
       });
     })
+
+  }
+
+  public getTarefa(keyEquipe: string, keyTarefa: string) {
+    return this.db.object(`${dataBaseStorage.Tarefa}/${keyEquipe}/${keyTarefa}`).map((item) => {
+      return this.firebaseToTarefa(item);
+    });
   }
 
   public getTarefasPorLocalId(keyEquipe: string, keyLocal: string): Promise<any> {
@@ -52,32 +70,62 @@ export class TarefaServiceProvider {
     });
   }
 
-  public save(tarefa: Tarefa) {
-    var refPai = this.db.database.ref(`${dataBaseStorage.Tarefa}/${tarefa.keyEquipe}`);
 
-    if (!tarefa.$key) {
-      tarefa.$key = refPai.push().key;
-      //Envia notificação no chat
-    }
+  public save(tarefa: Tarefa): Promise<any> {
+    let cadastro = false;
+    return new Promise((resolve, reject) => {
 
-    var updates = {};
+      if (!tarefa.$key) {
+        tarefa.$key = this.db.database.ref(`${dataBaseStorage.Tarefa}/${tarefa.keyEquipe}`).push().key;
+        cadastro = true;
+        //Envia notificação no chat
+      }
 
-    refPai.child(tarefa.$key).child('keyResponsaveis').set(tarefa.keyResponsaveis);
+      let updates = {}
 
-    return refPai.child(tarefa.$key).update({
-      'keyLocal': tarefa.keyLocal,
-      //'keyResponsaveis': tarefa.keyResponsaveis,
-      'keyEquipe': tarefa.keyEquipe,
-      'nome': tarefa.nome,
-      'descricao': tarefa.descricao,
-      'situacao': tarefa.situacao,
+      updates[`${dataBaseStorage.Tarefa}/${tarefa.keyEquipe}/${tarefa.$key}`] = {
+        'keyLocal': tarefa.keyLocal,
+        'keyResponsaveis': tarefa.keyResponsaveisToObject(),
+        'keyEquipe': tarefa.keyEquipe,
+        'nome': tarefa.nome,
+        'descricao': tarefa.descricao,
+        'situacao': tarefa.situacao,
+      }
+
+      tarefa.keyResponsaveis.forEach(keyResponsavel => {
+        updates[`${dataBaseStorage.TarefaResponsavel}/${keyResponsavel}/${tarefa.keyEquipe}/${tarefa.$key}`] = true;
+      });
+
+      updates[`${dataBaseStorage.LocalTarefas}/${tarefa.keyEquipe}/${tarefa.keyLocal}/${tarefa.$key}`] = true;
+
+      if (!cadastro) {
+        new Promise((resolve, reject) => {
+          this.getTarefa(tarefa.keyEquipe, tarefa.$key).take(1).subscribe((objetoAntigo) => {
+            if (objetoAntigo.keyLocal != tarefa.keyLocal) {
+              this.db.database.ref(`${dataBaseStorage.LocalTarefas}/${tarefa.keyEquipe}/${objetoAntigo.keyLocal}/${tarefa.$key}`).remove()
+            }
+
+            var responsaveisRemovidos = objetoAntigo.keyResponsaveis.filter(e => tarefa.keyResponsaveis.indexOf(e) === -1);
+            responsaveisRemovidos.forEach(keyResponsavel => {
+              this.db.database.ref(`${dataBaseStorage.TarefaResponsavel}/${keyResponsavel}/${tarefa.keyEquipe}/${tarefa.$key}`).remove();
+            });
+
+            resolve(true);
+          });
+        }).then(data => {
+          resolve(this.db.database.ref().update(updates))
+        })
+
+      } else {
+        resolve(this.db.database.ref().update(updates))
+      }
     });
   }
 
   public remove(tarefa: Tarefa) {
-    tarefa.keyResponsaveis.forEach(keyResponsavel => {
-      this.db.database.ref(`${dataBaseStorage.TarefaResponsavel}/${keyResponsavel}/${tarefa.keyEquipe}/${tarefa.$key}`).remove();
-    });
+    // tarefa.keyResponsaveis.forEach(keyResponsavel => {
+    //   this.db.database.ref(`${dataBaseStorage.TarefaResponsavel}/${keyResponsavel}/${tarefa.keyEquipe}/${tarefa.$key}`).remove();
+    // });
 
     return this.db.database.ref(`${dataBaseStorage.Tarefa}/${tarefa.keyEquipe}/${tarefa.$key}`).remove();
   }

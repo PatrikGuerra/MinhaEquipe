@@ -1,19 +1,19 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>Tarefa</ion-title>
+
+    <ion-buttons end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)">
+      <button ion-button icon-only (click)="save()" [disabled]="!tarefaForm.valid">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-fab top right edge *ngIf="!tarefa.keyLocal" (click)="selecionarLocal()">
-    <button ion-fab mini>
-      <ion-icon name="pin"></ion-icon>
-    </button>
-  </ion-fab>
-
   <form [formGroup]="tarefaForm">
     <div *ngIf="tarefa.$key">
-      <tarefa-status-label [status]="tarefa.situacao" [buttonBlock]="true"></tarefa-status-label>
+      <!-- <tarefa-status-label [status]="tarefa.situacao" [buttonBlock]="true"></tarefa-status-label> -->
     </div>
 
     <ion-item>
@@ -41,23 +41,43 @@
           </ion-avatar>
           {{ responsavel.nome }}
         </ion-item>
-
       </ion-list>
     </ion-card>
 
     <ion-card *ngIf="tarefa.keyLocal">
-      <div style="position: relative">
-        <img src="https://maps.googleapis.com/maps/api/staticmap?autoscale=2&size=600x600&maptype=roadmap&format=png&visual_refresh=true&markers=icon:http://www.clker.com/cliparts/e/3/F/I/0/A/google-maps-marker-for-residencelamontagne-hi.png|{{ tarefa.local.coordenadas.lat }},{{ tarefa.local.coordenadas.lng }}">
+      <ion-list>
+        <ion-item>
+          <h2>{{ tarefa.local.nome }}</h2>
+          <p>{{ tarefa.local.descricao }}</p>
 
-        <ion-fab right top *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)">
-          <button ion-fab class="fab-map" (click)="selecionarLocal()">
-            <ion-icon name='create'></ion-icon>
+          <button ion-button item-end color="danger" *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada) && tarefa.keyLocal"
+            (click)="removerLocal()">
+            <ion-icon name="trash"></ion-icon>
           </button>
-        </ion-fab>
+
+          <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarLocal()">
+            <ion-icon name="create"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-list>
+
+      <div style="position:relative" *ngIf="tarefa.keyLocal">
+        <img src="https://maps.googleapis.com/maps/api/staticmap?autoscale=2&size=600x600&maptype=roadmap&format=png&visual_refresh=true&markers=icon:http://www.clker.com/cliparts/e/3/F/I/0/A/google-maps-marker-for-residencelamontagne-hi.png|{{ tarefa.local.coordenadas.lat }},{{ tarefa.local.coordenadas.lng }}">
       </div>
     </ion-card>
 
-    <div padding>
+    <ion-card *ngIf="!tarefa.keyLocal">
+      <ion-list>
+        <ion-item>
+          <h2>Local</h2>
+          <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarLocal()">
+            <ion-icon name="create"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+
+    <div padding-bottom>
       <div *ngIf="tarefa.$key">
         <div *ngIf="isSituacao(enumTarefaSituacao.Pendente) && isResponsavel()">
           <button ion-button block color="primary" (click)="comecarTarefa()">Começar</button>
@@ -68,12 +88,8 @@
         </div>
 
         <div *ngIf="isAdministradorEquipe() && (isSituacao(enumTarefaSituacao.Pendente) || isSituacao(enumTarefaSituacao.Andamento))">
-          <button ion-button block color="primary" (click)="cancelarTarefa()">Cancelar</button>
+          <button ion-button block color="primary" (click)="cancelarTarefa()" color="danger">Cancelar</button>
         </div>
-      </div>
-
-      <div *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)">
-        <button ion-button block color="primary" [disabled]="!tarefaForm.valid || !tarefa.local" (click)="save()">Salvar</button>
       </div>
     </div>
 

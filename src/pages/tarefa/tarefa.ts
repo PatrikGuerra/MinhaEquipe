@@ -9,6 +9,7 @@ import { UsuarioSelectPage } from "../usuario-select/usuario-select";
 //Models
 import { Tarefa } from "../../models/tarefa";
 import { Equipe } from "../../models/equipe";
+import { Local } from "../../models/local";
 
 //Providers
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
@@ -80,12 +81,13 @@ export class TarefaPage {
       this.navCtrl.pop();
     }).catch((error) => {
       loading.dismiss();
+      console.log(error);
     });
-
+    console.log(this.tarefa)
     toast.dismiss();
   }
 
-  selecionarLocal() {
+  public selecionarLocal() {
     let localSelectPage = this.modalCtrl.create(LocalSelectPage, {
       displayProperty: 'nome',
       title: "Local da tarefa",
@@ -103,6 +105,11 @@ export class TarefaPage {
     localSelectPage.present();
   }
 
+  public removerLocal() {
+    this.tarefa.local = new Local();
+    this.tarefa.keyLocal = "";
+  }
+
   selecionarResponsaveis() {
     let usuarioSelectPage = this.modalCtrl.create(UsuarioSelectPage, {
       displayProperty: 'nome',
@@ -112,7 +119,6 @@ export class TarefaPage {
     });
 
     usuarioSelectPage.onDidDismiss((data) => {
-
       if (data) {
         this.tarefa.keyResponsaveis = data.keys;
         this.tarefa.setReponsaveis(this.sessaoService.equipe.membros);
