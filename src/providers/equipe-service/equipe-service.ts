@@ -161,6 +161,8 @@ export class EquipeServiceProvider {
   }
   public pictureFromCamera() {
     const cameraOptions: CameraOptions = {
+      targetHeight: 500,
+      targetWidth: 500,
       quality: 50,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
@@ -181,6 +183,8 @@ export class EquipeServiceProvider {
   }
   public pictureFromLibray() {
     const cameraOptions: CameraOptions = {
+      targetHeight: 500,
+      targetWidth: 500,
       // quality: 50,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
