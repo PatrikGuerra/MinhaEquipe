@@ -7,16 +7,16 @@
     </ion-buttons>
 
     <ion-title>{{ equipe.nome }}</ion-title>
+
+    <ion-buttons end *ngIf="isAdministradorEquipe()">
+      <button ion-button icon-only (click)="novoLocal()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-fab right bottom *ngIf="isAdministradorEquipe()">
-    <button ion-fab color="primary" (click)="novoLocal()">
-      <ion-icon name="add"></ion-icon>
-    </button>
-  </ion-fab>
-
   <ion-card *ngIf="equipe.locais.length == 0">
     <ion-card-content>
       Parece que a equipe não possui nenhum local...

@@ -17,12 +17,6 @@
 </ion-header>
 
 <ion-content no-bounce>
-  <ion-fab right bottom *ngIf="equipe.$key && isAdministradorEquipe()">
-    <button ion-fab color="primary" (click)="abrirConvidar()">
-      <ion-icon name="person-add"></ion-icon>
-    </button>
-  </ion-fab>
-
   <div id="profile-bg"></div>
 
   <div id="content">
@@ -63,6 +57,11 @@
       <ion-list>
         <ion-item>
           <h3>{{ equipe.membros.length }} Membros</h3>
+        </ion-item>
+
+        <ion-item *ngIf="isAdministradorEquipe()" (click)="abrirConvidar()">
+          <ion-icon color="primary" name="person-add" item-start></ion-icon>
+          Enviar convites
         </ion-item>
 
         <div *ngFor="let usuario of equipe.membros">
