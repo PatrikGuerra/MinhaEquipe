@@ -20,7 +20,7 @@ import { AuthServiceProvider } from "../auth-service/auth-service";
 import { LocalStorage } from "../../app/app.constants";
 
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-import {  NgZone } from '@angular/core';
+import { NgZone } from '@angular/core';
 // import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import 'rxjs/add/operator/filter';
 
@@ -40,22 +40,11 @@ export class UsuarioServiceProvider {
   }
 
   public setUsuarioAplicacao(key: string): Promise<any> {
-    console.log("Passou aquieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-    console.log("Passou aquieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-    console.log("Passou aquieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-    console.log(key)
-    
-    
     return new Promise((resolve, reject) => {
-      
-      this.getUsuario(key)
-      // this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
-        //   this.monitorar();
-        //   return this.firebaseToUsuario(item);
-        // })
-        .subscribe(dataUsuario => {
-          console.log("Passou aquieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+      this.getUsuario(key).subscribe(dataUsuario => {
         this.usuario = dataUsuario;
+        this.monitorar();
+
         resolve(dataUsuario);
       });
 
@@ -78,29 +67,30 @@ export class UsuarioServiceProvider {
   }
 
   private monitorar() {
-    this.geolocationSubscription = this.geolocation.watchPosition({
-      // frequency: 3000,
-      
-      enableHighAccuracy: true
-    })
-      .filter((p) => p.coords === undefined) //Filter Out Errors
-      .subscribe((geoposition: Geoposition) => {
+    this.geolocationSubscription = this.geolocation.watchPosition(
+      // {
+      //   // frequency: 3000,
+      //   enableHighAccuracy: true
+      // }
+    ).filter((p) => p.coords !== undefined).subscribe((geoposition: Geoposition) => {
 
-        this.atualizarLocalizacao(geoposition);
-        console.log(geoposition);
-      });
+      this.atualizarLocalizacao(geoposition);
+      console.log(geoposition);
+    });
   }
 
   private atualizarLocalizacao(geoposition: Geoposition) {
     var updates = {};
 
-    Object.keys(this.usuario.equipes).forEach(element => {
-      updates[`${dataBaseStorage.UsuarioLocalizacao}/${element}/${this.usuario.$key}`] = {
-        'lat': geoposition.coords.latitude,
-        'lng': geoposition.coords.longitude,
-        'timestamp': geoposition.timestamp
-      };
-    });
+    if (this.usuario.equipes) {
+      Object.keys(this.usuario.equipes).forEach(element => {
+        updates[`${dataBaseStorage.UsuarioLocalizacao}/${element}/${this.usuario.$key}`] = {
+          'lat': geoposition.coords.latitude,
+          'lng': geoposition.coords.longitude,
+          'timestamp': geoposition.timestamp
+        };
+      });
+    }
 
     return this.db.database.ref().update(updates);
   }
