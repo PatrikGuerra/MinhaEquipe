@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, ActionSheetController, LoadingController, PopoverController } from 'ionic-angular';
-// import { Renderer } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { DatePicker } from '@ionic-native/date-picker';
@@ -12,6 +11,9 @@ import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
+
+//Enums
+import { OrigemImagem } from "../../app/app.constants";
 
 //Models
 import { Equipe } from "../../models/equipe";
@@ -25,7 +27,6 @@ import { Usuario } from "../../models/usuario";
 export class EquipePage {
   private equipe: Equipe = new Equipe();
   private imagemBase64: string = "";
-
   private usuario: Usuario;
   private form: FormGroup;
 
@@ -40,16 +41,7 @@ export class EquipePage {
     private sessaoService: SessaoServiceProvider,
 
     private formBuilder: FormBuilder,
-    private datePicker: DatePicker,
-    // private renderer: Renderer
-  ) {
-
-    this.usuarioService.getUser().then(userObservable => {
-      userObservable.subscribe((usuarioData: Usuario) => {
-        this.usuario = usuarioData;
-      });
-    });
-
+    private datePicker: DatePicker) {
 
     this.form = this.formBuilder.group({
       nome: ['', Validators.compose([Validators.minLength(3), Validators.required])],
@@ -79,7 +71,7 @@ export class EquipePage {
     // }
   }
 
-  itemPressed(usuario: Usuario) {
+  private itemPressed(usuario: Usuario) {
     if (usuario.$key == this.equipe.keyResponsavel) {
       return;
     }
@@ -136,21 +128,21 @@ export class EquipePage {
     toast.dismiss();
   }
 
-  menuAlterarImagem() {
+  private menuAlterarImagem() {
     let actionSheet = this.actionsheetCtrl.create({
       buttons: [
         {
           text: 'Camera',
           icon: 'camera',
           handler: () => {
-            this.camera();
+            this.getImagem(OrigemImagem.Camera);
           }
         },
         {
           text: 'Galeria',
           icon: 'image',
           handler: () => {
-            this.biblioteca();
+            this.getImagem(OrigemImagem.Galeria);
           }
         }
       ]
@@ -158,27 +150,30 @@ export class EquipePage {
 
     actionSheet.present();
   }
-  private camera() {
-    let loading = this.loadingCtrl.create();
-    loading.present();
 
-    this.equipeService.pictureFromCamera().then((imageData) => {
-      this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
-    }).catch((error) => {
-      this.imagemBase64 = "";
-      console.error(error);
+  private getImagem(enumOrigem: OrigemImagem) {
+    let loading = this.loadingCtrl.create({
+      content: 'Alterando imagem da equipe...'
     });
 
-    loading.dismiss();
-  }
-  private biblioteca() {
-    let loading = this.loadingCtrl.create();
-    loading.present();
+    if (this.equipe.$key) {
+      loading.setContent('Alterando imagem da equipe...')
+    }
 
-    this.equipeService.pictureFromLibray().then((imageData) => {
+    this.equipeService.getPicture(enumOrigem).then((imageData) => {
+      loading.present();
       this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
+
+      if (this.equipe.$key) {
+        this.equipeService.atualizarImagem(this.equipe.$key, this.imagemBase64).then((dataUploadImagem) => {
+          loading.dismiss();
+        });
+      } else {
+        loading.dismiss();
+      }
     }).catch((error) => {
       this.imagemBase64 = "";
+      loading.dismiss();
       console.error(error);
     });
 

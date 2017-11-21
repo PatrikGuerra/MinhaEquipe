@@ -30,9 +30,14 @@ export enum TarefaSituacao	 {
 export const LocalStorage = {
 	UsuarioUid: 'uid',
 	LoginEmail: 'loginEmail',
-};
+}
 
 export enum MensagemTipo {
 	Mensagem = 0,
 	Notificacao = 1
+}
+
+export enum OrigemImagem {
+	Camera = 0,
+	Galeria = 1
 }

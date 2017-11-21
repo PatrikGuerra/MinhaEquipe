@@ -12,15 +12,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-card *ngIf="convites.length == 0">
+  <ion-card *ngIf="convitesUsuario.length == 0">
     <ion-card-content>
       Parece que você não tem nenhum convite..
     </ion-card-content>
   </ion-card>
 
-  <ion-list *ngIf="convites.length > 0">
-    <ion-item-sliding *ngFor="let convite of convites">
-      <ion-item>
+  <ion-list *ngIf="convitesUsuario.length > 0">
+    <div *ngFor="let convite of convitesUsuario">
+      <button ion-item (press)="itemPressed(usuario)">
         <ion-avatar item-start>
           <img src="{{ convite.equipe?.fotoUrl ? convite.equipe?.fotoUrl : 'assets/images/no-image.gif'}}">
         </ion-avatar>
@@ -28,14 +28,7 @@
         {{ convite.equipe?.nome }}
         <p *ngIf="isToday(convite.timestamp)">Hoje às {{ convite.timestamp | date:"hh:mm a" }}</p>
         <p *ngIf="!isToday(convite.timestamp)">{{ convite.timestamp | date: "dd/mm/yyyy hh:mm a" }}</p>
-      </ion-item>
-
-      <ion-item-options slide="right">
-        <button ion-button color="primary" (click)="aceitarConvite(convite)">
-          <ion-icon name="checkmark"></ion-icon>Aceitar</button>
-        <button ion-button color="danger" (click)="recusarConvite(convite)">
-          <ion-icon name="close"></ion-icon>Recusar</button>
-      </ion-item-options>
-    </ion-item-sliding>
+      </button>
+    </div>
   </ion-list>
 </ion-content>

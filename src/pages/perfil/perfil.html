@@ -21,7 +21,7 @@
 
   <div id="content">
     <div id="profile-info" padding-horizontal>
-      <img id="profile-image" (click)="menuAlterarFoto()" src="{{ usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
+      <img id="profile-image" (click)="menuAlterarFoto()" src="{{ imagemBase64 ? imagemBase64 : usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
     </div>
   </div>
 

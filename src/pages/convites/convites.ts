@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, ActionSheetController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 
 //Providers
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
@@ -14,10 +14,11 @@ import { ConviteUsuario } from "../../models/conviteUsuario";
   templateUrl: 'convites.html',
 })
 export class ConvitesPage {
-  convites: ConviteUsuario[] = [];
+  private convitesUsuario: ConviteUsuario[] = [];
 
   constructor(
     public navCtrl: NavController,
+    private actionsheetCtrl: ActionSheetController,
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
@@ -31,8 +32,8 @@ export class ConvitesPage {
     loading.present();
 
     this.usuarioService.getuid().then((usuarioUid) => {
-      this.conviteService.meusConvites(usuarioUid).subscribe((convitesData: ConviteUsuario[]) => {
-        this.convites = convitesData;
+      this.conviteService.meusConvites(usuarioUid).subscribe((convitesUsuarioData: ConviteUsuario[]) => {
+        this.convitesUsuario = convitesUsuarioData;
 
         loading.dismiss();
       });
@@ -43,7 +44,7 @@ export class ConvitesPage {
     console.log('ionsViewDidLoad ConvitesPage');
   }
 
-  recusarConvite(convite: ConviteUsuario) {
+  private recusarConvite(convite: ConviteUsuario) {
     let loading = this.loadingCtrl.create();
 
     let toast = this.toastCtrl.create({
@@ -60,7 +61,7 @@ export class ConvitesPage {
     });
   }
 
-  aceitarConvite(convite: ConviteUsuario) {
+  private aceitarConvite(convite: ConviteUsuario) {
     let loading = this.loadingCtrl.create();
 
     let toast = this.toastCtrl.create({
@@ -77,7 +78,31 @@ export class ConvitesPage {
     });
   }
 
-  isToday(timestamp: number) {
+  private isToday(timestamp: number) {
     return new Date(timestamp).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0);
+  }
+
+  private opcoesConvite(conviteUsuario: ConviteUsuario) {
+    var actionSheet = this.actionsheetCtrl.create({
+      title: conviteUsuario.equipe.nome,
+      buttons: [
+        {
+          text: `Aceitar`,
+          cssClass: 'corTextoVerde',
+          handler: () => {
+            this.aceitarConvite(conviteUsuario);
+          }
+        },
+        {
+          text: `Recusar`,
+          cssClass: 'corTextoVermelho',
+          handler: () => {
+            this.recusarConvite(conviteUsuario);
+          }
+        }
+      ]
+    });
+
+    actionSheet.present();
   }
 }
