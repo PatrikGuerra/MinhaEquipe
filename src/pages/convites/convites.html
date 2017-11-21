@@ -20,7 +20,7 @@
 
   <ion-list *ngIf="convitesUsuario.length > 0">
     <div *ngFor="let convite of convitesUsuario">
-      <button ion-item (press)="itemPressed(usuario)">
+      <button ion-item (press)="opcoesConvite(convite)">
         <ion-avatar item-start>
           <img src="{{ convite.equipe?.fotoUrl ? convite.equipe?.fotoUrl : 'assets/images/no-image.gif'}}">
         </ion-avatar>

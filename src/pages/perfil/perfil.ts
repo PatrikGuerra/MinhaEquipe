@@ -5,9 +5,6 @@ import { Storage } from '@ionic/storage';
 //Providers
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
-//Components
-//  import { TagsInputComponent } from "../../components/tags-input/tags-input.component";
-
 //Popover
 import { PerfilPopoverPage } from "../perfil-popover/perfil-popover";
 

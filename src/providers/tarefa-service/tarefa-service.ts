@@ -17,17 +17,21 @@ import 'rxjs/add/operator/take';
 
 @Injectable()
 export class TarefaServiceProvider {
-  private enumTarefaSituacao = TarefaSituacao;
-
   constructor(
     public db: AngularFireDatabase) {
     console.log('Hello TarefaServiceProvider Provider');
   }
 
   private firebaseToTarefa(objeto: any) {
+    console.log(objeto)
     let tarefa: Tarefa = Object.assign(new Tarefa(), JSON.parse(JSON.stringify(objeto)))
     tarefa.$key = objeto.$key;
-    tarefa.keyResponsaveis = Object.keys(objeto['keyResponsaveis']);
+    
+    if (objeto['keyResponsaveis']) {
+      tarefa.keyResponsaveis = Object.keys(objeto['keyResponsaveis']);
+    } else {
+      tarefa.keyResponsaveis = [];
+    }
 
     console.log(tarefa)
 
@@ -40,7 +44,6 @@ export class TarefaServiceProvider {
         return this.firebaseToTarefa(item);
       });
     })
-
   }
 
   public getTarefa(keyEquipe: string, keyTarefa: string) {
@@ -69,7 +72,6 @@ export class TarefaServiceProvider {
       })
     });
   }
-
 
   public save(tarefa: Tarefa): Promise<any> {
     let cadastro = false;
@@ -100,10 +102,10 @@ export class TarefaServiceProvider {
 
       if (!cadastro) {
         new Promise((resolve, reject) => {
-          this.getTarefa(tarefa.keyEquipe, tarefa.$key).take(1).subscribe((objetoAntigo) => { 
+          this.getTarefa(tarefa.keyEquipe, tarefa.$key).take(1).subscribe((objetoAntigo) => {
             //https://github.com/angular/angularfire2/issues/456#issuecomment-254464619
             // https://github.com/angular/angularfire2/issues/456#issuecomment-241509299
-            
+
             if (objetoAntigo.keyLocal != tarefa.keyLocal) {
               this.db.database.ref(`${dataBaseStorage.LocalTarefas}/${tarefa.keyEquipe}/${objetoAntigo.keyLocal}/${tarefa.$key}`).remove()
             }
@@ -125,12 +127,22 @@ export class TarefaServiceProvider {
     });
   }
 
-  public remove(tarefa: Tarefa) {
-    // tarefa.keyResponsaveis.forEach(keyResponsavel => {
-    //   this.db.database.ref(`${dataBaseStorage.TarefaResponsavel}/${keyResponsavel}/${tarefa.keyEquipe}/${tarefa.$key}`).remove();
-    // });
+  public remover(tarefa: Tarefa): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.getTarefa(tarefa.keyEquipe, tarefa.$key).take(1).subscribe((dataTarefa: Tarefa) => {
+        this.db.database.ref(`${dataBaseStorage.Tarefa}/${tarefa.keyEquipe}/${tarefa.$key}`).remove().then(dataRemover => {
+          tarefa.keyResponsaveis.forEach(keyResponsavel => {
+            this.db.database.ref(`${dataBaseStorage.TarefaResponsavel}/${keyResponsavel}/${tarefa.keyEquipe}/${tarefa.$key}`).remove();
+          });
 
-    return this.db.database.ref(`${dataBaseStorage.Tarefa}/${tarefa.keyEquipe}/${tarefa.$key}`).remove();
+          this.db.database.ref(`${dataBaseStorage.LocalTarefas}/${tarefa.keyEquipe}/${tarefa.keyLocal}/${tarefa.$key}`).remove();
+
+          resolve(true);
+        }).catch(error => {
+          reject(error);
+        });
+      })
+    });
   }
 
   public alterarStatus(tarefa: Tarefa, eSituacao: TarefaSituacao) {
@@ -141,22 +153,15 @@ export class TarefaServiceProvider {
     });
   }
 
-  // public getTarefasUsuario(keyEquipe: string): FirebaseListObservable<ConviteUsuario[]> {
-  //   return <FirebaseListObservable<Tarefa[]>>this.db.list(`${dataBaseStorage.Tarefa}/${keyEquipe}`, {
-  //     query: {
-  //       orderByChild: `keyUsuario`,
-  //       equalTo: usuarioId
-  //     }
-  //   }).map((items) => {
-  //     return items.map(item => {
-  //       this.equipeService.getEquipe(item.keyEquipe).subscribe(data => {
-  //         item.equipe = data
-  //       })
+  public getKeyTarefasUsuario(keyUsuario: string) {
+    // updates[`${dataBaseStorage.TarefaResponsavel}/${keyResponsavel}/${tarefa.keyEquipe}/${tarefa.$key}`] = true;
+    return this.db.list(`${dataBaseStorage.TarefaResponsavel}/${keyUsuario}`).map((items) => {
+      return items.map((item) => {
+        let objeto = {};
+        objeto[item.$key] = Object.keys(item);
 
-  //       return item;
-  //     });
-  //   })
-  // }
-
-
+        return objeto;
+      });
+    })
+  }
 }

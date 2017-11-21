@@ -47,6 +47,71 @@ export class EquipeServiceProvider {
     return equipe;
   }
 
+  private removerUsuarioDasTarefas(keyEquipe: string, keyUsuario: string): Promise<any> {
+    console.log("chegou aquieeeee 3")
+    return new Promise((resolve, reject) => {
+      console.log("chegou aquieeeee 4")
+      this.db.object(`${dataBaseStorage.TarefaResponsavel}/${keyUsuario}/${keyEquipe}`).take(1).subscribe(keyTarefas => {
+        console.log("chegou aquieeeee 5")
+        if (keyTarefas.$value === null) {
+          console.log("chegou aquieeeee 6 -- null")
+          resolve(true);
+        } else {
+          Object.keys(keyTarefas).forEach(keyTarefa => {
+            console.log("chegou aquieeeee 6 -- " + keyTarefa)
+            //Remove o usuário de cada Tarefa
+            this.db.object(`${dataBaseStorage.Tarefa}/${keyEquipe}/${keyTarefa}/keyResponsaveis/${keyUsuario}`).remove();
+          });
+
+          resolve(true)
+        };
+      });
+    });
+  }
+
+  public removerMembro(keyEquipe: string, keyUsuario: string): Promise<any> {
+    console.clear()
+    console.log("chegou aquieeeee 1")
+    return new Promise((resolve, reject) => {
+      console.log("chegou aquieeeee 2")
+      //Exclui o registro de TarefaResponsavel do usuario na equipe
+      this.removerUsuarioDasTarefas(keyEquipe, keyUsuario).then(() => {
+        console.log("chegou aquieeeee 7")
+
+        this.db.object(`${dataBaseStorage.TarefaResponsavel}/${keyUsuario}/${keyEquipe}`).remove().then(() => {
+          console.log("chegou aquieeeee 8")
+          //remove a equipe do usuario
+          this.db.object(`${dataBaseStorage.Usuario}/${keyUsuario}/equipes/${keyEquipe}`).remove().then(() => {
+            console.log("chegou aquieeeee 7")
+            
+            //remove o usuario da equipe
+            this.db.object(`${dataBaseStorage.Equipe}/${keyEquipe}/keyMembros/${keyUsuario}`).remove().then(() => {
+              console.log("chegou aquieeeee 10")
+              resolve(true);
+            }).catch(error => {
+              console.error("error 4");
+              console.error(error);
+              reject(error);
+            });
+
+          }).catch(error => {
+            console.error("error 3");
+            console.error(error);
+            reject(error);
+          });
+        }).catch(error => {
+          console.error("error 2");
+          console.error(error);
+          reject(error);
+        });
+      }).catch(error => {
+        console.error("error 1");
+        console.error(error);
+        reject(error);
+      });
+    });
+  }
+
   public getAll(usuarioId: string) {
 
     // var query = firebase.database().ref(dataBaseStorage.Equipe).orderByChild( `keyMembros/${usuarioId}`).equalTo(true);
@@ -103,10 +168,7 @@ export class EquipeServiceProvider {
           equipe.addMembro(usuarioUid);
           equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
 
-          equipe.$key = this.db.database.ref(dataBaseStorage.Equipe).push({
-            'keyResponsavel': equipe.keyResponsavel,
-            'timestamp': equipe.timestamp
-          }).key;
+          equipe.$key = this.db.database.ref(dataBaseStorage.Equipe).push().key;
         }
 
         this.update(equipe).then((dataEquipePush) => {
@@ -130,23 +192,21 @@ export class EquipeServiceProvider {
     var updates = {};
 
     updates[`${dataBaseStorage.Equipe}/${equipe.$key}`] = {
-      // 'timestamp': equipe.timestamp,
-      //'keyResponsavel': equipe.keyResponsavel,
-      // 'fotoUrl': equipe.fotoUrl,
+      'fotoUrl': equipe.fotoUrl,
+      'keyResponsavel': equipe.keyResponsavel,
+      'timestamp': equipe.timestamp,
       'dataInicio': equipe.dataInicio,
       'dataFim': equipe.dataFim,
       'nome': equipe.nome,
       'keyMembros': equipe.keyMembros,
     };
-    // /equipes/_UidEquipe_
+    // /equipes/keyEquipe
 
     updates[`${dataBaseStorage.Usuario}/${equipe.keyResponsavel}/equipes/${equipe.$key}`] = true; //Atualiza Usuario administrador
-    // /usuarios/_UidUsuario_/equipes/_UidEquipe_
+    // /usuarios/keyUsuario/equipes/keyEquipe
 
     return this.db.database.ref().update(updates);
   }
-
-
 
   public atualizarImagem(keyEquipe: string, imageString: string): Promise<any> {
     return new Promise((resolve, reject) => {

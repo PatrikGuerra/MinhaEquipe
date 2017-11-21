@@ -6,33 +6,27 @@
       </button>
     </ion-buttons>
 
-    <ion-title>{{ equipe.nome }}</ion-title>
-
-    <ion-buttons end *ngIf="isAdministradorEquipe()">
-      <button ion-button icon-only (click)="novaTarefa()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-buttons>
+    <ion-title>Minhas Tarefas</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-card *ngIf="equipe.tarefas.length == 0">
+  <!-- <ion-card *ngIf="equipe.tarefas.length == 0"> -->
+  <ion-card >
     <ion-card-content>
-      Parece que a equipe não possui nenhuma tarefa...
+      Parece que você não possui nenhuma tarefa...
     </ion-card-content>
   </ion-card>
 
-  <ion-list *ngIf="equipe.tarefas.length > 0">
+  <!-- <ion-list *ngIf="equipe.tarefas.length > 0">
     <button ion-item *ngFor="let tarefa of equipe.tarefas" (click)="editarTarefa(tarefa)">
       <ion-label>
         <h2>{{ tarefa.nome }}</h2>
         <p>{{ tarefa.descricao }}</p>
       </ion-label>
       <div item-content>
-        <ion-badge [color]="corBadge(tarefa.situacao)" item-end>{{ descricaoBadge(tarefa.situacao) }}</ion-badge>
       </div>
     </button>
 
-  </ion-list>
+  </ion-list> -->
 </ion-content>

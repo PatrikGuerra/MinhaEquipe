@@ -44,7 +44,7 @@ export class EquipePage {
     private datePicker: DatePicker) {
 
     this.form = this.formBuilder.group({
-      nome: ['', Validators.compose([Validators.minLength(3), Validators.required])],
+      nome: ['', Validators.compose([/*Validators.minLength(3),*/ Validators.required])],
     });
 
     if (this.navParams.data.nova) {
@@ -82,7 +82,7 @@ export class EquipePage {
           text: `Remover ${usuario.nome}`,
           cssClass: 'corTextoVermelho',
           handler: () => {
-
+            this.removerUsuarioDaEquipe(usuario);
           }
         }
       ]
@@ -92,6 +92,28 @@ export class EquipePage {
 
     console.log("itemPressed")
     console.log(usuario.nome)
+  }
+
+  private removerUsuarioDaEquipe(usuario: Usuario) {
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom',
+      message: `O membro '${ usuario.nome }' foi removido.`
+    });
+
+    let loading = this.loadingCtrl.create({
+      content: `Removendo '${usuario.nome}'...`
+    });
+
+    loading.present();
+
+    this.equipeService.removerMembro(this.equipe.$key, usuario.$key).then((dataRemoverMembro) => {
+      loading.dismiss();
+      toast.present();
+    }).catch((error) => {
+      loading.dismiss();
+      console.error(error);
+    });
   }
 
   ionViewDidLoad() {
@@ -129,6 +151,10 @@ export class EquipePage {
   }
 
   private menuAlterarImagem() {
+    if (!this.isAdministradorEquipe()) {
+      return;
+    }
+
     let actionSheet = this.actionsheetCtrl.create({
       buttons: [
         {
@@ -186,7 +212,30 @@ export class EquipePage {
     });
   }
 
-  public alterarDataIncio() {
+  private validarDatas():boolean {
+    if (this.equipe.dataInicio && this.equipe.dataFim) {
+      if (this.equipe.dataInicio.getTime() <= this.equipe.dataFim.getTime())
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private corClasse() {
+    if (this.validarDatas()) {
+      return 'dataHoraSucesso';
+    } else {
+      return 'dataHoraErro';
+    }
+  }
+
+  public alterarDataInicio() {
+    if (!this.isAdministradorEquipe() && this.equipe.$key) {
+      return;
+    }
+
     this.getInicioData().then(data => {
       this.getInicioHora().then(horario => {
         data.setHours(horario.getHours());
@@ -220,6 +269,10 @@ export class EquipePage {
   }
 
   public alterarDataTermino() {
+    if (!this.isAdministradorEquipe() && this.equipe.$key) {
+      return;
+    }
+
     this.getTerminoData().then(data => {
       this.getTerminoHora().then(horario => {
         data.setHours(horario.getHours());
@@ -276,7 +329,7 @@ export class EquipePage {
   }
 
 
-  isAdministradorEquipe() {
+  private isAdministradorEquipe() {
     let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
     return retorno;
   }

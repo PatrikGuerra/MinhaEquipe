@@ -40,7 +40,9 @@ export class CustomMarker extends google.maps.OverlayView {
 			// }
 
 			this.clickListener = google.maps.event.addDomListener(marker, "click", (event) => {
-				alert('You clicked on a custom marker!');
+				// alert('You clicked on a custom marker!');
+				console.log('You clicked on a custom marker!');
+				console.log(event)
 				google.maps.event.trigger(this, "click");
 			});
 

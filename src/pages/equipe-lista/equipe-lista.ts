@@ -60,16 +60,20 @@ export class EquipeListaPage {
     loading.present();
 
     // var equipe: Equipe = this.navParams.data.equipe;
-
     // this.equipeService.getEquipe(equipe.$key).subscribe(dataEquipe => {
-    this.sessaoService.setEquipeKey(equipe.$key).then(dataEquipe => { //this.sessaoService.setEquipe(equipe).then(dataEquipe => {
+    //   this.sessaoService.setEquipe(equipe).then(dataEquipe => {
+    //     loading.dismiss();
+    //     this.navCtrl.setRoot('TabsPage')
+    //   });
+    // });
+
+    this.sessaoService.setEquipeKey(equipe.$key).then(dataEquipe => {
       loading.dismiss();
       this.navCtrl.setRoot('TabsPage')
-
     });
-    // });
   }
+
   removerEquipe(equipe: Equipe) {
-    this.equipeService.remove(equipe.$key);
+    // this.equipeService.remove(equipe.$key);
   }
 }

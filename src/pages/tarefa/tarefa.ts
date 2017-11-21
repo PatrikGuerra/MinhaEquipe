@@ -57,7 +57,7 @@ export class TarefaPage {
     console.log('ionViewDidLoad TarefaPage');
   }
 
-  save() {
+  private save() {
     let toast = this.toastCtrl.create({
       duration: 3000,
       position: 'bottom'
@@ -84,6 +84,31 @@ export class TarefaPage {
       console.log(error);
     });
     console.log(this.tarefa)
+    toast.dismiss();
+  }
+
+  private remover() {
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom',
+      message: "Tarefa removida."
+    });
+
+    let loading = this.loadingCtrl.create({
+      content: 'Removendo Tarefa...'
+    });
+
+    loading.present();
+
+    this.tarefaService.remover(this.tarefa).then((data) => {
+      loading.dismiss();
+      toast.present();
+      this.navCtrl.pop();
+    }).catch((error) => {
+      loading.dismiss();
+      console.error(error);
+    });
+
     toast.dismiss();
   }
 
@@ -198,18 +223,36 @@ export class TarefaPage {
     toast.dismiss();
   }
 
-  isAdministradorEquipe() {
+  private isAdministradorEquipe() {
     let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
     return retorno;
   }
   
-  isResponsavel() {
+  private isResponsavel() {
     let retorno = this.tarefa.keyResponsaveis.indexOf(this.usuarioService.usuario.$key) > -1;
     return retorno;
   }
 
-  isSituacao(situacao: TarefaSituacao) {    
+  private isSituacao(situacao: TarefaSituacao) {    
     let retorno = this.tarefa.situacao == situacao;
     return retorno;
+  }
+  
+  private corBadge(tarefaSituacao: TarefaSituacao) {
+    if (tarefaSituacao == TarefaSituacao.Andamento) {
+      return "cortarefaandamento";
+    } else if (tarefaSituacao == TarefaSituacao.Cancelada) {
+      return "cortarefacancelada";
+    } else if (tarefaSituacao == TarefaSituacao.Finalizado) {
+      return "cortarefafinalizado";
+    } else if (tarefaSituacao == TarefaSituacao.Pendente) {
+      return "cortarefapendente";
+    }
+    alert("erro");
+    return '';
+  }
+
+  private descricaoBadge(tarefaSituacao: TarefaSituacao) {
+    return TarefaSituacao[tarefaSituacao];
   }
 }

@@ -88,13 +88,15 @@ export class ConvitesPage {
       buttons: [
         {
           text: `Aceitar`,
-          cssClass: 'corTextoVerde',
+          cssClass: 'corTextoPrimaria',
+          icon: 'checkmark',
           handler: () => {
             this.aceitarConvite(conviteUsuario);
           }
         },
         {
           text: `Recusar`,
+          icon: 'trash',
           cssClass: 'corTextoVermelho',
           handler: () => {
             this.recusarConvite(conviteUsuario);
