@@ -2,26 +2,26 @@
   <ion-navbar color="primary">
     <ion-buttons left>
       <button ion-button menuToggle>
-          <ion-icon name="menu"></ion-icon>
+        <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
 
-
-
     <ion-title>Equipes</ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="novaEquipe()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <!-- <div padding>
-    <button ion-button block color="primary" (click)="novaEquipe()">+</button>
-  </div> -->
-
-  <ion-fab right bottom>
+  <!-- <ion-fab right bottom>
     <button ion-fab color="primary" (click)="novaEquipe()">
       <ion-icon name="add"></ion-icon>
     </button>
-  </ion-fab>
+  </ion-fab> -->
 
   <ion-card *ngIf="equipes.length == 0">
     <ion-card-content>
