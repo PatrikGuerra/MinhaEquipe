@@ -6,7 +6,7 @@ https://stackoverflow.com/questions/42598133/ionic-2-dynamic-markers-in-google-m
 https://medium.com/the-web-tub/creating-google-maps-sample-app-with-angularjs-and-onsen-ui-c1325139781e
 https://stackoverflow.com/questions/24413766/how-to-use-svg-markers-in-google-maps-api-v3
 */
-export class CustomMarker extends google.maps.OverlayView {
+export class UsuarioMarker extends google.maps.OverlayView {
 	marker: any;
 	clickListener: google.maps.MapsEventListener;
 
@@ -17,20 +17,20 @@ export class CustomMarker extends google.maps.OverlayView {
 
 	draw() {
 		const panes = this.getPanes();
-		let marker = this.marker;
+		let marcador = this.marker;
 
-		if (!marker) {
-			marker = this.marker = document.createElement('div');
-			marker.className = 'marker';
+		if (!marcador) {
+			marcador = this.marker = document.createElement('div');
+			marcador.className = 'marker';
 
 			if (this.args.img) {
-				let img = document.createElement('img');
-				img.src = this.args.img;
-				marker.appendChild(img);
+				let imagem = document.createElement('img');
+				imagem.src = this.args.img;
+				marcador.appendChild(imagem);
 			} else {
-				let par = document.createElement('p');
-				par.innerHTML = this.args.label.substring(0, 2);
-				marker.appendChild(par);
+				let paragrafo = document.createElement('p');
+				paragrafo.innerHTML = this.args.label.substring(0, 2);
+				marcador.appendChild(paragrafo);
 			}
 
 			// let point = this.getProjection().fromLatLngToDivPixel(this.latlng);
@@ -39,7 +39,7 @@ export class CustomMarker extends google.maps.OverlayView {
 			// 	marker.style.top = (point.y - 35) + 'px';
 			// }
 
-			this.clickListener = google.maps.event.addDomListener(marker, "click", (event) => {
+			this.clickListener = google.maps.event.addDomListener(marcador, "click", (event) => {
 				// alert('You clicked on a custom marker!');
 				console.log('You clicked on a custom marker!');
 				console.log(event)
@@ -47,7 +47,7 @@ export class CustomMarker extends google.maps.OverlayView {
 			});
 
 			var paneses = this.getPanes();
-			paneses.overlayMouseTarget.appendChild(marker);
+			paneses.overlayMouseTarget.appendChild(marcador);
 		}
 
 		var point = this.getProjection().fromLatLngToDivPixel(this.latlng);
@@ -55,8 +55,8 @@ export class CustomMarker extends google.maps.OverlayView {
 		//var clientHeight = document.getElementById('myDiv').clientHeight;
 		//https:/ / stackoverflow.com / questions / 15615552 / get - div - height -with-plain - javascript
 		if (point) {
-			marker.style.left = (point.x - (45 / 2)) + 'px';
-			marker.style.top = (point.y - ((45 + 16 - 5))) + 'px';
+			marcador.style.left = (point.x - (45 / 2)) + 'px';
+			marcador.style.top = (point.y - ((45 + 16 - 5))) + 'px';
 		}
 	}
 
