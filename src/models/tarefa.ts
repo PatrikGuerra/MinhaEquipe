@@ -7,7 +7,7 @@ import { Usuario } from "./usuario";
 import { Equipe } from "./equipe";
 
 export class Tarefa {
-		$key?: string;
+		$key?: string = "";
 
 	keyLocal: string; 
 		local: Local;
@@ -30,6 +30,20 @@ export class Tarefa {
 				this.responsaveis.push(membro);
 			}
 		});
+	}
+
+	public keyResponsaveisToObject() {
+		let obj = {};
+
+		this.keyResponsaveis.forEach(element => {
+			obj[element] = true;
+		});
+
+		return obj;
+	}
+
+	public Copy() {
+		return Object.assign(new Tarefa(), JSON.parse(JSON.stringify(this)))
 	}
 }
 

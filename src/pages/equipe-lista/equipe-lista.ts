@@ -1,24 +1,24 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
-import { IonicPage, App, Nav } from 'ionic-angular';
+import { IonicPage, Nav, NavController, NavParams, LoadingController } from 'ionic-angular';
+
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
 //Pages
-import { EquipePage } from "../equipe/equipe";
-import { TabsPage } from "../tabs/tabs";
+// import { EquipePage } from "../equipe/equipe";
 
 //Models
 import { Equipe } from "../../models/equipe";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
+
+@IonicPage()
 @Component({
   selector: 'page-equipe-lista',
   templateUrl: 'equipe-lista.html',
 })
 export class EquipeListaPage {
   private equipes: Equipe[] = [];
-  private usuarioUid: string = "";
 
   constructor(
     public navCtrl: NavController,
@@ -27,8 +27,7 @@ export class EquipeListaPage {
     private usuarioService: UsuarioServiceProvider,
     private equipeService: EquipeServiceProvider,
 
-    private sessaoService: SessaoServiceProvider,
-    private app: App) {
+    private sessaoService: SessaoServiceProvider) {
 
     let loading = this.loadingCtrl.create({
       content: 'Carregando equipes...'
@@ -36,15 +35,10 @@ export class EquipeListaPage {
 
     loading.present();
 
-    this.usuarioService.getuid().then((usuarioUid) => {
-      this.usuarioUid = usuarioUid;
-
-      this.equipeService.getAll(usuarioUid).subscribe((data: Equipe[]) => {
-        console.log("data")
-        this.equipes = data;
-        loading.dismiss();
-      });
-
+    this.equipeService.getAll(this.usuarioService.usuario.$key).subscribe((data: Equipe[]) => {
+      console.log("data")
+      this.equipes = data;
+      loading.dismiss();
     });
   }
 
@@ -53,7 +47,7 @@ export class EquipeListaPage {
   }
 
   novaEquipe() {
-    this.navCtrl.push(EquipePage, {
+    this.navCtrl.push('EquipePage', {
       nova: true
     });
   }
@@ -66,20 +60,13 @@ export class EquipeListaPage {
     loading.present();
 
     // var equipe: Equipe = this.navParams.data.equipe;
+
     // this.equipeService.getEquipe(equipe.$key).subscribe(dataEquipe => {
     this.sessaoService.setEquipeKey(equipe.$key).then(dataEquipe => { //this.sessaoService.setEquipe(equipe).then(dataEquipe => {
       loading.dismiss();
-      this.app.getRootNav().setRoot(TabsPage);
+      this.navCtrl.setRoot('TabsPage')
+
     });
-    // });
-
-    // this.app.getRootNav().setRoot(TabsPage, { 
-    //   equipe: equipe
-    // });
-
-    //this.navCtrl.setRoot(YourPage, { myData: "test data" })
-    // this.navCtrl.push(EquipePage, {
-    //   equipe: equipe
     // });
   }
   removerEquipe(equipe: Equipe) {

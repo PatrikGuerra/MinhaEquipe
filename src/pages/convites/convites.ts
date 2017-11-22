@@ -8,6 +8,7 @@ import { ConviteServiceProvider } from "../../providers/convite-service/convite-
 //Models
 import { ConviteUsuario } from "../../models/conviteUsuario";
 
+@IonicPage()
 @Component({
   selector: 'page-convites',
   templateUrl: 'convites.html',

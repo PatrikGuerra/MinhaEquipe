@@ -14,8 +14,10 @@ export const dataBaseStorage = {
 	UsuarioLocalizacao: 'localizacoes',
 	Convite: 'convites',
 	Local: 'locais',
+	LocalTarefas: 'localTarefas',//Aponta quais tarefas estão associadas a um determinado local
+
 	Tarefa: 'tarefas',
-	TarefaResponsavel: 'tarefaResponsaveis',
+	TarefaResponsavel: 'tarefaResponsaveis', //Aponta ao usuaio quais tarefas de quais equipes ele possui
 };
 
 export enum TarefaSituacao	 {

@@ -1,21 +1,22 @@
 <ion-header>
   <ion-navbar color="primary">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+
     <ion-title>{{ equipe.nome }}</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="abrirPopover($event)">
-        <ion-icon name="more"></ion-icon>
+
+    <ion-buttons end *ngIf="isAdministradorEquipe()">
+      <button ion-button icon-only (click)="novaTarefa()">
+        <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-fab right bottom *ngIf="isAdministradorEquipe()">
-    <button ion-fab color="primary" (click)="novaTarefa()">
-      <ion-icon name="add"></ion-icon>
-    </button>
-  </ion-fab>
-
   <ion-card *ngIf="equipe.tarefas.length == 0">
     <ion-card-content>
       Parece que a equipe não possui nenhuma tarefa...
@@ -23,14 +24,13 @@
   </ion-card>
 
   <ion-list *ngIf="equipe.tarefas.length > 0">
-
     <button ion-item *ngFor="let tarefa of equipe.tarefas" (click)="editarTarefa(tarefa)">
       <ion-label>
         <h2>{{ tarefa.nome }}</h2>
         <p>{{ tarefa.descricao }}</p>
       </ion-label>
       <div item-content>
-        <tarefa-status-label [status]="tarefa.situacao" [buttonBlock]="false"></tarefa-status-label>
+        <!-- <tarefa-status-label [status]="tarefa.situacao" [buttonBlock]="false"></tarefa-status-label> -->
       </div>
     </button>
 

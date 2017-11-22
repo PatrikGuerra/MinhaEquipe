@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
-import { App, NavController, NavParams, ToastController, ActionSheetController, LoadingController, PopoverController } from 'ionic-angular';
-import { Renderer } from '@angular/core';
+import { IonicPage, NavController, NavParams, ToastController, ActionSheetController, LoadingController, PopoverController } from 'ionic-angular';
+// import { Renderer } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { DatePicker } from '@ionic-native/date-picker';
 
 //Modal
 import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
-// Popover
-import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
 
 //Providers
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
@@ -19,6 +17,7 @@ import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-ser
 import { Equipe } from "../../models/equipe";
 import { Usuario } from "../../models/usuario";
 
+@IonicPage()
 @Component({
   selector: 'page-equipe',
   templateUrl: 'equipe.html',
@@ -42,9 +41,8 @@ export class EquipePage {
 
     private formBuilder: FormBuilder,
     private datePicker: DatePicker,
-    private renderer: Renderer,
-    private app: App,
-    public popoverCtrl: PopoverController) {
+    // private renderer: Renderer
+  ) {
 
     this.usuarioService.getUser().then(userObservable => {
       userObservable.subscribe((usuarioData: Usuario) => {
@@ -61,6 +59,7 @@ export class EquipePage {
     } else {
       this.equipe = sessaoService.equipe;
     }
+    console.log(this.equipe)
 
 
     // if (this.navParams.data.equipe) {
@@ -80,16 +79,31 @@ export class EquipePage {
     // }
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad EquipePage');
+  itemPressed(usuario: Usuario) {
+    if (usuario.$key == this.equipe.keyResponsavel) {
+      return;
+    }
+
+    var actionSheet = this.actionsheetCtrl.create({
+      buttons: [
+        {
+          text: `Remover ${usuario.nome}`,
+          cssClass: 'corTextoVermelho',
+          handler: () => {
+
+          }
+        }
+      ]
+    });
+
+    actionSheet.present();
+
+    console.log("itemPressed")
+    console.log(usuario.nome)
   }
 
-  public abrirPopover(myEvent) {
-    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
-
-    contextoPopoverPage.present({
-      ev: myEvent
-    });
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad EquipePage');
   }
 
   save() {
@@ -179,15 +193,11 @@ export class EquipePage {
     loading.dismiss();
   }
 
-  abrirConvidar() {
-    this.app.getRootNav().push(EquipeConvidarPage, {
+  public abrirConvidar() {
+    this.navCtrl.push(EquipeConvidarPage, {
       equipe: this.equipe
     });
-    // this.navCtrl.push(EquipeConvidarPage, {
-    //   equipe: this.equipe
-    // });
   }
-
 
   public alterarDataIncio() {
     this.getInicioData().then(data => {

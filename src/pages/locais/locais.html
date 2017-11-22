@@ -1,21 +1,22 @@
 <ion-header>
   <ion-navbar color="primary">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+
     <ion-title>{{ equipe.nome }}</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="abrirPopover($event)">
-        <ion-icon name="more"></ion-icon>
+
+    <ion-buttons end *ngIf="isAdministradorEquipe()">
+      <button ion-button icon-only (click)="novoLocal()">
+        <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-fab right bottom *ngIf="isAdministradorEquipe()">
-      <button ion-fab color="primary" (click)="novoLocal()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-fab>
-
   <ion-card *ngIf="equipe.locais.length == 0">
     <ion-card-content>
       Parece que a equipe não possui nenhum local...
@@ -23,15 +24,15 @@
   </ion-card>
 
   <ion-list *ngIf="equipe.locais.length > 0">
-      <button ion-item *ngFor="let local of equipe.locais" (click)="editarLocal(local)">
+    <button ion-item *ngFor="let local of equipe.locais" (click)="editarLocal(local)">
       <!--
         <ion-avatar item-start>
           <img src="{{ equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
         </ion-avatar>
       -->
-  
-        <h2>{{ local.nome }}</h2>
-        <p>{{ local.descricao }}</p>
-     </button>
-    </ion-list>
+
+      <h2>{{ local.nome }}</h2>
+      <p>{{ local.descricao }}</p>
+    </button>
+  </ion-list>
 </ion-content>

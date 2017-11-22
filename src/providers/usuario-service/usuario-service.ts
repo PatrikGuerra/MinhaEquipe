@@ -19,7 +19,10 @@ import { AuthServiceProvider } from "../auth-service/auth-service";
 //Others
 import { LocalStorage } from "../../app/app.constants";
 
-import { Geolocation } from '@ionic-native/geolocation';
+import { Geolocation, Geoposition } from '@ionic-native/geolocation';
+import { NgZone } from '@angular/core';
+// import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+import 'rxjs/add/operator/filter';
 
 @Injectable()
 export class UsuarioServiceProvider {
@@ -38,11 +41,10 @@ export class UsuarioServiceProvider {
 
   public setUsuarioAplicacao(key: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
-        this.monitorar();
-        return this.firebaseToUsuario(item);
-      }).subscribe(dataUsuario => {
+      this.getUsuario(key).subscribe(dataUsuario => {
         this.usuario = dataUsuario;
+        this.monitorar();
+
         resolve(dataUsuario);
       });
 
@@ -64,26 +66,31 @@ export class UsuarioServiceProvider {
     });
   }
 
-
   private monitorar() {
-    this.geolocationSubscription = this.geolocation.watchPosition()
-      .filter((p) => p.coords !== undefined) //Filter Out Errors
-      .subscribe(position => {
+    this.geolocationSubscription = this.geolocation.watchPosition(
+      // {
+      //   // frequency: 3000,
+      //   enableHighAccuracy: true
+      // }
+    ).filter((p) => p.coords !== undefined).subscribe((geoposition: Geoposition) => {
 
-        this.atualizarLocalizacao(position);
-        console.log(position);
-      });
+      this.atualizarLocalizacao(geoposition);
+      console.log(geoposition);
+    });
   }
 
-  private atualizarLocalizacao(position: any) {
+  private atualizarLocalizacao(geoposition: Geoposition) {
     var updates = {};
 
-    Object.keys(this.usuario.equipes).forEach(element => {
-      updates[`${dataBaseStorage.UsuarioLocalizacao}/${element}/${this.usuario.$key}`] = {
-        'lat': position.coords.latitude,
-        'lng': position.coords.longitude
-      };
-    });
+    if (this.usuario.equipes) {
+      Object.keys(this.usuario.equipes).forEach(element => {
+        updates[`${dataBaseStorage.UsuarioLocalizacao}/${element}/${this.usuario.$key}`] = {
+          'lat': geoposition.coords.latitude,
+          'lng': geoposition.coords.longitude,
+          'timestamp': geoposition.timestamp
+        };
+      });
+    }
 
     return this.db.database.ref().update(updates);
   }
@@ -110,7 +117,11 @@ export class UsuarioServiceProvider {
 
 
   public getUsuario(key: string) {
-    return this.db.object(`${dataBaseStorage.Usuario}/${key}`);
+    // return this.db.object(`${dataBaseStorage.Usuario}/${key}`);
+
+    return this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
+      return this.firebaseToUsuario(item);
+    })
   }
 
 
@@ -284,6 +295,8 @@ export class UsuarioServiceProvider {
   pictureFromCamera() {
     const cameraOptions: CameraOptions = {
       quality: 50,
+      targetHeight: 500,
+      targetWidth: 500,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, NavController, NavParams, PopoverController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, PopoverController, AlertController } from 'ionic-angular';
 
 //Pages
 import { LocalPage } from "../local/local";
@@ -13,9 +13,7 @@ import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-ser
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { LocalServiceProvider } from "../../providers/local-service/local-service";
 
-// Popover
-import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
-
+@IonicPage()
 @Component({
   selector: 'page-locais',
   templateUrl: 'locais.html',
@@ -28,43 +26,23 @@ export class LocaisPage {
     public navParams: NavParams,
     public sessaoService: SessaoServiceProvider,
     private usuarioService: UsuarioServiceProvider,
-    private localService: LocalServiceProvider,
-    
-    private app: App,
-    public popoverCtrl: PopoverController) {
+    private localService: LocalServiceProvider) {
 
-    this.equipe = this.sessaoService.equipe;
-    
+    this.equipe = this.sessaoService.equipe;    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LocaisPage');
   }
 
-  public abrirPopover(myEvent) {
-    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
-
-    contextoPopoverPage.present({
-      ev: myEvent
-    });
-  }
-
   novoLocal() {
-    this.app.getRootNav().push(LocalPage);
-    // this.navCtrl.push(LocalPage);
+    this.navCtrl.push(LocalPage);
   }
 
   editarLocal(local: Local) {
-    this.app.getRootNav().push(LocalPage, {
-      local: local,
+    this.navCtrl.push(LocalPage, {
+      local: local.Copy(),
     });
-    // this.navCtrl.push(LocalPage, {
-    //   local: local,
-    // });
-  }
-
-  removerLocal(local: Local) {
-    this.localService.remove(local.$key);
   }
 
   isAdministradorEquipe() {

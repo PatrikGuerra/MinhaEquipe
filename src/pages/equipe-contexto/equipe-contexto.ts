@@ -1,6 +1,6 @@
 import { Component, NgZone, ElementRef, ViewChild } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation';
-import { App, LoadingController, NavController, NavParams, ViewController, PopoverController } from 'ionic-angular';
+import { IonicPage, LoadingController, NavController, NavParams, ViewController, PopoverController } from 'ionic-angular';
 
 import { } from '@types/googlemaps';
 
@@ -13,9 +13,12 @@ import { dataBaseStorage } from "../../app/app.constants";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
-// Popover
-import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
+import { CustomMarker } from './custom.marker';
 
+//Import
+import { Usuario } from "../../models/usuario";
+
+@IonicPage()
 @Component({
   selector: 'page-equipe-contexto',
   templateUrl: 'equipe-contexto.html',
@@ -23,25 +26,28 @@ import { ContextoPopoverPage } from "../contexto-popover/contexto-popover";
 export class EquipeContextoPage {
   @ViewChild('map') mapElement: ElementRef;
   private map: google.maps.Map;
-  private markers: google.maps.Marker[] = [];
+  // private markers: google.maps.Marker[] = [];
+  private markers: any = [];
 
   constructor(
     public db: AngularFireDatabase,
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
-
     public geolocation: Geolocation,
     public sessaoService: SessaoServiceProvider,
-    private usuarioService: UsuarioServiceProvider,
-
-    private app: App,
-    public popoverCtrl: PopoverController) {
-
+    private usuarioService: UsuarioServiceProvider) {
   }
 
   ionViewDidEnter() {
     console.log("ionViewDidEnter")
+
+    this.loadMap();
+  }
+
+
+
+  private loadMap() {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: {
         lat: -29.166564,
@@ -51,8 +57,18 @@ export class EquipeContextoPage {
       disableDefaultUI: true //https://developers.google.com/maps/documentation/javascript/examples/control-disableUI?hl=pt-br
     });
 
-    //this.centerMapOnCurrentPosition();
+    google.maps.event.addListenerOnce(this.map, 'tilesloaded', (event) => {
+      // https://gist.github.com/aknosis/997144 
+      // https://developers.google.com/maps/documentation/javascript/events
+      // https://forum.ionicframework.com/t/calling-a-function-from-a-listener/58814#post_2
+      this.fixMyPageOnce();
+    });
+  }
+
+  private fixMyPageOnce() {
     this.carregarLocalizacoes();
+    // do stuff
+    // no need to remove the event listener
   }
 
   ionViewDidLoad() {
@@ -62,13 +78,6 @@ export class EquipeContextoPage {
     //  this.carregarLocalizacoes();
   }
 
-  public abrirPopover(myEvent) {
-    let contextoPopoverPage = this.popoverCtrl.create(ContextoPopoverPage);
-
-    contextoPopoverPage.present({
-      ev: myEvent
-    });
-  }
   centerMapOnCurrentPosition() {
     let loadingGeo = this.loadingCtrl.create({
       content: "Buscando sua localização.."
@@ -111,159 +120,44 @@ export class EquipeContextoPage {
 
         return item;
       });
-    }).subscribe(data => {
+    }).subscribe(registros => {
       this.clearMarkers()
-      console.log(data)
 
-      data.forEach(element => {
-        console.log(element)
-        this.setMarker(new google.maps.LatLng(element.lat, element.lng))
+      registros.forEach(registroLocalizacaoUsuario => {   
+        let latLnl = new google.maps.LatLng(registroLocalizacaoUsuario.lat, registroLocalizacaoUsuario.lng);
+
+        this.addMarcadoMembro(latLnl, registroLocalizacaoUsuario.usuario)
       });
     })
   }
 
-  // private aplicaMarcadores(data) {
-  //   console.log(data)
+  private addMarcadoMembro(latLng: google.maps.LatLng, usuario: Usuario) {
+    let parametros = {
+      label: usuario.nome,
+      img: usuario.fotoUrl,
+    };
+    let marcador = new CustomMarker(latLng, this.map, parametros);
 
-  //   data.forEach(element => {
-  //     console.log(element)
-  //     this.setMarker(new google.maps.LatLng(element.lat, element.lng))
-  //   });
-  // }
-
-  private setMarker(latLng: google.maps.LatLng) {
-    let newMarker = new google.maps.Marker({
-      position: latLng,
-      map: this.map
-    });
-
-    this.markers.push(newMarker);
+    this.markers.push(marcador);
   }
 
+  private addMarcadorNomal(latLng: google.maps.LatLng, usuario: Usuario) {
+    let normal = new google.maps.Marker({
+      position: latLng,
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+    });
 
+    this.markers.push(normal);
+  }
 
-  clearMarkers() {
+  private clearMarkers() {
     for (var index = 0; index < this.markers.length; index++) {
       this.markers[index].setMap(null);
     }
+    this.markers = [];
   }
 
-
-
-
-
-
-
-
-
-
+  //https://forum.ionicframework.com/t/custom-modal-alert-with-html-form/47980/11#post_11
+  //Ao clicar sobre algum item
 }
-
-
-
-
-
-
-
-                      // Map Initilize function 
-                      // function initMap() {
-                      //   var options = {
-                      //     timeout: 10000,
-                      //     enableHighAccuracy: true
-                      //   };
-                      //   $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
-                      //     var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-                      //     var mapOptions = {
-                      //       center: latLng,
-                      //       zoom: 15,
-                      //       disableDefaultUI: true,
-                      //       mapTypeId: google.maps.MapTypeId.ROADMAP
-                      //     };
-                      //     map = new google.maps.Map(document.getElementById("map"), mapOptions);
-                      //     //Wait until the map is loaded
-                      //     //Load the markers
-                      //     loadMarkers();
-                      //     //});
-                      //   }, function(error) {
-                      //     console.log(error);
-                      //     console.log("Could not get location");
-                      //     //Load the markers
-                      //     loadMarkers();
-                      //   });
-                      // }
-
-                      //load marker using rest api
-
-
-                      /*
-                      EDITANDO
-                      function loadMarkers() {
-                        CommonService. ();
-                        YOUR REST API SERVICE.then(function(res) {
-                          angular.forEach(res, function(value, key) {
-                            var record = value;
-                            console.log(record);
-                            var image = {
-                              url: 'img/ic_map_pin_gray.png', // custom background image (marker pin)
-                              scaledSize: new google.maps.Size(70, 70),
-                            };
-                            var markerPos = new google.maps.LatLng(record.lat, record.long);
-                            //Add the markerto the map
-                            var marker = new google.maps.Marker({
-                              map: map,
-                              animation: google.maps.Animation.DROP,
-                              position: markerPos,
-                              icon: image,
-                            });
-                            var img_src = record.profilePic;
-                            var overlay = new CustomMarker(
-                              markerPos,
-                              map, {image: img_src}
-                            );
-                          });
-                        }).catch(function(error, status, headers, config) {
-                          console.log(error);
-                        });
-                      }
-
-
-                      //CustomMarker function 
-                      function CustomMarker(latlng, map, args) {
-                        this.latlng = latlng;
-                        this.args = args;
-                        this.setMap(map);
-                      }
-                      CustomMarker.prototype = new google.maps.OverlayView();
-
-                      CustomMarker.prototype.draw = function() {
-                        var self = this;
-                        var div = this.div;
-                        if (!div) {
-                          div = this.div = document.createElement('img');
-                          div.src = self.args.image;
-                          div.className = 'marker';
-                          div.style.position = 'absolute';
-                          div.style.cursor = 'pointer';
-                          div.style.width = '35px';
-                          div.style.height = '35px';
-                          div.style.borderRadius  = '50%';
-
-                          if (typeof(self.args.marker_id) !== 'undefined') {
-                            div.dataset.marker_id = self.args.marker_id;
-                          }
-
-                          google.maps.event.addDomListener(div, "click", function(event) {
-                            google.maps.event.trigger(self, "click");
-                          });
-
-                          var panes = this.getPanes();
-                          panes.overlayImage.appendChild(div);
-                        }
-                        var point = this.getProjection().fromLatLngToDivPixel(this.latlng);
-
-                        if (point) {
-                          div.style.left = (point.x - 18) + 'px'; // set custom (i set it as i want to set in map )
-                          div.style.top = (point.y - 56) + 'px'; //set custom (i set it as i want to set in map )
-                        }
-                      };
-                      */

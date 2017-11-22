@@ -1,11 +1,12 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>{{ this.sessaoService.equipe.nome }}</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="abrirPopover($event)">
-        <ion-icon name="more"></ion-icon>
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
+
+    <ion-title>{{ this.sessaoService.equipe.nome }}</ion-title>
   </ion-navbar>
 </ion-header>
 

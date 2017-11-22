@@ -1,6 +1,13 @@
 <ion-header>
   <ion-navbar color="primary">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+
     <ion-title>Perfil</ion-title>
+    
     <ion-buttons end>
       <button ion-button icon-only (click)="abrirPopover($event)">
         <ion-icon name="more"></ion-icon>
@@ -24,7 +31,7 @@
 
   <ion-item>
     <ion-label>Nome</ion-label>
-    <ion-input type="text" [(ngModel)]="usuario.nome" name="Nome" minlength="3" maxlength="25" ></ion-input>
+    <ion-input type="text" [(ngModel)]="usuario.nome" name="Nome" minlength="3" maxlength="25"></ion-input>
   </ion-item>
 
   <ion-item>
@@ -33,7 +40,8 @@
   </ion-item>
 
   <div padding-horizontal padding-top>
-    <tags-input [maxWordLength]="10" [maxTags]="5" [allowDuplicates]="false" [duplicatesRestrictionMsg]=" moo" [(ngModel)]="usuario.tags"></tags-input>
+    tags-input
+    <!-- <tags-input [maxWordLength]="10" [maxTags]="5" [allowDuplicates]="false" [duplicatesRestrictionMsg]=" moo" [(ngModel)]="usuario.tags"></tags-input> -->
   </div>
 
   <div padding>
