@@ -21,7 +21,7 @@
 
   <div id="content">
     <div id="profile-info" padding-horizontal>
-      <img id="profile-image" (click)="menuAlterarFoto()" src="{{ usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
+      <img id="profile-image" (click)="menuAlterarFoto()" src="{{ imagemBase64 ? imagemBase64 : usuario.fotoUrl ? usuario.fotoUrl : 'assets/images/no-image.jpg' }}">
     </div>
   </div>
 
@@ -40,8 +40,7 @@
   </ion-item>
 
   <div padding-horizontal padding-top>
-    tags-input
-    <!-- <tags-input [maxWordLength]="10" [maxTags]="5" [allowDuplicates]="false" [duplicatesRestrictionMsg]=" moo" [(ngModel)]="usuario.tags"></tags-input> -->
+    <tags-input [maxWordLength]="10" [maxTags]="5" [allowDuplicates]="false" [duplicatesRestrictionMsg]=" moo" [(ngModel)]="usuario.tags"></tags-input>
   </div>
 
   <div padding>

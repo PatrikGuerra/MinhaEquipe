@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, ActionSheetController, LoadingController, PopoverController } from 'ionic-angular';
-// import { Renderer } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { DatePicker } from '@ionic-native/date-picker';
@@ -12,6 +11,9 @@ import { EquipeConvidarPage } from "../equipe-convidar/equipe-convidar";
 import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
+
+//Enums
+import { OrigemImagem } from "../../app/app.constants";
 
 //Models
 import { Equipe } from "../../models/equipe";
@@ -25,7 +27,6 @@ import { Usuario } from "../../models/usuario";
 export class EquipePage {
   private equipe: Equipe = new Equipe();
   private imagemBase64: string = "";
-
   private usuario: Usuario;
   private form: FormGroup;
 
@@ -40,19 +41,10 @@ export class EquipePage {
     private sessaoService: SessaoServiceProvider,
 
     private formBuilder: FormBuilder,
-    private datePicker: DatePicker,
-    // private renderer: Renderer
-  ) {
-
-    this.usuarioService.getUser().then(userObservable => {
-      userObservable.subscribe((usuarioData: Usuario) => {
-        this.usuario = usuarioData;
-      });
-    });
-
+    private datePicker: DatePicker) {
 
     this.form = this.formBuilder.group({
-      nome: ['', Validators.compose([Validators.minLength(3), Validators.required])],
+      nome: ['', Validators.compose([/*Validators.minLength(3),*/ Validators.required])],
     });
 
     if (this.navParams.data.nova) {
@@ -79,7 +71,7 @@ export class EquipePage {
     // }
   }
 
-  itemPressed(usuario: Usuario) {
+  private itemPressed(usuario: Usuario) {
     if (usuario.$key == this.equipe.keyResponsavel) {
       return;
     }
@@ -90,7 +82,7 @@ export class EquipePage {
           text: `Remover ${usuario.nome}`,
           cssClass: 'corTextoVermelho',
           handler: () => {
-
+            this.removerUsuarioDaEquipe(usuario);
           }
         }
       ]
@@ -100,6 +92,28 @@ export class EquipePage {
 
     console.log("itemPressed")
     console.log(usuario.nome)
+  }
+
+  private removerUsuarioDaEquipe(usuario: Usuario) {
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom',
+      message: `O membro '${ usuario.nome }' foi removido.`
+    });
+
+    let loading = this.loadingCtrl.create({
+      content: `Removendo '${usuario.nome}'...`
+    });
+
+    loading.present();
+
+    this.equipeService.removerMembro(this.equipe.$key, usuario.$key).then((dataRemoverMembro) => {
+      loading.dismiss();
+      toast.present();
+    }).catch((error) => {
+      loading.dismiss();
+      console.error(error);
+    });
   }
 
   ionViewDidLoad() {
@@ -144,21 +158,25 @@ export class EquipePage {
     toast.dismiss();
   }
 
-  menuAlterarImagem() {
+  private menuAlterarImagem() {
+    if (!this.isAdministradorEquipe()) {
+      return;
+    }
+
     let actionSheet = this.actionsheetCtrl.create({
       buttons: [
         {
           text: 'Camera',
           icon: 'camera',
           handler: () => {
-            this.camera();
+            this.getImagem(OrigemImagem.Camera);
           }
         },
         {
           text: 'Galeria',
           icon: 'image',
           handler: () => {
-            this.biblioteca();
+            this.getImagem(OrigemImagem.Galeria);
           }
         }
       ]
@@ -166,27 +184,30 @@ export class EquipePage {
 
     actionSheet.present();
   }
-  private camera() {
-    let loading = this.loadingCtrl.create();
-    loading.present();
 
-    this.equipeService.pictureFromCamera().then((imageData) => {
-      this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
-    }).catch((error) => {
-      this.imagemBase64 = "";
-      console.error(error);
+  private getImagem(enumOrigem: OrigemImagem) {
+    let loading = this.loadingCtrl.create({
+      content: 'Alterando imagem da equipe...'
     });
 
-    loading.dismiss();
-  }
-  private biblioteca() {
-    let loading = this.loadingCtrl.create();
-    loading.present();
+    if (this.equipe.$key) {
+      loading.setContent('Alterando imagem da equipe...')
+    }
 
-    this.equipeService.pictureFromLibray().then((imageData) => {
+    this.equipeService.getPicture(enumOrigem).then((imageData) => {
+      loading.present();
       this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
+
+      if (this.equipe.$key) {
+        this.equipeService.atualizarImagem(this.equipe.$key, this.imagemBase64).then((dataUploadImagem) => {
+          loading.dismiss();
+        });
+      } else {
+        loading.dismiss();
+      }
     }).catch((error) => {
       this.imagemBase64 = "";
+      loading.dismiss();
       console.error(error);
     });
 
@@ -199,7 +220,30 @@ export class EquipePage {
     });
   }
 
-  public alterarDataIncio() {
+  private validarDatas():boolean {
+    if (this.equipe.dataInicio && this.equipe.dataFim) {
+      if (this.equipe.dataInicio.getTime() <= this.equipe.dataFim.getTime())
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private corClasse() {
+    if (this.validarDatas()) {
+      return 'dataHoraSucesso';
+    } else {
+      return 'dataHoraErro';
+    }
+  }
+
+  public alterarDataInicio() {
+    if (!this.isAdministradorEquipe() && this.equipe.$key) {
+      return;
+    }
+
     this.getInicioData().then(data => {
       this.getInicioHora().then(horario => {
         data.setHours(horario.getHours());
@@ -233,6 +277,10 @@ export class EquipePage {
   }
 
   public alterarDataTermino() {
+    if (!this.isAdministradorEquipe() && this.equipe.$key) {
+      return;
+    }
+
     this.getTerminoData().then(data => {
       this.getTerminoHora().then(horario => {
         data.setHours(horario.getHours());
@@ -289,7 +337,7 @@ export class EquipePage {
   }
 
 
-  isAdministradorEquipe() {
+  private isAdministradorEquipe() {
     let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
     return retorno;
   }

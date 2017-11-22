@@ -8,8 +8,8 @@
 
     <ion-title>Equipe</ion-title>
 
-    <ion-buttons end>
-      <button ion-button icon-only (click)="save()" [disabled]="!form.valid">
+    <ion-buttons end *ngIf="isAdministradorEquipe()">
+      <button ion-button icon-only (click)="save()" [disabled]="!form.valid || !validarDatas()">
         <ion-icon name="checkmark"></ion-icon>
       </button>
     </ion-buttons>
@@ -37,10 +37,28 @@
       <ion-input type="text" formControlName="nome" maxlength="25" [(ngModel)]="equipe.nome" name="Nome"></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item (click)="alterarDataInicio()" [ngClass]="corClasse()">
+      <ion-label style="color:#999; max-width: 30%;">Início</ion-label>
+      <!-- <ion-note item-end>{{ dataFormatada(equipe.dataInicio) }}</ion-note> -->
+      <ion-label text-right>{{ dataFormatada(equipe.dataInicio) }}</ion-label>
+      <button ion-button item-right *ngIf="isAdministradorEquipe() || !equipe.$key">
+        <ion-icon name="create"></ion-icon>
+      </button>
+    </ion-item>
+
+    <ion-item (click)="alterarDataTermino()" [ngClass]="corClasse()">
+      <ion-label style="color:#999; max-width: 30%;">Término</ion-label>
+      <!-- <ion-note item-end>{{ dataFormatada(equipe.dataFim) }}</ion-note> -->
+      <ion-label text-right>{{ dataFormatada(equipe.dataFim) }}</ion-label>
+      <button ion-button item-right *ngIf="isAdministradorEquipe() || !equipe.$key">
+        <ion-icon name="create"></ion-icon>
+      </button>
+    </ion-item>
+
+    <!-- <ion-item>
       <ion-label>Início</ion-label>
       <ion-input type="text" text-right [value]="dataFormatada(equipe.dataInicio)" [disabled]="true"></ion-input>
-      <button ion-button item-right (click)="alterarDataIncio()" *ngIf="isAdministradorEquipe()">
+      <button ion-button item-right (click)="alterarDataIncio()" *ngIf="isAdministradorEquipe() || !equipe.$key">
         <ion-icon name="create"></ion-icon>
       </button>
     </ion-item>
@@ -48,15 +66,15 @@
     <ion-item>
       <ion-label>Término</ion-label>
       <ion-input type="text" text-right [value]="dataFormatada(equipe.dataFim)" [disabled]="true"></ion-input>
-      <button ion-button item-right (click)="alterarDataTermino()" *ngIf="isAdministradorEquipe()">
+      <button ion-button item-right (click)="alterarDataTermino()" *ngIf="isAdministradorEquipe() || !equipe.$key">
         <ion-icon name="create"></ion-icon>
       </button>
-    </ion-item>
+    </ion-item> -->
 
     <ion-card *ngIf="equipe.$key">
       <ion-list>
         <ion-item>
-          <h3>{{ equipe.membros.length }} Membros</h3>
+          <h2>{{ equipe.membros.length }} Membros</h2>
         </ion-item>
 
         <ion-item *ngIf="isAdministradorEquipe()" (click)="abrirConvidar()">
@@ -81,24 +99,4 @@
       <button ion-button color="danger" (click)="remover()" block>Remover Equipe</button>
     </div>
   </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <!-- <div padding>
-    <button ion-button (click)="abrirMembrosDaEquipe()" block icon-only>
-      <ion-icon name="document"></ion-icon>
-    </button>
-  </div> -->
 </ion-content>

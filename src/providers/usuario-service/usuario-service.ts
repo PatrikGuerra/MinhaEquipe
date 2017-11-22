@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
-
 import * as firebase from 'firebase';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { dataBaseStorage } from "../../app/app.constants";
 
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+
+import { LocalStorage } from "../../app/app.constants";
+
+//Enums
+import { OrigemImagem } from "../../app/app.constants";
 
 //Models
 import { Usuario } from "../../models/usuario";
@@ -16,13 +20,10 @@ import { Credencial } from "../../models/credencial";
 //Services
 import { AuthServiceProvider } from "../auth-service/auth-service";
 
-//Others
-import { LocalStorage } from "../../app/app.constants";
-
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-import { NgZone } from '@angular/core';
+// import { NgZone } from '@angular/core';
 // import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
-import 'rxjs/add/operator/filter';
+// import 'rxjs/add/operator/filter';
 
 @Injectable()
 export class UsuarioServiceProvider {
@@ -37,6 +38,21 @@ export class UsuarioServiceProvider {
     private geolocation: Geolocation) {
 
     console.log('Hello UsuarioServiceProvider Provider');
+    console.log("this.usuario");
+    console.log(this.usuario);
+  }
+
+  private firebaseToUsuario(objeto: any) {
+    let usuario: Usuario = Object.assign(new Usuario(), JSON.parse(JSON.stringify(objeto)))
+    usuario.$key = objeto.$key;
+
+    return usuario;
+  }
+
+  public getUsuario(key: string) {
+    return this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
+      return this.firebaseToUsuario(item);
+    });
   }
 
   public setUsuarioAplicacao(key: string): Promise<any> {
@@ -47,7 +63,6 @@ export class UsuarioServiceProvider {
 
         resolve(dataUsuario);
       });
-
     });
   }
 
@@ -95,34 +110,21 @@ export class UsuarioServiceProvider {
     return this.db.database.ref().update(updates);
   }
 
-  private firebaseToUsuario(objeto: any) {
-    let usuario: Usuario = Object.assign(new Usuario(), JSON.parse(JSON.stringify(objeto)))
-    usuario.$key = objeto.$key;
-
-    return usuario;
-  }
-
   getuid() {
     return this.storage.get("uid");
   }
 
-  getUser() {
-    return this.getuid().then(uid => {
-      return <FirebaseObjectObservable<Usuario>>this.db.object(`${dataBaseStorage.Usuario}/${uid}`).map((item) => {
-        return this.firebaseToUsuario(item);
-      })
-    });
-  }
+  // getUser() {
+  //   return this.getuid().then(uid => {
+  //     return <FirebaseObjectObservable<Usuario>>this.db.object(`${dataBaseStorage.Usuario}/${uid}`).map((item) => {
+  //       return this.firebaseToUsuario(item);
+  //     })
+  //   });
+  // }
 
 
 
-  public getUsuario(key: string) {
-    // return this.db.object(`${dataBaseStorage.Usuario}/${key}`);
 
-    return this.db.object(`${dataBaseStorage.Usuario}/${key}`).map((item) => {
-      return this.firebaseToUsuario(item);
-    })
-  }
 
 
   public buscarUsuariosPorKey(keysUsuario: string[]) {
@@ -254,15 +256,16 @@ export class UsuarioServiceProvider {
       });
     });
   }
-  atualizarImagem(image: string): Promise<any> {
+
+  public atualizarImagem(image: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getuid().then(usuarioUid => {
-        this.uploadImage(image, usuarioUid).then((firebaseImage: any) => {
+        this.uploadImagePerfil(image, usuarioUid).then((firebaseImage: any) => {
           let usuarioAtual = this.db.database.ref(`${dataBaseStorage.Usuario}/${usuarioUid}`);
 
-          usuarioAtual.update(
-            { fotoUrl: firebaseImage.downloadURL }
-          ).then(function (firebaseImageUpdate) {
+          usuarioAtual.update({
+            'fotoUrl': firebaseImage.downloadURL
+          }).then(function (firebaseImageUpdate) {
             resolve(firebaseImageUpdate);
           }, function (error) {
             reject(error);
@@ -273,16 +276,14 @@ export class UsuarioServiceProvider {
     });
   }
 
-  uploadImage(imageString: string, uid: string): Promise<any> {
-    let storageRef: any;
+  private uploadImagePerfil(imageString: string, uid: string): Promise<any> {
     let parseUpload: any;
 
     return new Promise((resolve, reject) => {
-      storageRef = firebase.storage().ref(`${dataBaseStorage.Usuario}/${uid}.jpg`);
+      let storageRef = firebase.storage().ref(`${dataBaseStorage.Usuario}/${uid}.jpg`);
       parseUpload = storageRef.putString(imageString, firebase.storage.StringFormat.DATA_URL);
 
       parseUpload.on('state_changed', (_snapshot) => {
-
       },
         (_err) => {
           reject(_err);
@@ -292,49 +293,26 @@ export class UsuarioServiceProvider {
         });
     });
   }
-  pictureFromCamera() {
+
+  public getPicture(enumOrigem: OrigemImagem) {
     const cameraOptions: CameraOptions = {
-      quality: 50,
       targetHeight: 500,
       targetWidth: 500,
+      // quality: 50, 
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
-      sourceType: this.camera.PictureSourceType.CAMERA
+      // sourceType: this.camera.PictureSourceType.CAMERA
+      // sourceType: this.camera.PictureSourceType.SAVEDPHOTOALBUM
     };
 
-    return this.camera.getPicture(cameraOptions);
-    /*.then((imageData) => {
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64:
-      var stringzaum = 'data:image/jpeg;base64,' + imageData;
-      console.log(stringzaum);
-   //   this.captureDataUrl = 
-    }, (err) => {
-      // Handle error
-    });*/
-  }
-  pictureFromLibray() {
-    const cameraOptions: CameraOptions = {
-      // quality: 50,
-      targetHeight: 500,
-      targetWidth: 500,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE,
-      sourceType: this.camera.PictureSourceType.SAVEDPHOTOALBUM
-    };
+    if (enumOrigem == OrigemImagem.Camera) {
+      cameraOptions.sourceType = this.camera.PictureSourceType.CAMERA;
+      cameraOptions.quality = 50;
+    } else if (enumOrigem == OrigemImagem.Galeria) {
+      cameraOptions.sourceType = this.camera.PictureSourceType.SAVEDPHOTOALBUM;
+    }
 
     return this.camera.getPicture(cameraOptions);
-    /*
-    .then((imageData) => {
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64:
-      var stringzaum = 'data:image/jpeg;base64,' + imageData;
-      console.log(stringzaum);
-   //   this.captureDataUrl = 
-    }, (err) => {
-      // Handle error
-    });*/
   }
 }

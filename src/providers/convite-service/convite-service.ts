@@ -37,7 +37,7 @@ export class ConviteServiceProvider {
     var listaEmailsNaoCadastrados = [];
 
     return this.buscarUsuariosPorEmail(listaEmails, listaKeyUsuarios, listaEmailsNaoCadastrados).then(data => {
-      return this.equipeService.getEquipe(equipeId).subscribe((equipe: Equipe) => {
+      return this.equipeService.getEquipe(equipeId).take(1).subscribe((equipe: Equipe) => {
         var listaMembrosEquipeKey = Object.keys(equipe.keyMembros);
 
         listaKeyUsuarios = this.RetornaItensDeAqueNaoExistemEmB(listaKeyUsuarios, listaMembrosEquipeKey);
@@ -70,7 +70,7 @@ export class ConviteServiceProvider {
 
     listaEmails.forEach(email => {
       var promise = new Promise((resolve, reject) => {
-        this.userService.getUsuarioByEmail(email).subscribe((data: any) => {
+        this.userService.getUsuarioByEmail(email).take(1).subscribe((data: any) => {
           if (data.length > 0) {
             listaKeyUsuarios.push(<Usuario>data[0].$key);
           } else {
@@ -102,7 +102,7 @@ export class ConviteServiceProvider {
     var keys: string[] = [];
 
     return new Promise((resolve, reject) => {
-      return this.getConvitesEquipe(equipeId).subscribe((data) => {
+      return this.getConvitesEquipe(equipeId).take(1).subscribe((data) => {
         data.forEach(convite => {
           if (listaUsuariosKey.indexOf(convite.keyUsuario) > -1 || listaEmails.indexOf(convite.email) > -1) {
             keys.push(convite.$key)

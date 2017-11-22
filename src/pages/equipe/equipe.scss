@@ -1,4 +1,20 @@
 page-equipe {
+    .dataHoraSucesso .item-inner {
+        border-bottom: 1px solid #32db64 !important;
+        border-bottom-color: #32db64;
+        -webkit-box-shadow: inset 0 -1px 0 0 #32db64;
+        box-shadow: inset 0 -1px 0 0 #32db64;
+    }
+    .dataHoraErro .item-inner {
+        border-bottom: 1px solid #f53d3d32db64 !important;
+        border-bottom-color: #f53d3d;
+        -webkit-box-shadow: inset 0 -1px 0 0 #f53d3d;
+        box-shadow: inset 0 -1px 0 0 #f53d3d;
+    }
+    // .dataHora.item-inner {
+    //     border-bottom: 1px solid #dedede !important;
+    // } 
+    
     // Estilização do perfil: https://codepen.io/nathvarun/pen/eAbCK
     #profile-bg {
         left: 0;

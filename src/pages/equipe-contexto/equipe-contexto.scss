@@ -27,7 +27,7 @@ page-equipe-contexto {
         border-left: 16px solid transparent;
         border-right: 16px solid transparent;
         border-top: 16px solid #333;
-    } 
+    }
     .marker img {
         display: block;
         border-radius: 100px;
@@ -41,6 +41,9 @@ page-equipe-contexto {
         text-align: center;
         margin: auto;
     } // novo - fim
+    .markerLocal {
+        background: rgb(241, 100, 6);
+    }
 }
 
 ion-app._gmaps_cdv_ .nav-decor {

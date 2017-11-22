@@ -8,12 +8,15 @@ import { TarefaPage } from "../tarefa/tarefa";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
+//Enum
+import { TarefaSituacao } from "../../app/app.constants";
+
 //Models
 import { Equipe } from "../../models/equipe";
 import { Tarefa } from "../../models/tarefa";
 
-
 import { TarefaServiceProvider } from "../../providers/tarefa-service/tarefa-service";
+
 @IonicPage()
 @Component({
   selector: 'page-tarefas',
@@ -52,5 +55,23 @@ export class TarefasPage {
   isAdministradorEquipe() {
     let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
     return retorno;
+  }
+
+  private corBadge(tarefaSituacao: TarefaSituacao) {
+    if (tarefaSituacao == TarefaSituacao.Andamento) {
+      return "cortarefaandamento";
+    } else if (tarefaSituacao == TarefaSituacao.Cancelada) {
+      return "cortarefacancelada";
+    } else if (tarefaSituacao == TarefaSituacao.Finalizado) {
+      return "cortarefafinalizado";
+    } else if (tarefaSituacao == TarefaSituacao.Pendente) {
+      return "cortarefapendente";
+    }
+    alert("erro");
+    return '';
+  }
+
+  private descricaoBadge(tarefaSituacao: TarefaSituacao) {
+    return TarefaSituacao[tarefaSituacao];
   }
 }

@@ -13,7 +13,7 @@ import { dataBaseStorage } from "../../app/app.constants";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
-import { CustomMarker } from './custom.marker';
+import { UsuarioMarker } from './usuario.marker';
 
 //Import
 import { Usuario } from "../../models/usuario";
@@ -54,7 +54,13 @@ export class EquipeContextoPage {
         lng: -51.1863117
       },
       zoom: 15, //https://developers.google.com/maps/documentation/static-maps/intro#Zoomlevels
-      disableDefaultUI: true //https://developers.google.com/maps/documentation/javascript/examples/control-disableUI?hl=pt-br
+      //disableDefaultUI: true //https://developers.google.com/maps/documentation/javascript/examples/control-disableUI?hl=pt-br
+      zoomControl: false,
+      mapTypeControl: true,
+      scaleControl: false,
+      streetViewControl: false,
+      rotateControl: true,
+      fullscreenControl: false
     });
 
     google.maps.event.addListenerOnce(this.map, 'tilesloaded', (event) => {
@@ -136,7 +142,7 @@ export class EquipeContextoPage {
       label: usuario.nome,
       img: usuario.fotoUrl,
     };
-    let marcador = new CustomMarker(latLng, this.map, parametros);
+    let marcador = new UsuarioMarker(latLng, this.map, parametros);
 
     this.markers.push(marcador);
   }

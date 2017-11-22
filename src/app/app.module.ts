@@ -48,10 +48,6 @@ import { ChatServiceProvider } from "../providers/chat-service/chat-service";
 import { LocalServiceProvider } from '../providers/local-service/local-service';
 import { TarefaServiceProvider } from '../providers/tarefa-service/tarefa-service';
 
-//Components
-import { TagsInputModule } from "../components/tags-input/index";
-import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/tarefa-status-label";
-
 @NgModule({
   declarations: [
     MyApp,
@@ -67,7 +63,6 @@ import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/ta
     LocalSelectPage,
     UsuarioSelectPage,
 
-    TarefaStatusLabelComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,8 +75,6 @@ import { TarefaStatusLabelComponent } from "../components/tarefa-status-label/ta
     AngularFireModule.initializeApp(firebaseConfig), 
     AngularFireAuthModule,
     AngularFireDatabaseModule, 
-
-    TagsInputModule
   ],
   bootstrap: [
     IonicApp

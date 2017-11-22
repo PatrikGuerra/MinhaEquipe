@@ -13,7 +13,7 @@
 <ion-content>
   <form [formGroup]="tarefaForm">
     <div *ngIf="tarefa.$key">
-      <!-- <tarefa-status-label [status]="tarefa.situacao" [buttonBlock]="true"></tarefa-status-label> -->
+      <button  ion-button [color]="corBadge(tarefa.situacao)" block>{{ descricaoBadge(tarefa.situacao) }}</button>
     </div>
 
     <ion-item>
@@ -29,10 +29,15 @@
     <ion-card>
       <ion-list>
         <ion-item>
-          <h2>Responsáveis</h2>
-          <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarResponsaveis()">
+          <h2>{{ tarefa.responsaveis.length }} Responsáveis</h2>
+          <!-- <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarResponsaveis()">
             <ion-icon name="person-add"></ion-icon>
-          </button>
+          </button> -->
+        </ion-item>
+
+        <ion-item *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarResponsaveis()">
+          <ion-icon color="primary" name="person-add" item-start></ion-icon>
+          Editar Responsáveis
         </ion-item>
 
         <ion-item *ngFor="let responsavel of tarefa.responsaveis">
@@ -93,5 +98,8 @@
       </div>
     </div>
 
+    <div padding-bottom *ngIf="isAdministradorEquipe() && tarefa.$key">
+      <button ion-button color="danger" (click)="remover()" block>Remover Tarefa</button>
+    </div>
   </form>
 </ion-content>

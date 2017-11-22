@@ -27,6 +27,24 @@ ion-avatar img {
     }
 }
 
+.corTextoVerde {
+    // ion-icon {
+    //     color: #f53d3d;
+    // }
+    .button-inner {
+        color: #2dc937
+    }
+}
+
+.corTextoPrimaria {
+    // ion-icon {
+    //     color: #f53d3d;
+    // }
+    .button-inner {
+        color: color($colors, primary, base);
+    }
+}
+
 .itemOutline {
     border: thin solid color($colors, primary, base);
     border-color: color($colors, primary, base);

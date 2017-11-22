@@ -5,11 +5,11 @@ import { Storage } from '@ionic/storage';
 //Providers
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 
-//Components
-//  import { TagsInputComponent } from "../../components/tags-input/tags-input.component";
-
 //Popover
 import { PerfilPopoverPage } from "../perfil-popover/perfil-popover";
+
+//Enums
+import { OrigemImagem } from "../../app/app.constants";
 
 //Models
 import { Usuario } from './../../models/usuario';
@@ -22,6 +22,9 @@ import { Usuario } from './../../models/usuario';
 export class PerfilPage {
   private usuario: Usuario = new Usuario();
 
+  private imagemBase64: string = "";
+  private enumOrigemImagem = OrigemImagem;
+
   constructor(
     public navCtrl: NavController,
     private platform: Platform,
@@ -31,23 +34,28 @@ export class PerfilPage {
     private usuarioService: UsuarioServiceProvider,
     public popoverCtrl: PopoverController) {
 
-    let loading = this.loadingCtrl.create({
-      content: 'Carregando perfil...'
-    });
+    this.usuario = this.usuarioService.usuario
 
-    loading.present();
+    if (!this.usuario.tags) {
+      this.usuario.tags = [];
+    }
 
-    this.usuarioService.getUser().then(userObservable => {
-      userObservable.subscribe((usuarioData: Usuario) => {
-        this.usuario = usuarioData;
+    // let loading = this.loadingCtrl.create({
+    //   content: 'Carregando perfil...'
+    // });
 
-        loading.dismiss();
+    // loading.present();
 
-        if (!this.usuario.tags) {
-          this.usuario.tags = [];
-        }
-      });
-    });
+    // this.usuarioService.getUser().then(userObservable => {
+    //   userObservable.subscribe((usuarioData: Usuario) => {
+    //     this.usuario = usuarioData;
+    //     loading.dismiss();
+
+    //     if (!this.usuario.tags) {
+    //       this.usuario.tags = [];
+    //     }
+    //   });
+    // });
   }
 
   ionViewDidLoad() {
@@ -62,23 +70,21 @@ export class PerfilPage {
     });
   }
 
-  menuAlterarFoto() {
+  private menuAlterarFoto() {
     let actionSheet = this.actionsheetCtrl.create({
       buttons: [
         {
           text: 'Camera',
           icon: 'camera',
           handler: () => {
-            console.log('Camera');
-            this.camera()
+            this.getImagem(OrigemImagem.Camera)
           }
         },
         {
           text: 'Galeria',
           icon: 'image',
           handler: () => {
-            console.log('Galeria');
-            this.biblioteca()
+            this.getImagem(OrigemImagem.Galeria)
           }
         }
       ]
@@ -86,37 +92,20 @@ export class PerfilPage {
 
     actionSheet.present();
   }
-  camera() {
+  private getImagem(enumOrigem: OrigemImagem) {
     let loading = this.loadingCtrl.create({
       content: 'Alterando foto de perfil...'
     });
 
-    this.usuarioService.pictureFromCamera().then((imageData) => {
+    this.usuarioService.getPicture(enumOrigem).then((imageData) => {
       loading.present();
-      var imagem = 'data:image/jpeg;base64,' + imageData;
+      this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
 
-      this.usuarioService.atualizarImagem(imagem).then((hue) => {
+      this.usuarioService.atualizarImagem(this.imagemBase64).then((dataUploadImagem) => {
         loading.dismiss();
-      })
+      });
     }, (erro) => {
-      loading.dismiss();
-      console.log(erro);
-    });
-  }
-  biblioteca() {
-    let loading = this.loadingCtrl.create({
-      content: 'Alterando foto de perfil...'
-    });
-
-    this.usuarioService.pictureFromLibray().then((imageData) => {
-      loading.present();
-
-      var imagem = 'data:image/jpeg;base64,' + imageData;
-
-      this.usuarioService.atualizarImagem(imagem).then((hue) => {
-        loading.dismiss();
-      })
-    }, (erro) => {
+      this.imagemBase64 = "";
       loading.dismiss();
       console.log(erro);
     });
@@ -141,4 +130,3 @@ export class PerfilPage {
     });
   }
 }
- 
