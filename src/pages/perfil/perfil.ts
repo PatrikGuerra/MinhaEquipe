@@ -13,6 +13,7 @@ import { OrigemImagem } from "../../app/app.constants";
 
 //Models
 import { Usuario } from './../../models/usuario';
+import { ActionSheet } from 'ionic-angular/components/action-sheet/action-sheet';
 
 @IonicPage()
 @Component({
@@ -21,9 +22,6 @@ import { Usuario } from './../../models/usuario';
 })
 export class PerfilPage {
   private usuario: Usuario = new Usuario();
-
-  private imagemBase64: string = "";
-  private enumOrigemImagem = OrigemImagem;
 
   constructor(
     public navCtrl: NavController,
@@ -34,28 +32,15 @@ export class PerfilPage {
     private usuarioService: UsuarioServiceProvider,
     public popoverCtrl: PopoverController) {
 
-    this.usuario = this.usuarioService.usuario
+    this.atualizarUsuarioPagina();
 
     if (!this.usuario.tags) {
       this.usuario.tags = [];
     }
+  }
 
-    // let loading = this.loadingCtrl.create({
-    //   content: 'Carregando perfil...'
-    // });
-
-    // loading.present();
-
-    // this.usuarioService.getUser().then(userObservable => {
-    //   userObservable.subscribe((usuarioData: Usuario) => {
-    //     this.usuario = usuarioData;
-    //     loading.dismiss();
-
-    //     if (!this.usuario.tags) {
-    //       this.usuario.tags = [];
-    //     }
-    //   });
-    // });
+  private atualizarUsuarioPagina() {
+    this.usuario = this.usuarioService.usuario;
   }
 
   ionViewDidLoad() {
@@ -90,8 +75,20 @@ export class PerfilPage {
       ]
     });
 
+    if (this.usuario.$key) {
+      actionSheet.addButton({
+        text: 'Remover',
+        icon: 'trash',
+        cssClass: 'corTextoVermelho',
+        handler: () => {
+          this.removerImagem()
+        }
+      });
+    }
+
     actionSheet.present();
   }
+
   private getImagem(enumOrigem: OrigemImagem) {
     let loading = this.loadingCtrl.create({
       content: 'Alterando foto de perfil...'
@@ -99,19 +96,34 @@ export class PerfilPage {
 
     this.usuarioService.getPicture(enumOrigem).then((imageData) => {
       loading.present();
-      this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
+      let imagemBase64 = 'data:image/jpeg;base64,' + imageData;
 
-      this.usuarioService.atualizarImagem(this.imagemBase64).then((dataUploadImagem) => {
+      this.usuarioService.atualizarImagem(imagemBase64).then((dataUploadImagem) => {
+        this.atualizarUsuarioPagina();
         loading.dismiss();
       });
-    }, (erro) => {
-      this.imagemBase64 = "";
+    }).then((erro) => {
       loading.dismiss();
       console.log(erro);
     });
   }
 
-  alterarUsuario() {
+  private removerImagem() {
+    let loading = this.loadingCtrl.create({
+      content: 'Removendo foto de perfil...'
+    });
+
+    loading.present();
+    this.usuarioService.removerImagem(this.usuario.$key).then((dataRemover) => {
+      this.atualizarUsuarioPagina();
+      loading.dismiss();
+    }).catch((erro) => {
+      loading.dismiss();
+      console.log(erro);
+    });
+  }
+
+  public alterarUsuario() {
     let toast = this.toastCtrl.create({
       duration: 3000,
       position: 'bottom',
@@ -124,7 +136,7 @@ export class PerfilPage {
 
     loading.present();
 
-    this.usuarioService.save(this.usuario).then((data) => {
+    this.usuarioService.salvar(this.usuario).then((data) => {
       loading.dismiss();
       toast.present();
     });

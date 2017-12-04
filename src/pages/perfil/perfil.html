@@ -7,8 +7,12 @@
     </ion-buttons>
 
     <ion-title>Perfil</ion-title>
-    
+
     <ion-buttons end>
+      <button ion-button icon-only (click)="alterarUsuario()">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
+
       <button ion-button icon-only (click)="abrirPopover($event)">
         <ion-icon name="more"></ion-icon>
       </button>
@@ -39,11 +43,5 @@
     <ion-input type="text" [ngModel]="usuario.email" readonly name="email"></ion-input>
   </ion-item>
 
-  <div padding-horizontal padding-top>
-    <tags-input [maxWordLength]="10" [maxTags]="5" [allowDuplicates]="false" [duplicatesRestrictionMsg]=" moo" [(ngModel)]="usuario.tags"></tags-input>
-  </div>
-
-  <div padding>
-    <button ion-button full (click)="alterarUsuario()">Salvar</button>
-  </div>
+  <tags-input [maxWordLength]="10" [maxTags]="5" [permitirDuplicados]="false" [(ngModel)]="usuario.tags"></tags-input>
 </ion-content>

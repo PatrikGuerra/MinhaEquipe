@@ -1,0 +1,23 @@
+<ion-card padding-bottom>
+	<ion-list>
+		<ion-item>
+			<h2>Tags</h2>
+		</ion-item>
+
+		<div padding-horizontal padding-bottom>
+			<ion-item>
+				<ion-input type="text" [(ngModel)]="inputValorTag" placeholder="Insira aqui uma nova Tag" [maxlength]="maxWordLength"></ion-input>
+				<button ion-button item-right (click)="adicionarItem()" [disabled]="!adicionarHabilitado">
+					<ion-icon name="add"></ion-icon>
+				</button>
+			</ion-item>
+		</div>
+
+		<div padding-horizontal text-center>
+			<button type="button" *ngFor="let tag of listaTag; let i=index" ion-button item-right icon-right (click)="removerItem(i)">
+				{{ tag }}
+				<ion-icon name="close"></ion-icon>
+			</button>
+		</div>
+	</ion-list>
+</ion-card>
