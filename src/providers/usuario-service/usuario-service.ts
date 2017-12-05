@@ -21,9 +21,6 @@ import { Credencial } from "../../models/credencial";
 import { AuthServiceProvider } from "../auth-service/auth-service";
 
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-// import { NgZone } from '@angular/core';
-// import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
-// import 'rxjs/add/operator/filter';
 
 @Injectable()
 export class UsuarioServiceProvider {
@@ -98,8 +95,8 @@ export class UsuarioServiceProvider {
     var updates = {};
 
     if (this.usuario.equipes) {
-      Object.keys(this.usuario.equipes).forEach(element => {
-        updates[`${dataBaseStorage.UsuarioLocalizacao}/${element}/${this.usuario.$key}`] = {
+      Object.keys(this.usuario.equipes).forEach(keyEquipe => {
+        updates[`${dataBaseStorage.UsuarioLocalizacao}/${keyEquipe}/${this.usuario.$key}`] = {
           'lat': geoposition.coords.latitude,
           'lng': geoposition.coords.longitude,
           'timestamp': geoposition.timestamp
@@ -178,16 +175,14 @@ export class UsuarioServiceProvider {
     });
   }
 
-  public save(usuario: Usuario) {
-    var dataUsuario = {
-      nome: usuario.nome,
-      //email: usuario.email,
-      fotoUrl: usuario.fotoUrl,
-      tags: usuario.tags,
-      equipes: usuario.equipes,
-    }
-
-    return this.db.database.ref(`${dataBaseStorage.Usuario}/${usuario.$key}`).update(dataUsuario)
+  public salvar(usuario: Usuario) {
+    return this.db.database.ref(`${dataBaseStorage.Usuario}/${usuario.$key}`).update({
+      "nome": usuario.nome,
+      //"email": usuario.email,
+      "fotoUrl": usuario.fotoUrl,
+      "tags": usuario.tags,
+      "equipes": usuario.equipes,
+    })
   }
 
   public criarUsuario(key: string, nome: string, email: string) {
@@ -292,6 +287,28 @@ export class UsuarioServiceProvider {
           resolve(parseUpload.snapshot);
         });
     });
+  }
+
+  public removerImagem(keyUsuario: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+      this.db.database.ref(`${dataBaseStorage.Usuario}/${keyUsuario}`).update({
+        'fotoUrl': ""
+      }).then((data) => {
+        this.removeImagemPerfil(keyUsuario).then(dataStorage => {
+          resolve(true);
+        }).catch((error) => {
+          reject(error);
+        });
+      }).catch((error) => {
+        reject(error);
+      });
+
+    });
+  }
+
+  private removeImagemPerfil(uid: string) {
+    return firebase.storage().ref(`${dataBaseStorage.Usuario}/${uid}.jpg`).delete();
   }
 
   public getPicture(enumOrigem: OrigemImagem) {

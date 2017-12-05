@@ -26,8 +26,8 @@
         </ion-avatar>
 
         {{ convite.equipe?.nome }}
-        <p *ngIf="isToday(convite.timestamp)">Hoje às {{ convite.timestamp | date:"hh:mm a" }}</p>
-        <p *ngIf="!isToday(convite.timestamp)">{{ convite.timestamp | date: "dd/mm/yyyy hh:mm a" }}</p>
+        <p *ngIf="isToday(convite.timestamp)">Hoje às {{ convite.timestamp | date:"H:mm" }}</p>
+        <p *ngIf="!isToday(convite.timestamp)">{{ convite.timestamp | date: "dd/mm/yyyy H:mm" }}</p>
       </button>
     </div>
   </ion-list>

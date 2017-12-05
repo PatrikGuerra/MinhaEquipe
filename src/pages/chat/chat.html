@@ -15,11 +15,12 @@
     <div *ngFor="let mensagem of mensagens; let i = index">
 
       <fieldset *ngIf="i == 0 || (i > 0) && mensagem.dia != mensagens[i - 1].dia">
+        <legend align="center" *ngIf="!isToday(mensagem.timestamp)">
+          {{ mensagem.timestamp | date: "dd/mm/yyyy H:mm" }}
+        </legend>
+
         <legend align="center" *ngIf="isToday(mensagem.timestamp)">
           Hoje
-        </legend>
-        <legend align="center" *ngIf="!isToday(mensagem.timestamp)">
-          {{ mensagem.timestamp | date: "dd/mm/yyyy" }}
         </legend>
       </fieldset>
 
@@ -27,14 +28,14 @@
         <ion-label class="margem" *ngIf="mensagem.tipo == enumMensagemTipo.Notificacao">
           <p style="text-align: center">
             <span class="notificacao">{{ mensagem.conteudo }}</span>
-            <span class="message-time">{{ mensagem.timestamp | date:"hh:mm a" }}</span>
+            <span class="message-time">{{ mensagem.timestamp | date: "H:mm" }}</span>
           </p>
         </ion-label>
 
         <ion-label class="margem" *ngIf="mensagem.tipo == enumMensagemTipo.Mensagem">
           <p *ngIf="mensagem.keyUsuario == usuario.$key">
             <span class="message-text right">{{ mensagem.conteudo }}</span>
-            <span class="message-time">{{ mensagem.timestamp | date:"hh:mm a" }}</span>
+            <span class="message-time">{{ mensagem.timestamp | date:"H:mm" }}</span>
           </p>
 
           <p *ngIf="mensagem.keyUsuario != usuario.$key">
@@ -45,7 +46,7 @@
               <span class="author">{{ mensagem.usuario?.nome || mensagem.usuario?.email }}</span>
               {{ mensagem.conteudo }}
             </span>
-            <span class="message-time">{{ mensagem.timestamp | date:"hh:mm a" }}</span>
+            <span class="message-time">{{ mensagem.timestamp | date:"H:mm" }}</span>
           </p>
         </ion-label>
 
