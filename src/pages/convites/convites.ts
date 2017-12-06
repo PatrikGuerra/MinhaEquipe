@@ -33,6 +33,7 @@ export class ConvitesPage {
 
     this.usuarioService.getuid().then((usuarioUid) => {
       this.conviteService.meusConvites(usuarioUid).subscribe((convitesUsuarioData: ConviteUsuario[]) => {
+        console.log(convitesUsuarioData)
         this.convitesUsuario = convitesUsuarioData;
 
         loading.dismiss();
