@@ -75,7 +75,7 @@ export class PerfilPage {
       ]
     });
 
-    if (this.usuario.$key) {
+    if (this.usuario.fotoUrl) {
       actionSheet.addButton({
         text: 'Remover',
         icon: 'trash',
@@ -91,7 +91,7 @@ export class PerfilPage {
 
   private getImagem(enumOrigem: OrigemImagem) {
     let loading = this.loadingCtrl.create({
-      content: 'Alterando foto de perfil...'
+      content: "Alterando foto de perfil..."
     });
 
     this.usuarioService.getPicture(enumOrigem).then((imageData) => {
