@@ -16,10 +16,12 @@ export class ChatServiceProvider {
   }
 
   private firebaseToMensagem(objeto: any) {
+    console.log(objeto)
     let mensagem: Mensagem = Object.assign(new Mensagem(), JSON.parse(JSON.stringify(objeto)))
     mensagem.$key = objeto.$key;
-    mensagem.dia = new Date(mensagem.timestamp || Date.now()).getDate();
-
+    // mensagem.dia = new Date(mensagem.timestamp || Date.now()).getDate();
+    mensagem.dia = new Date(mensagem.timestamp);
+    
     return mensagem;
   }
 

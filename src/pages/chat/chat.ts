@@ -87,7 +87,11 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   isToday(timestamp: number) {
-    return new Date(timestamp).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0);
+    return this.diaSemHora(timestamp) == new Date().setHours(0, 0, 0, 0);
+  }
+
+  public diaSemHora(timestamp: number) {
+    return new Date(timestamp).setHours(0, 0, 0, 0);
   }
 
   private scrollDown() {
