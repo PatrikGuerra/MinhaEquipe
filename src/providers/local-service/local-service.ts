@@ -56,7 +56,7 @@ export class LocalServiceProvider {
     });
   }
 
-  public save(local: Local, keyEquipe: string) {
+  public salvar(local: Local, keyEquipe: string) {
     var ref = this.db.database.ref(`${dataBaseStorage.Local}/${keyEquipe}`);
 
     if (!local.$key) {

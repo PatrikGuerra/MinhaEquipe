@@ -54,7 +54,7 @@ export class LocalPage {
     console.log('ionViewDidLoad LocalPage');
   }
 
-  save() {
+  salvar() {
     let toast = this.toastCtrl.create({
       duration: 3000,
       position: 'bottom'
@@ -72,7 +72,7 @@ export class LocalPage {
 
     loading.present();
 
-    this.localService.save(this.local, this.equipe.$key).then((data) => {
+    this.localService.salvar(this.local, this.equipe.$key).then((data) => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();
