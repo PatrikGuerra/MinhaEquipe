@@ -11,18 +11,11 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 //Enums
 import { OrigemImagem } from "../../app/app.constants";
 
-
 //Models
 import { Equipe } from "../../models/equipe";
 
-
 //Services
 import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
-
-
-
-
-
 
 @Injectable()
 export class EquipeServiceProvider {
@@ -83,7 +76,7 @@ export class EquipeServiceProvider {
           //remove a equipe do usuario
           this.db.object(`${dataBaseStorage.Usuario}/${keyUsuario}/equipes/${keyEquipe}`).remove().then(() => {
             console.log("chegou aquieeeee 7")
-            
+
             //remove o usuario da equipe
             this.db.object(`${dataBaseStorage.Equipe}/${keyEquipe}/keyMembros/${keyUsuario}`).remove().then(() => {
               console.log("chegou aquieeeee 10")
@@ -158,20 +151,49 @@ export class EquipeServiceProvider {
   //   return this.db.database.ref(key).remove();
   // }
 
-  public save(equipe: Equipe, imagem: string): Promise<any> {
+  /* Salvar - Modo antigo
+    public salvar(equipe: Equipe, imagem: string): Promise<any> {
+      return new Promise((resolve, reject) => {
+        this.userService.getuid().then((usuarioUid) => {
+  
+          if (!equipe.$key) {
+            //Se é Push
+            equipe.keyResponsavel = usuarioUid;
+            equipe.addMembro(usuarioUid);
+            equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
+  
+            equipe.$key = this.db.database.ref(dataBaseStorage.Equipe).push().key;
+          }
+  
+          this.alterar(equipe).then((dataEquipePush) => {
+            if (imagem) {
+              this.atualizarImagem(equipe.$key, imagem).then(dataImagem => {
+                resolve(dataEquipePush);
+              }).catch((error) => {
+                reject(error);
+              });
+            } else {
+              resolve(dataEquipePush);
+            }
+          }).catch((error) => {
+            reject(error);
+          });
+        });
+      });
+    }
+  */
+
+  public criar(equipe: Equipe, imagem: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.userService.getuid().then((usuarioUid) => {
 
-        if (!equipe.$key) {
-          //Se é Push
-          equipe.keyResponsavel = usuarioUid;
-          equipe.addMembro(usuarioUid);
-          equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
+        equipe.keyResponsavel = usuarioUid;
+        equipe.addMembro(usuarioUid);
+        equipe.timestamp = firebase.database.ServerValue.TIMESTAMP;
 
-          equipe.$key = this.db.database.ref(dataBaseStorage.Equipe).push().key;
-        }
+        equipe.$key = this.db.database.ref(dataBaseStorage.Equipe).push().key;
 
-        this.update(equipe).then((dataEquipePush) => {
+        this.alterar(equipe).then((dataEquipePush) => {
           if (imagem) {
             this.atualizarImagem(equipe.$key, imagem).then(dataImagem => {
               resolve(dataEquipePush);
@@ -188,7 +210,7 @@ export class EquipeServiceProvider {
     });
   }
 
-  private update(equipe: Equipe) {
+  public alterar(equipe: Equipe) {
     var updates = {};
 
     updates[`${dataBaseStorage.Equipe}/${equipe.$key}`] = {
@@ -210,7 +232,7 @@ export class EquipeServiceProvider {
 
   public atualizarImagem(keyEquipe: string, imageString: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.uploadImageEquipe(keyEquipe, imageString).then((firebaseImage: any) => {
+      this.uploadImagemEquipe(keyEquipe, imageString).then((firebaseImage: any) => {
         let equipeAtual = this.db.database.ref(`${dataBaseStorage.Equipe}/${keyEquipe}`);
 
         equipeAtual.update({
@@ -225,7 +247,7 @@ export class EquipeServiceProvider {
     });
   }
 
-  private uploadImageEquipe(keyEquipe: string, imageString: string): Promise<any> {
+  private uploadImagemEquipe(keyEquipe: string, imageString: string): Promise<any> {
     let parseUpload: any;
 
     return new Promise((resolve, reject) => {
@@ -241,6 +263,28 @@ export class EquipeServiceProvider {
           resolve(parseUpload.snapshot);
         });
     });
+  }
+
+  public removerImagem(keyEquipe: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+      this.db.database.ref(`${dataBaseStorage.Equipe}/${keyEquipe}`).update({
+        'fotoUrl': ""
+      }).then((data) => {
+        this.removeImagemEquipe(keyEquipe).then(dataStorage => {
+          resolve(true);
+        }).catch((error) => {
+          reject(error);
+        });
+      }).catch((error) => {
+        reject(error);
+      });
+
+    });
+  }
+
+  private removeImagemEquipe(uid: string) {
+    return firebase.storage().ref(`${dataBaseStorage.Equipe}/${uid}.jpg`).delete();
   }
 
   public getPicture(enumOrigem: OrigemImagem) {

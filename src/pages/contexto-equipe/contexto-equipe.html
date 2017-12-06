@@ -8,7 +8,7 @@
 
     <ion-title>Equipe</ion-title>
 
-    <ion-buttons end >
+    <ion-buttons end *ngIf="isAdministradorEquipe()">
       <button ion-button icon-only (click)="salvar()" [disabled]="!form.valid || !validarDatas()">
         <ion-icon name="checkmark"></ion-icon>
       </button>
@@ -21,7 +21,7 @@
 
   <div id="content">
     <div id="profile-info" padding-horizontal>
-      <img id="profile-image" (click)="menuAlterarImagem()" src="{{ imagemBase64 ? imagemBase64 : 'assets/images/no-image.gif'}}">
+      <img id="profile-image" (click)="menuAlterarImagem()" src="{{ equipe.fotoUrl ? equipe.fotoUrl : 'assets/images/no-image.gif'}}">
     </div>
   </div>
 
@@ -40,5 +40,33 @@
       <ion-label style="color:#999; max-width: 30%;">Término</ion-label>
       <ion-label text-right>{{ dataFormatada(equipe.dataFim) }}</ion-label>
     </ion-item>
+
+    <ion-card>
+      <ion-list>
+        <ion-item>
+          <h2>{{ equipe.membros.length }} Membros</h2>
+        </ion-item>
+
+        <button ion-item *ngIf="isAdministradorEquipe()" (click)="abrirConvidar()">
+          <ion-icon color="primary" name="person-add" item-start></ion-icon>
+          Enviar convites
+        </button>
+
+        <div *ngFor="let usuarioMembro of equipe.membros">
+          <button ion-item (press)="listaMembrosItemPressed(usuarioMembro)">
+            <ion-avatar item-start>
+              <img src="{{ usuarioMembro.fotoUrl ? usuarioMembro.fotoUrl : 'assets/images/no-image.jpg' }}">
+            </ion-avatar>
+            {{ usuarioMembro.nome }}
+
+            <ion-badge *ngIf="usuarioMembro.$key == equipe.keyResponsavel" class="itemOutline" item-end>Admin</ion-badge>
+          </button>
+        </div>
+      </ion-list>
+    </ion-card>
+
+    <div padding-bottom *ngIf="isAdministradorEquipe()">
+      <button ion-button color="danger" (click)="remover()" block>Remover Equipe</button>
+    </div>
   </form>
 </ion-content>

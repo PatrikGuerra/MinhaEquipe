@@ -21,12 +21,11 @@ import { Usuario } from "../../models/usuario";
 
 @IonicPage()
 @Component({
-  selector: 'page-equipe',
-  templateUrl: 'equipe.html',
+  selector: 'page-contexto-equipe',
+  templateUrl: 'contexto-equipe.html',
 })
-export class EquipePage {
+export class ContextoEquipePage {
   private equipe: Equipe = new Equipe();
-  private imagemBase64: string = "";
   private usuario: Usuario;
   private form: FormGroup;
 
@@ -46,29 +45,74 @@ export class EquipePage {
       nome: ['', Validators.compose([/*Validators.minLength(3),*/ Validators.required])],
     });
 
-    this.imagemBase64 = "";
+    this.atualizarEquipePagina();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EquipePage');
   }
 
-  public salvar() {
+  private atualizarEquipePagina() {
+    this.equipe = this.sessaoService.equipe;
+  }
+
+  private listaMembrosItemPressed(usuarioMembro: Usuario) {
+    if (!this.isAdministradorEquipe() || usuarioMembro.$key == this.equipe.keyResponsavel) {
+      return;
+    }
+
+    var actionSheet = this.actionsheetCtrl.create({
+      buttons: [
+        {
+          text: `Remover ${usuarioMembro.nome}`,
+          cssClass: 'corTextoVermelho',
+          handler: () => {
+            this.removerUsuarioDaEquipe(usuarioMembro);
+          }
+        }
+      ]
+    });
+
+    actionSheet.present();
+  }
+
+  private removerUsuarioDaEquipe(usuario: Usuario) {
     let toast = this.toastCtrl.create({
       duration: 3000,
       position: 'bottom',
-      message: "Equipe criada."
+      message: `O membro '${usuario.nome}' foi removido.`
     });
 
     let loading = this.loadingCtrl.create({
-      content: "Criando equipe..."
+      content: `Removendo '${usuario.nome}'...`
     });
 
     loading.present();
 
-    this.equipeService.criar(this.equipe, this.imagemBase64).then((data) => {
+    this.equipeService.removerMembro(this.equipe.$key, usuario.$key).then((dataRemoverMembro) => {
       loading.dismiss();
-      this.navCtrl.pop();
+      toast.present();
+    }).catch((error) => {
+      loading.dismiss();
+      console.error(error);
+    });
+  }
+
+  public salvar() {
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom',
+      message: "Equipe alterada."
+    });
+
+    let loading = this.loadingCtrl.create({
+      content: "Alterando equipe..."
+    });
+
+    loading.present();
+
+    this.equipeService.alterar(this.equipe).then((data) => {
+      loading.dismiss();
       toast.present();
     }).catch((error) => {
       loading.dismiss();
@@ -79,6 +123,10 @@ export class EquipePage {
   }
 
   private menuAlterarImagem() {
+    if (!this.isAdministradorEquipe()) {
+      return;
+    }
+
     let actionSheet = this.actionsheetCtrl.create({
       buttons: [
         {
@@ -98,7 +146,7 @@ export class EquipePage {
       ]
     });
 
-    if (this.imagemBase64) {
+    if (this.equipe.fotoUrl) {
       actionSheet.addButton({
         text: 'Remover',
         icon: 'trash',
@@ -113,15 +161,46 @@ export class EquipePage {
   }
 
   private getImagem(enumOrigem: OrigemImagem) {
+    let loading = this.loadingCtrl.create({
+      content: 'Alterando imagem da equipe...'
+    });
+
     this.equipeService.getPicture(enumOrigem).then((imageData) => {
-      this.imagemBase64 = 'data:image/jpeg;base64,' + imageData;
+      loading.present();
+      let imagemBase64 = 'data:image/jpeg;base64,' + imageData;
+
+      this.equipeService.atualizarImagem(this.equipe.$key, imagemBase64).then((dataUploadImagem) => {
+        this.atualizarEquipePagina();
+        loading.dismiss();
+      });
     }).catch((error) => {
+      this.atualizarEquipePagina();
+      loading.dismiss();
       console.error(error);
     });
+
+    loading.dismiss();
   }
 
   private removerImagem() {
-    this.imagemBase64 = "";
+    let loading = this.loadingCtrl.create({
+      content: 'Removendo imagem da equipe...'
+    });
+
+    loading.present();
+    this.equipeService.removerImagem(this.equipe.$key).then((dataRemover) => {
+      this.atualizarEquipePagina();
+      loading.dismiss();
+    }).catch((erro) => {
+      loading.dismiss();
+      console.log(erro);
+    });
+  }
+
+  public abrirConvidar() {
+    this.navCtrl.push(EquipeConvidarPage, {
+      equipe: this.equipe
+    });
   }
 
   private validarDatas(): boolean {
@@ -143,6 +222,10 @@ export class EquipePage {
   }
 
   public alterarDataInicio() {
+    if (!this.isAdministradorEquipe()) {
+      return;
+    }
+
     this.getInicioData().then(data => {
       this.getInicioHora().then(horario => {
         data.setHours(horario.getHours());
@@ -176,6 +259,10 @@ export class EquipePage {
   }
 
   public alterarDataTermino() {
+    if (!this.isAdministradorEquipe()) {
+      return;
+    }
+
     this.getTerminoData().then(data => {
       this.getTerminoHora().then(horario => {
         data.setHours(horario.getHours());
@@ -229,5 +316,10 @@ export class EquipePage {
     //let formatedSecond = (second.length === 1) ? ("0" + second) : second;
 
     return formatedDay + "/" + formatedMonth + "/" + year + " " + formatedHour + ':' + formatedMinute //+ ':' + formatedSecond;
+  }
+
+  private isAdministradorEquipe() {
+    let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
+    return retorno;
   }
 }

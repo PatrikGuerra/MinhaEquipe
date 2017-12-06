@@ -10,7 +10,7 @@ import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-ser
 
 //Pages
 import { EquipeListaPage } from '../equipe-lista/equipe-lista';
-import { EquipePage } from '../equipe/equipe';
+import { ContextoEquipePage } from '../contexto-equipe/contexto-equipe';
 import { ChatPage } from "../chat/chat";
 import { EquipeContextoPage } from "../equipe-contexto/equipe-contexto";
 import { TarefasPage } from "../tarefas/tarefas";
@@ -21,7 +21,7 @@ import { LocaisPage } from "../locais/locais";
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
-  tab1Root: any = 'EquipePage'
+  tab1Root: any = 'ContextoEquipePage'
   tab2Root: any = 'ChatPage'
   tab3Root: any = 'EquipeContextoPage'
   tab4Root: any = 'TarefasPage'
