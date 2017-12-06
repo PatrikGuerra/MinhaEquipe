@@ -15,8 +15,8 @@ export class Tarefa {
 	keyResponsaveis: string[] = [];
 		responsaveis: Usuario[] = [];
 
-	keyEquipe: string;
-		equipe: Equipe; //opcional, só usado quando o usuario esta analisando suas tarefas
+	// keyEquipe: string;
+		// equipe: Equipe; //opcional, só usado quando o usuario esta analisando suas tarefas
 
 	nome: string;
 	descricao: string;
@@ -46,4 +46,3 @@ export class Tarefa {
 		return Object.assign(new Tarefa(), JSON.parse(JSON.stringify(this)))
 	}
 }
-

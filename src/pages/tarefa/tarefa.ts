@@ -28,7 +28,7 @@ export class TarefaPage {
   private tarefa: Tarefa = new Tarefa();
   private equipe: Equipe;
   private enumTarefaSituacao = TarefaSituacao; //https://github.com/angular/angular/issues/2885
-
+  
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -42,7 +42,7 @@ export class TarefaPage {
 
     this.tarefaForm = this.formBuilder.group({
       nome: ['', Validators.compose([Validators.required])],
-      descricao: ['', Validators.compose([Validators.required])],
+      descricao: [''],
     });
 
     if (this.navParams.data.tarefa) {
@@ -50,32 +50,31 @@ export class TarefaPage {
     }
 
     this.equipe = this.sessaoService.equipe;
-    this.tarefa.keyEquipe = this.equipe.$key;
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TarefaPage');
+    console.log("ionViewDidLoad TarefaPage");
   }
 
-  private save() {
+  private salvar() {
     let toast = this.toastCtrl.create({
       duration: 3000,
-      position: 'bottom'
+      position: "bottom"
     });
 
     let loading = this.loadingCtrl.create();
 
     if (this.tarefa.$key) {
-      loading.setContent('Alterando Tarefa...');
+      loading.setContent("Alterando Tarefa...");
       toast.setMessage("Tarefa alterada.");
     } else {
-      loading.setContent('Criando Tarefa...');
+      loading.setContent("Criando Tarefa...");
       toast.setMessage("Tarefa criada.");
     }
 
     loading.present();
 
-    this.tarefaService.save(this.tarefa).then((data) => {
+    this.tarefaService.salvar(this.tarefa, this.equipe.$key).then((data) => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();
@@ -100,7 +99,7 @@ export class TarefaPage {
 
     loading.present();
 
-    this.tarefaService.remover(this.tarefa).then((data) => {
+    this.tarefaService.remover(this.tarefa, this.equipe.$key).then((data) => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();
@@ -166,7 +165,7 @@ export class TarefaPage {
 
     loading.present();
 
-    this.tarefaService.alterarStatus(this.tarefa, this.enumTarefaSituacao.Andamento).then((data) => {
+    this.tarefaService.alterarStatus(this.equipe.$key, this.tarefa, this.enumTarefaSituacao.Andamento).then((data) => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();
@@ -189,7 +188,7 @@ export class TarefaPage {
 
     loading.present();
 
-    this.tarefaService.alterarStatus(this.tarefa, this.enumTarefaSituacao.Finalizado).then((data) => {
+    this.tarefaService.alterarStatus(this.equipe.$key, this.tarefa, this.enumTarefaSituacao.Finalizado).then((data) => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();
@@ -212,7 +211,7 @@ export class TarefaPage {
 
     loading.present();
 
-    this.tarefaService.alterarStatus(this.tarefa, this.enumTarefaSituacao.Cancelada).then((data) => {
+    this.tarefaService.alterarStatus(this.equipe.$key, this.tarefa, this.enumTarefaSituacao.Cancelada).then((data) => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();
@@ -248,8 +247,8 @@ export class TarefaPage {
     } else if (tarefaSituacao == TarefaSituacao.Pendente) {
       return "cortarefapendente";
     }
-    alert("erro");
-    return '';
+
+    return "primary";
   }
 
   private descricaoBadge(tarefaSituacao: TarefaSituacao) {

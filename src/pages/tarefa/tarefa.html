@@ -1,24 +1,28 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>Tarefa</ion-title>
+    <ion-title>
+      Tarefa
+    </ion-title>
 
     <ion-buttons end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)">
-      <button ion-button icon-only (click)="save()" [disabled]="!tarefaForm.valid">
+      <button ion-button icon-only (click)="salvar()" [disabled]="!tarefaForm.valid || !tarefa.responsaveis.length">
         <ion-icon name="checkmark"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
+
+  <ion-toolbar *ngIf="tarefa.$key" [color]="corBadge(tarefa.situacao)">
+    <ion-title text-center>
+      {{ descricaoBadge(tarefa.situacao) }}
+    </ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <form [formGroup]="tarefaForm">
-    <div *ngIf="tarefa.$key">
-      <button  ion-button [color]="corBadge(tarefa.situacao)" block>{{ descricaoBadge(tarefa.situacao) }}</button>
-    </div>
-
     <ion-item>
       <ion-label floating>Nome</ion-label>
-      <ion-input type="text" [(ngModel)]="tarefa.nome" minlength="5" maxlength="30" formControlName="nome"></ion-input>
+      <ion-input type="text" [(ngModel)]="tarefa.nome" maxlength="25" formControlName="nome"></ion-input>
     </ion-item>
 
     <ion-item>
@@ -26,19 +30,19 @@
       <ion-textarea [(ngModel)]="tarefa.descricao" maxlength="140" formControlName="descricao"></ion-textarea>
     </ion-item>
 
-    <ion-card>
+    <ion-card *ngIf="tarefa.responsaveis.length">
       <ion-list>
         <ion-item>
-          <h2>{{ tarefa.responsaveis.length }} Responsáveis</h2>
+          <h2>{{ tarefa.responsaveis.length }} {{ (tarefa.responsaveis.length > 1) ? 'Responsáveis' : 'Responsável'}}</h2>
           <!-- <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarResponsaveis()">
             <ion-icon name="person-add"></ion-icon>
           </button> -->
         </ion-item>
 
-        <ion-item *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarResponsaveis()">
+        <button ion-item *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarResponsaveis()">
           <ion-icon color="primary" name="person-add" item-start></ion-icon>
           Editar Responsáveis
-        </ion-item>
+        </button>
 
         <ion-item *ngFor="let responsavel of tarefa.responsaveis">
           <ion-avatar item-start>
@@ -49,37 +53,40 @@
       </ion-list>
     </ion-card>
 
+    <ion-card *ngIf="!tarefa.responsaveis.length">
+      <button ion-item (click)="selecionarResponsaveis()">
+        <ion-icon color="primary" name="person-add" item-start></ion-icon>
+        Selecionar Responsáveis
+      </button>
+    </ion-card>
+
+
+
     <ion-card *ngIf="tarefa.keyLocal">
-      <ion-list>
-        <ion-item>
-          <h2>{{ tarefa.local.nome }}</h2>
-          <p>{{ tarefa.local.descricao }}</p>
+      <!-- <ion-list> -->
+      <ion-item>
+        <h2>{{ tarefa.local.nome }}</h2>
+        <p>{{ tarefa.local.descricao }}</p>
 
-          <button ion-button item-end color="danger" *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada) && tarefa.keyLocal"
-            (click)="removerLocal()">
-            <ion-icon name="trash"></ion-icon>
-          </button>
+        <button ion-button item-end color="danger" *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="removerLocal()">
+          <ion-icon name="trash"></ion-icon>
+        </button>
 
-          <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarLocal()">
-            <ion-icon name="create"></ion-icon>
-          </button>
-        </ion-item>
-      </ion-list>
+        <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarLocal()">
+          <ion-icon name="create"></ion-icon>
+        </button>
+      </ion-item>
+      <!-- </ion-list> -->
 
-      <div style="position:relative" *ngIf="tarefa.keyLocal">
+      <div style="position:relative">
         <img src="https://maps.googleapis.com/maps/api/staticmap?autoscale=2&size=600x600&maptype=roadmap&format=png&visual_refresh=true&markers=icon:http://www.clker.com/cliparts/e/3/F/I/0/A/google-maps-marker-for-residencelamontagne-hi.png|{{ tarefa.local.coordenadas.lat }},{{ tarefa.local.coordenadas.lng }}">
       </div>
     </ion-card>
-
     <ion-card *ngIf="!tarefa.keyLocal">
-      <ion-list>
-        <ion-item>
-          <h2>Local</h2>
-          <button ion-button item-end *ngIf="isAdministradorEquipe() && !isSituacao(enumTarefaSituacao.Cancelada)" (click)="selecionarLocal()">
-            <ion-icon name="create"></ion-icon>
-          </button>
-        </ion-item>
-      </ion-list>
+      <button ion-item (click)="selecionarLocal()">
+        <ion-icon color="primary" name="pin" item-start></ion-icon>
+        Selecionar Local
+      </button>
     </ion-card>
 
     <div padding-bottom>
