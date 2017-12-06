@@ -14,15 +14,12 @@ import { Equipe } from "../../models/equipe";
 import { Usuario } from "../../models/usuario";
 import { ConviteUsuario } from "../../models/conviteUsuario";
 
-//Models Data
-import { ConviteEquipeData } from "../../models/data/ConviteEquipeData";
-
 @Injectable()
 export class ConviteServiceProvider {
 
   constructor(
     public db: AngularFireDatabase,
-    public userService: UsuarioServiceProvider,
+    public usuarioService: UsuarioServiceProvider,
     public equipeService: EquipeServiceProvider) {
 
     console.log('Hello ConviteServiceProvider Provider');
@@ -30,33 +27,41 @@ export class ConviteServiceProvider {
 
   //https://github.com/angular/angularfire2/issues/708
 
-  public enviarConvites(listaEmails: string[], equipeId: string) {
+  public enviarConvites(listaEmails: string[], keyEquipe: string) {
     listaEmails = this.tratarListaDeEmails(listaEmails);
 
     var listaKeyUsuarios = [];
     var listaEmailsNaoCadastrados = [];
 
     return this.buscarUsuariosPorEmail(listaEmails, listaKeyUsuarios, listaEmailsNaoCadastrados).then(data => {
-      return this.equipeService.getEquipe(equipeId).take(1).subscribe((equipe: Equipe) => {
+      return this.equipeService.getEquipe(keyEquipe).take(1).subscribe((equipe: Equipe) => {
         var listaMembrosEquipeKey = Object.keys(equipe.keyMembros);
 
         listaKeyUsuarios = this.RetornaItensDeAqueNaoExistemEmB(listaKeyUsuarios, listaMembrosEquipeKey);
 
-        return this.removerConvitesExistentes(equipeId, listaKeyUsuarios, listaEmailsNaoCadastrados).then(dataRemover => {
+        return this.removerConvitesExistentes(keyEquipe, listaKeyUsuarios, listaEmailsNaoCadastrados).then(dataRemover => {
           var updates = {};
 
-          listaKeyUsuarios.forEach(elemUsuarioKey => {
-            var convite = new ConviteEquipeData(equipeId, elemUsuarioKey, "");
+          listaKeyUsuarios.forEach(elemKeyUsuario => {
             var keyConvite = this.db.database.ref(`${dataBaseStorage.Convite}`).push().key;
 
-            updates[`${dataBaseStorage.Convite}/${keyConvite}`] = convite;
+            updates[`${dataBaseStorage.Convite}/${keyConvite}`] = {
+              "timestamp": firebase.database.ServerValue.TIMESTAMP,
+              "keyEquipe": keyEquipe,       
+              "email": "",
+              "keyUsuario": elemKeyUsuario
+            };
           });
 
-          listaEmailsNaoCadastrados.forEach(elemEmail => {
-            var convite = new ConviteEquipeData(equipeId, "", elemEmail);
+          listaEmailsNaoCadastrados.forEach(elemEmailUsuario => {
             var keyConvite = this.db.database.ref(`${dataBaseStorage.Convite}`).push().key;
 
-            updates[`${dataBaseStorage.Convite}/${keyConvite}`] = convite;
+            updates[`${dataBaseStorage.Convite}/${keyConvite}`] = {
+              "timestamp": firebase.database.ServerValue.TIMESTAMP,
+              "keyEquipe": keyEquipe,          
+              "email": elemEmailUsuario,
+              "keyUsuario": ""
+            };
           });
 
           return this.db.database.ref().update(updates);
@@ -70,7 +75,7 @@ export class ConviteServiceProvider {
 
     listaEmails.forEach(email => {
       var promise = new Promise((resolve, reject) => {
-        this.userService.getUsuarioByEmail(email).take(1).subscribe((data: any) => {
+        this.usuarioService.getUsuarioByEmail(email).take(1).subscribe((data: any) => {
           if (data.length > 0) {
             listaKeyUsuarios.push(<Usuario>data[0].$key);
           } else {
@@ -130,6 +135,19 @@ export class ConviteServiceProvider {
     })
   }
 
+  private firebaseToConviteUsuario(objeto: any) {
+    let conviteUsuario: ConviteUsuario = Object.assign(new ConviteUsuario(), JSON.parse(JSON.stringify(objeto)))
+    conviteUsuario.$key = objeto.$key;
+    conviteUsuario.dia = new Date(conviteUsuario.timestamp);
+
+
+    this.equipeService.getEquipe(conviteUsuario.keyEquipe).subscribe(data => {
+      conviteUsuario.equipe = data
+    })
+
+    return conviteUsuario;
+  }
+
   public meusConvites(usuarioId: string): FirebaseListObservable<ConviteUsuario[]> {
     return <FirebaseListObservable<ConviteUsuario[]>>this.db.list(`${dataBaseStorage.Convite}`, {
       query: {
@@ -138,11 +156,7 @@ export class ConviteServiceProvider {
       }
     }).map((items) => {
       return items.map(item => {
-        this.equipeService.getEquipe(item.keyEquipe).subscribe(data => {
-          item.equipe = data
-        })
-
-        return item;
+        return this.firebaseToConviteUsuario(item);
       });
     })
   }
@@ -180,7 +194,7 @@ export class ConviteServiceProvider {
     });
   }
 
-  private convitesDataPorEmail(email: string): FirebaseListObservable<ConviteEquipeData[]> {
+  private convitesDataPorEmail(email: string): FirebaseListObservable<ConviteUsuario[]> {
     return <FirebaseListObservable<ConviteUsuario[]>>this.db.list(`${dataBaseStorage.Convite}`, {
       query: {
         orderByChild: `email`,
@@ -207,7 +221,7 @@ export class ConviteServiceProvider {
         }).catch(error => {
           reject(error);
         });
-      })
+      });
 
     });
   }

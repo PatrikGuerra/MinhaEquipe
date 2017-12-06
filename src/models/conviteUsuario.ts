@@ -2,8 +2,12 @@ import { Equipe } from "./equipe";
 
 export class ConviteUsuario {
     $key?: string;
-    keyUsuario: string; //quando á um usuário cadastrado
-    timestamp?: string | Object;
+    email: string;          //quando NÃO há usuário cadastrado 
+    keyUsuario: string;     //quando há usuário cadastrado
+  
+    timestamp: number;
+    dia: Date;
+
     keyEquipe: string;	
-	equipe: Equipe;
+	    equipe: Equipe;
 }
