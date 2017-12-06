@@ -22,16 +22,16 @@ export class UsuarioMarker extends google.maps.OverlayView {
 		if (!marcador) {
 			marcador = this.marker = document.createElement('div');
 			marcador.className = 'marker';
+			let imagem = document.createElement('img');
 
 			if (this.args.img) {
-				let imagem = document.createElement('img');
 				imagem.src = this.args.img;
-				marcador.appendChild(imagem);
 			} else {
-				let paragrafo = document.createElement('p');
-				paragrafo.innerHTML = this.args.label.substring(0, 2);
-				marcador.appendChild(paragrafo);
+				// imagem.src = `http://ipsumimage.appspot.com/80x80,333333?l=${ this.args.label.substring(0, 2).toUpperCase() }&f=ffffff`
+				imagem.src = `http://ipsumimage.appspot.com/80x80,ffffff?l=${this.args.label.substring(0, 2).toUpperCase()}&f=000000`
 			}
+			
+			marcador.appendChild(imagem);
 
 			// let point = this.getProjection().fromLatLngToDivPixel(this.latlng);
 			// if (point) {
