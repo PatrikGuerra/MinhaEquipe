@@ -5,14 +5,18 @@ import { IonicPage, App, NavController, NavParams, LoadingController, PopoverCon
 import { TarefaPage } from "../tarefa/tarefa";
 
 //Services
-import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
+import { EquipeServiceProvider } from "../../providers/equipe-service/equipe-service";
+import { TarefaServiceProvider } from "../../providers/tarefa-service/tarefa-service";
+import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
+
+//Enum
+import { TarefaSituacao } from "../../app/app.constants";
 
 //Models
 import { Equipe } from "../../models/equipe";
 import { Tarefa } from "../../models/tarefa";
-
-import { TarefaServiceProvider } from "../../providers/tarefa-service/tarefa-service";
+import { UsuarioTarefasEquipe } from "../../models/usuarioTarefasEquipe";
 
 @IonicPage()
 @Component({
@@ -20,17 +24,18 @@ import { TarefaServiceProvider } from "../../providers/tarefa-service/tarefa-ser
   templateUrl: 'tarefas-usuario.html',
 })
 export class TarefasUsuarioPage {
+  private listaUsuarioTarefasEquipe: UsuarioTarefasEquipe[] = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private loadingCtrl: LoadingController,
-    private sessaoService: SessaoServiceProvider,
-    private usuarioService: UsuarioServiceProvider,
-
+    public loadingCtrl: LoadingController,
     public popoverCtrl: PopoverController,
-    public tarefaService: TarefaServiceProvider) {
 
+    private usuarioService: UsuarioServiceProvider,
+    private equipeService: EquipeServiceProvider,
+    private tarefaService: TarefaServiceProvider,
+    private sessaoService: SessaoServiceProvider) {
 
     let loading = this.loadingCtrl.create({
       content: 'Carregando tarefas...'
@@ -38,20 +43,64 @@ export class TarefasUsuarioPage {
 
     loading.present();
 
-    this.tarefaService.getKeyTarefasUsuario(this.usuarioService.usuario.$key).subscribe(tarefasArray => {
-      console.log(tarefasArray)
-      console.log(Object.keys(tarefasArray))
+    this.tarefaService.getUsuarioTarefasEquipe(this.usuarioService.usuario.$key).subscribe((data: UsuarioTarefasEquipe[]) => {
+      data.forEach(usuarioTarefasEquipe => {
+        this.equipeService.getEquipe(usuarioTarefasEquipe.keyEquipe).subscribe((dataEquipe: Equipe) => {
+          usuarioTarefasEquipe.equipe = dataEquipe;
+        });
+      });
+
+      this.listaUsuarioTarefasEquipe = data;
+      console.clear()
+
+      console.log(data);
       loading.dismiss();
-    });
+    })
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TarefasPage');
   }
 
-  editarTarefa(tarefa: Tarefa) {
-    // this.navCtrl.push(TarefaPage, {
-    //   tarefa: tarefa.Copy()
-    // });
+  public abrirTarefa(keyEquipe: string, tarefa: Tarefa) {
+    let loading = this.loadingCtrl.create({
+      content: 'Carregando tarefa...'
+    });
+
+    loading.present();
+
+    this.sessaoService.getEquipeCompleta(keyEquipe).then((dataEquipe: Equipe) => {
+      for (let index = 0; index < dataEquipe.tarefas.length; index++) {
+        if (dataEquipe.tarefas[index].$key == tarefa.$key) {
+          tarefa = dataEquipe.tarefas[index];
+          break;
+        }
+      }
+
+      loading.dismiss();
+
+      this.navCtrl.push(TarefaPage, {
+        tarefa: tarefa.Copy(),
+        equipe: dataEquipe
+      });
+    });
+  }
+
+  public corBadge(tarefaSituacao: TarefaSituacao) {
+    if (tarefaSituacao == TarefaSituacao.Andamento) {
+      return "cortarefaandamento";
+    } else if (tarefaSituacao == TarefaSituacao.Cancelada) {
+      return "cortarefacancelada";
+    } else if (tarefaSituacao == TarefaSituacao.Finalizado) {
+      return "cortarefafinalizado";
+    } else if (tarefaSituacao == TarefaSituacao.Pendente) {
+      return "cortarefapendente";
+    }
+    alert("erro");
+    return '';
+  }
+
+  public descricaoBadge(tarefaSituacao: TarefaSituacao) {
+    return TarefaSituacao[tarefaSituacao];
   }
 }

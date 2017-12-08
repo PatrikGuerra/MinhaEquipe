@@ -11,22 +11,32 @@
 </ion-header>
 
 <ion-content>
-  <!-- <ion-card *ngIf="equipe.tarefas.length == 0"> -->
-  <ion-card >
+  <ion-card *ngIf="listaUsuarioTarefasEquipe.length == 0">
     <ion-card-content>
       Parece que você não possui nenhuma tarefa...
     </ion-card-content>
   </ion-card>
 
-  <!-- <ion-list *ngIf="equipe.tarefas.length > 0">
-    <button ion-item *ngFor="let tarefa of equipe.tarefas" (click)="editarTarefa(tarefa)">
-      <ion-label>
-        <h2>{{ tarefa.nome }}</h2>
-        <p>{{ tarefa.descricao }}</p>
-      </ion-label>
-      <div item-content>
-      </div>
-    </button>
+  <ion-list *ngIf="listaUsuarioTarefasEquipe.length > 0">
 
-  </ion-list> -->
+    <ion-item-group *ngFor="let usuarioTarefasEquipe of listaUsuarioTarefasEquipe">
+      <ion-item-divider color="light">
+        <ion-avatar item-start>
+          <img src="{{ usuarioTarefasEquipe.equipe?.fotoUrl ? usuarioTarefasEquipe.equipe?.fotoUrl : 'assets/images/no-image.gif'}}">
+        </ion-avatar>
+        {{ usuarioTarefasEquipe.equipe?.nome }}
+      </ion-item-divider>
+
+      <button ion-item *ngFor="let tarefa of usuarioTarefasEquipe.tarefas" (click)="abrirTarefa(usuarioTarefasEquipe.keyEquipe, tarefa)">
+        <ion-label>
+          <h2>{{ tarefa.nome }}</h2>
+          <p>{{ tarefa.descricao }}</p>
+        </ion-label>
+        <div item-content>
+          <ion-badge [color]="corBadge(tarefa.situacao)" item-end>{{ descricaoBadge(tarefa.situacao) }}</ion-badge>
+        </div>
+      </button>
+    </ion-item-group>
+
+  </ion-list>
 </ion-content>

@@ -4,14 +4,15 @@ import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/databa
 import { dataBaseStorage } from "../../app/app.constants";
 import { TarefaSituacao } from "../../app/app.constants";
 
-//Models
-import { Tarefa } from "../../models/tarefa";
-
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
+
+//Models
+import { Tarefa } from "../../models/tarefa";
+import { UsuarioTarefasEquipe } from "../../models/usuarioTarefasEquipe";
 
 @Injectable()
 export class TarefaServiceProvider {
@@ -24,7 +25,7 @@ export class TarefaServiceProvider {
     console.log(objeto)
     let tarefa: Tarefa = Object.assign(new Tarefa(), JSON.parse(JSON.stringify(objeto)))
     tarefa.$key = objeto.$key;
-    
+
     if (objeto['keyResponsaveis']) {
       tarefa.keyResponsaveis = Object.keys(objeto['keyResponsaveis']);
     } else {
@@ -151,14 +152,20 @@ export class TarefaServiceProvider {
     });
   }
 
-  public getKeyTarefasUsuario(keyUsuario: string) {
-    // updates[`${dataBaseStorage.TarefaResponsavel}/${keyResponsavel}/${tarefa.keyEquipe}/${tarefa.$key}`] = true;
+  public getUsuarioTarefasEquipe(keyUsuario: string) {
     return this.db.list(`${dataBaseStorage.TarefaResponsavel}/${keyUsuario}`).map((items) => {
       return items.map((item) => {
-        let objeto = {};
-        objeto[item.$key] = Object.keys(item);
+        let usuarioTarefasEquipe = new UsuarioTarefasEquipe();
 
-        return objeto;
+        usuarioTarefasEquipe.keyEquipe = item.$key;
+
+        Object.keys(item).forEach(keyTarefa => {
+          this.getTarefa(usuarioTarefasEquipe.keyEquipe, keyTarefa).subscribe((dataTarefa: Tarefa) => {
+            usuarioTarefasEquipe.tarefas.push(dataTarefa);
+          });
+        });
+
+        return usuarioTarefasEquipe;
       });
     })
   }

@@ -29,7 +29,7 @@ export class MenuPage {
     // { title: 'Tab 2', pageName: 'TabsPage', tabComponent: 'Tabs2Page', index: 1, icon: 'contacts' },
     // { title: 'Special', pageName: 'SpecialPage', icon: 'shuffle' },
     { title: 'Convites', pageName: 'ConvitesPage', icon: 'contacts' },
-    // { title: 'Minhas Tarefas', pageName: 'TarefasUsuarioPage', icon: 'document' },
+    { title: 'Minhas Tarefas', pageName: 'TarefasUsuarioPage', icon: 'document' },
     { title: 'Equipes', pageName: 'EquipeListaPage', icon: 'home' },
   ];
 
