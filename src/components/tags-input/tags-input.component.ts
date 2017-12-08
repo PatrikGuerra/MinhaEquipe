@@ -14,7 +14,7 @@ import { AlertController, ToastController } from "ionic-angular";
 })
 export class TagsInputComponent {
   private inputValorTag: string = "";
-  private listaTag: Array<any> = [];
+  private listaTag: Array<string> = [];
   public adicionarHabilitado: boolean = true;
 
   @Input() maxTags: number;
@@ -28,12 +28,10 @@ export class TagsInputComponent {
   constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) { }
 
   writeValue(value: Array<any>): void {
-    this.listaTag = [];
+    this.listaTag = value;
 
     if (value) {
-      for (let index = 0; index < value.length; index++) {
-        this.addValue(value[index])
-      }
+      this.restricaoQuantidadeMaximaDeItensValida();
     }
   }
 
