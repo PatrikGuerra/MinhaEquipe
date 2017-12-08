@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase/app';
+// import * as firebase from 'firebase/app';
 
 //Models
 import { Equipe } from "../../models/equipe";
-import { Tarefa } from "../../models/tarefa";
 import { Usuario } from "../../models/usuario";
+import { Local } from '../../models/local';
+import { Tarefa } from "../../models/tarefa";
 
 //Providers
 import { EquipeServiceProvider } from "../equipe-service/equipe-service";
@@ -20,13 +21,56 @@ export class SessaoServiceProvider {
     private equipeService: EquipeServiceProvider,
     private usuarioService: UsuarioServiceProvider,
     private localService: LocalServiceProvider,
-    private tarefaService: TarefaServiceProvider
-  ) {
+    private tarefaService: TarefaServiceProvider) {
     console.log('Hello SessaoServiceProvider Provider');
   }
 
-  public setEquipeKey(keyEquipe: string): Promise<any> {
+  public getEquipeCompleta(keyEquipe: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let equipezona: Equipe;
 
+      this.equipeService.getEquipe(keyEquipe).subscribe((dataEquipe: Equipe) => {
+        console.log("dataEquipe")
+        console.log(dataEquipe)
+        equipezona = dataEquipe;
+
+        this.usuarioService.getUsuariosPorEquipe(equipezona.$key).subscribe((dataUsuarios: Usuario[]) => {
+          console.log("dataUsuarios");
+          console.log(dataUsuarios);
+          equipezona.setMembros(dataUsuarios);
+
+          this.localService.getLocaisPorEquipe(equipezona.$key).subscribe((dataLocais: Local[]) => {
+            console.log("dataLocais")
+            console.log(dataLocais)
+            equipezona.setLocais(dataLocais);
+
+            this.tarefaService.getTarefasPorEquipe(equipezona.$key).subscribe((dataTarefas: Tarefa[]) => {
+              console.log("dataTarefas")
+              console.log(dataTarefas)
+              dataTarefas.sort(this.dynamicSort('situacao'));
+
+              dataTarefas.forEach(tarefa => {
+                tarefa.setReponsaveis(equipezona.membros);
+                // this.encontraLocalDaTarefa(tarefa, equipezona.locais);
+                
+                for (var index = 0; index < equipezona.locais.length; index++) {
+                  if (equipezona.locais[index].$key == tarefa.keyLocal) {
+                    tarefa.local = equipezona.locais[index];
+                    break;
+                  }
+                }
+              });
+
+              equipezona.tarefas = dataTarefas;
+              resolve(equipezona);
+            });
+          });
+        });
+      });
+    });
+  }
+
+  public setEquipeKey(keyEquipe: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.equipeService.getEquipe(keyEquipe).subscribe(dataEquipe => {
         this.equipe = dataEquipe;
@@ -39,23 +83,6 @@ export class SessaoServiceProvider {
             this.sincronizarTarefas().then(dataLocais => {
               resolve(this.equipe);
             });
-          });
-        });
-      });
-    });
-  }
-
-  public setEquipe(equipe: Equipe): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.equipe = equipe;
-
-      console.log("setEquipe-------------------------------------------");
-      console.log(this.equipe);
-
-      this.sincronizarMembros().then(dataMembros => {
-        this.sincronizarLocais().then(dataLocais => {
-          this.sincronizarTarefas().then(dataLocais => {
-            resolve(this.equipe);
           });
         });
       });
@@ -88,6 +115,52 @@ export class SessaoServiceProvider {
     });
   }
 
+  private sincronizarTarefas() {
+    return new Promise((resolve, reject) => {
+      this.tarefaService.getTarefasPorEquipe(this.equipe.$key).subscribe((data: Tarefa[]) => {
+
+        data.sort(this.dynamicSort('situacao'))
+
+        data.forEach(tarefa => {
+          tarefa.setReponsaveis(this.equipe.membros);
+          // this.encontraLocalDaTarefa(tarefa, this.equipe.locais);
+
+          for (var index = 0; index < this.equipe.locais.length; index++) {
+            if (this.equipe.locais[index].$key == tarefa.keyLocal) {
+              tarefa.local = this.equipe.locais[index];
+              break;
+            }
+          }
+        });
+
+        console.log("sincronizarTarefas---------------------------------------")
+        console.log(data)
+
+        this.equipe.tarefas = data;
+        resolve();
+      });
+    });
+  }
+
+  //Métodos Auxiliares
+  private encontraLocalDaTarefa(tarefa: Tarefa, locais: Local[]) {
+    if (tarefa.keyLocal) {
+      locais.forEach(local => {
+        if (tarefa.keyLocal == local.$key) {
+          tarefa.local = local;
+          return;
+        }
+      });
+
+      // for (var index = 0; index < locais.length; index++) {
+      //   if (locais[index].$key == tarefa.keyLocal) {
+      //     tarefa.local = locais[index];
+      //     break;
+      //   }
+      // }
+    }
+  }
+
   private sort(a, b) {
     if (a.situacao < b.situacao) {
       return -1;
@@ -115,31 +188,5 @@ export class SessaoServiceProvider {
       var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
       return result * sortOrder;
     }
-  }
-
-  private sincronizarTarefas() {
-    return new Promise((resolve, reject) => {
-      this.tarefaService.getTarefasPorEquipe(this.equipe.$key).subscribe((data: Tarefa[]) => {
-
-        data.sort(this.dynamicSort('situacao'))
-
-        data.forEach(tarefa => {
-          tarefa.setReponsaveis(this.equipe.membros);
-
-          for (var index = 0; index < this.equipe.locais.length; index++) {
-            if (this.equipe.locais[index].$key == tarefa.keyLocal) {
-              tarefa.local = this.equipe.locais[index];
-              break;
-            }
-          }
-        });
-
-        console.log("sincronizarTarefas---------------------------------------")
-        console.log(data)
-
-        this.equipe.tarefas = data;
-        resolve();
-      });
-    });
   }
 }
