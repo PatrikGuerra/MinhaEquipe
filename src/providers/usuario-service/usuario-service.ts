@@ -16,6 +16,7 @@ import { OrigemImagem } from "../../app/app.constants";
 //Models
 import { Usuario } from "../../models/usuario";
 import { Credencial } from "../../models/credencial";
+import { UsuarioLocalizacao } from "../../models/usuarioLocalizacao";
 
 //Services
 import { AuthServiceProvider } from "../auth-service/auth-service";
@@ -42,7 +43,9 @@ export class UsuarioServiceProvider {
   private firebaseToUsuario(objeto: any) {
     let usuario: Usuario = Object.assign(new Usuario(), JSON.parse(JSON.stringify(objeto)))
     usuario.$key = objeto.$key;
-
+    if (!usuario.tags) {
+      usuario.tags = [];
+    }
     return usuario;
   }
 
@@ -87,42 +90,55 @@ export class UsuarioServiceProvider {
     ).filter((p) => p.coords !== undefined).subscribe((geoposition: Geoposition) => {
 
       this.atualizarLocalizacao(geoposition);
+      console.log("geoposition -- ");
       console.log(geoposition);
     });
   }
 
-  private atualizarLocalizacao(geoposition: Geoposition) {
-    var updates = {};
 
-    if (this.usuario.equipes) {
-      Object.keys(this.usuario.equipes).forEach(keyEquipe => {
-        updates[`${dataBaseStorage.UsuarioLocalizacao}/${keyEquipe}/${this.usuario.$key}`] = {
-          'lat': geoposition.coords.latitude,
-          'lng': geoposition.coords.longitude,
-          'timestamp': geoposition.timestamp
-        };
-      });
+
+  private atualizarLocalizacao(geoposition: Geoposition) {
+    if (!this.usuario || !this.usuario.equipes) {
+      return;
     }
 
-    return this.db.database.ref().update(updates);
+    var updates = {};
+
+    Object.keys(this.usuario.equipes).forEach(keyEquipe => {
+
+      let localizacao = {
+        'lat': geoposition.coords.latitude,
+        'lng': geoposition.coords.longitude,
+        'timestamp': geoposition.timestamp
+      };
+
+      updates[`${dataBaseStorage.UsuarioLocalizacao}/${keyEquipe}/${this.usuario.$key}`] = localizacao;
+    });
+
+    this.db.database.ref().update(updates);
+    console.log(Object.keys(updates));
+    console.log(Object.keys(updates).length);
+    console.log("geoposition -- Gravada");
   }
+
+  private firebaseToUsuarioLocalizacao(objeto: any) {
+    let usuarioLocalizacao: UsuarioLocalizacao = Object.assign(new UsuarioLocalizacao(), JSON.parse(JSON.stringify(objeto)))
+    usuarioLocalizacao.keyUsuario = objeto.$key;
+    return usuarioLocalizacao;
+  }
+
+  public getMonitoriasEquipe(keyEquipe: string) {
+    return this.db.list(`${dataBaseStorage.UsuarioLocalizacao}/${keyEquipe}`).map((items) => {
+      return items.map(item => {
+        return this.firebaseToUsuarioLocalizacao(item);
+      });
+    })
+  }
+
 
   getuid() {
     return this.storage.get("uid");
   }
-
-  // getUser() {
-  //   return this.getuid().then(uid => {
-  //     return <FirebaseObjectObservable<Usuario>>this.db.object(`${dataBaseStorage.Usuario}/${uid}`).map((item) => {
-  //       return this.firebaseToUsuario(item);
-  //     })
-  //   });
-  // }
-
-
-
-
-
 
   public buscarUsuariosPorKey(keysUsuario: string[]) {
     var promises = [];
@@ -142,14 +158,6 @@ export class UsuarioServiceProvider {
     return Promise.all(promises);
   }
 
-
-
-
-
-
-
-
-
   //ok
   public getUsuariosPorEquipe(keyEquipe: string) {
     return this.db.list(`${dataBaseStorage.Usuario}`, {
@@ -162,7 +170,7 @@ export class UsuarioServiceProvider {
       return items.map(item => {
         return this.firebaseToUsuario(item);
       });
-    })
+    });
   }
 
   public getUsuarioByEmail(email: string) {
@@ -181,7 +189,7 @@ export class UsuarioServiceProvider {
       //"email": usuario.email,
       "fotoUrl": usuario.fotoUrl,
       "tags": usuario.tags,
-      "equipes": usuario.equipes,
+      "equipes": usuario.equipes || [],
     })
   }
 

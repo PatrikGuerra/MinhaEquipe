@@ -14,8 +14,12 @@
   <div #map id='map'></div>
 
   <ion-fab right bottom>
-    <button ion-fab color="primary" (click)="centerMapOnCurrentPosition()">
+    <button *ngIf="!locationLoading" ion-fab color="primary" (click)="centerMapOnCurrentPosition()">
       <ion-icon name="locate"></ion-icon>
+    </button>
+
+    <button *ngIf="locationLoading" ion-fab color="primary" >
+      <ion-spinner color="light"></ion-spinner>
     </button>
   </ion-fab>
 </ion-content>

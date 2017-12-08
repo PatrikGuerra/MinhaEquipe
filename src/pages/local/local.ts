@@ -39,7 +39,7 @@ export class LocalPage {
 
     this.localForm = this.formBuilder.group({
       nome: ['', Validators.compose([Validators.required])],
-      descricao: ['', Validators.compose([Validators.required])],
+      descricao: [''],
     });
 
     this.equipe = this.sessaoService.equipe;
@@ -147,7 +147,7 @@ export class LocalPage {
 
         let alert = this.alertCtrl.create({
           title: 'Remover',
-          message: 'Tem certeza que deseja remover esse local?',
+          message: 'Tem certeza que deseja remover este local?',
           buttons: [
             {
               text: 'Cancelar',

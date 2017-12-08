@@ -17,10 +17,10 @@ export class LocalServiceProvider {
   }
 
   private firebaseToLocal(objeto: any) {
-    let loacl: Local = Object.assign(new Local(), JSON.parse(JSON.stringify(objeto)))
-    loacl.$key = objeto.$key;
+    let local: Local = Object.assign(new Local(), JSON.parse(JSON.stringify(objeto)))
+    local.$key = objeto.$key;
 
-    return loacl;
+    return local;
   }
 
   public getLocal(keyEquipe: string, keyLocal: string) {

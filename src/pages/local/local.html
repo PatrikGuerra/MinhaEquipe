@@ -3,7 +3,7 @@
     <ion-title>Local</ion-title>
 
     <ion-buttons end *ngIf="isAdministradorEquipe()">
-      <button ion-button icon-only (click)="salvar()" [disabled]="!localForm.valid">
+      <button ion-button icon-only (click)="salvar()" [disabled]="!localForm.valid || !local.coordenadas">
         <ion-icon name="checkmark"></ion-icon>
       </button>
     </ion-buttons>
@@ -20,7 +20,7 @@
   <form [formGroup]="localForm">
     <ion-item>
       <ion-label floating>Nome</ion-label>
-      <ion-input type="text" [(ngModel)]="local.nome" minlength="5" maxlength="30" formControlName="nome"></ion-input>
+      <ion-input type="text" [(ngModel)]="local.nome" maxlength="25" formControlName="nome"></ion-input>
     </ion-item>
 
     <ion-item>

@@ -2,7 +2,9 @@ page-equipe-contexto {
     #map {
         height: 100%;
         width: 100%;
-    } // novo - inicio
+    }
+    
+    // novo - inicio
     .marker {
         position: absolute;
         width: 45px;
@@ -40,10 +42,45 @@ page-equipe-contexto {
     .marker p {
         text-align: center;
         margin: auto;
-    } // novo - fim
+    }    
     .markerLocal {
+        position: absolute;
+        width: 45px;
+        height: 45px;
+        padding: 5px;
+        border-radius: 50px 50px 45px 45px;
         background: rgb(241, 100, 6);
+        //color: #fff;
+        cursor: pointer;
+        display: table-cell;
+        vertical-align: middle;
     }
+    .markerLocal:after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: -5px;
+        width: 0;
+        height: 0;
+        border-left: 16px solid transparent;
+        border-right: 16px solid transparent;
+        border-top: 16px solid rgb(241, 100, 6);
+    }
+    // .markerLocal img {
+    //     display: block;
+    //     border-radius: 100px;
+    //     width: 35px;
+    //     height: 35px;
+    //     margin: 0px auto 0;
+    //     background-color: #fff;
+    //     object-fit: cover;
+    // }
+    // .markerLocal p {
+    //     text-align: center;
+    //     margin: auto;
+    // } 
 }
 
 ion-app._gmaps_cdv_ .nav-decor {

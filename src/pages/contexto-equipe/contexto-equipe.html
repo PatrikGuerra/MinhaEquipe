@@ -6,7 +6,7 @@
       </button>
     </ion-buttons>
 
-    <ion-title>Equipe</ion-title>
+    <ion-title>{{ equipe.nome }}</ion-title>
 
     <ion-buttons end *ngIf="isAdministradorEquipe()">
       <button ion-button icon-only (click)="salvar()" [disabled]="!form.valid || !validarDatas()">
@@ -65,8 +65,9 @@
       </ion-list>
     </ion-card>
 
-    <div padding-bottom *ngIf="isAdministradorEquipe()">
-      <button ion-button color="danger" (click)="remover()" block>Remover Equipe</button>
-    </div>
+    <!-- <div padding-bottom>
+      <button ion-button color="danger" *ngIf="isAdministradorEquipe()" (click)="remover()" block>Remover Equipe</button>
+      <button ion-button color="danger" *ngIf="!isAdministradorEquipe()" (click)="sairDaEquipe()" block>Sair da Equipe</button>
+    </div> -->
   </form>
 </ion-content>

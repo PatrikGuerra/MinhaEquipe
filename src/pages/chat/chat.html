@@ -33,17 +33,18 @@
         </ion-label>
 
         <ion-label class="margem" *ngIf="mensagem.tipo == enumMensagemTipo.Mensagem">
-          <p *ngIf="mensagem.keyUsuario == usuario.$key">
+          <p *ngIf="mensagem.keyRemetente == usuario.$key">
             <span class="message-text right">{{ mensagem.conteudo }}</span>
             <span class="message-time">{{ mensagem.timestamp | date: "H:mm" }}</span>
           </p>
 
-          <p *ngIf="mensagem.keyUsuario != usuario.$key">
+          <p *ngIf="mensagem.keyRemetente != usuario.$key">
             <ion-avatar>
-              <img class="user-image" [src]="mensagem.usuario?.fotoUrl || 'assets/images/no-image.jpg'" />
+              <img class="user-image" [src]="mensagem.remetente?.fotoUrl || 'assets/images/no-image.jpg'" />
             </ion-avatar>
             <span class="message-text left">
-              <span class="author">{{ mensagem.usuario?.nome || mensagem.usuario?.email }}</span>
+              <span class="author">{{ mensagem.remetente?.nome || mensagem.remetente?.email }}</span>
+              <!-- <span class="author">{{ retornaNomeOuEmail(mensagem.remetente) }}</span> -->
               {{ mensagem.conteudo }}
             </span>
             <span class="message-time">{{ mensagem.timestamp | date: "H:mm" }}</span>

@@ -4,6 +4,6 @@ export class Usuario {
 	nome: string = "";
 	email: string = "";
 	fotoUrl: string = "";
-	tags: {};
+	tags: string[] = [];
 	equipes: {};	
 }

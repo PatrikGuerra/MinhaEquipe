@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, ActionSheetController, LoadingController, PopoverController } from 'ionic-angular';
+import { App, IonicPage, NavController, NavParams, ToastController, ActionSheetController, LoadingController, PopoverController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { DatePicker } from '@ionic-native/date-picker';
@@ -39,7 +39,9 @@ export class ContextoEquipePage {
     private usuarioService: UsuarioServiceProvider,
     private sessaoService: SessaoServiceProvider,
     private formBuilder: FormBuilder,
-    private datePicker: DatePicker) {
+    private datePicker: DatePicker,
+
+    private app: App) {
 
     this.form = this.formBuilder.group({
       nome: ['', Validators.compose([/*Validators.minLength(3),*/ Validators.required])],
@@ -77,19 +79,41 @@ export class ContextoEquipePage {
   }
 
   private removerUsuarioDaEquipe(usuario: Usuario) {
-    let toast = this.toastCtrl.create({
-      duration: 3000,
-      position: 'bottom',
-      message: `O membro '${usuario.nome}' foi removido.`
-    });
-
     let loading = this.loadingCtrl.create({
       content: `Removendo '${usuario.nome}'...`
     });
 
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom',
+      message: `'${usuario.nome}' removido.`
+    });
+
     loading.present();
 
-    this.equipeService.removerMembro(this.equipe.$key, usuario.$key).then((dataRemoverMembro) => {
+    this.equipeService.removerMembro(this.equipe.$key, usuario).then((dataRemoverMembro) => {
+      loading.dismiss();
+      toast.present();
+    }).catch((error) => {
+      loading.dismiss();
+      console.error(error);
+    });
+  }
+
+  private sairDaEquipe() {
+    let loading = this.loadingCtrl.create({
+      content: `Saindo da equipe...`
+    });
+
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom',
+      message: `Você saiu da Equipe.`
+    });
+
+    loading.present();
+
+    this.equipeService.sairDaEquipe(this.equipe.$key).then((dataMembroSair) => {
       loading.dismiss();
       toast.present();
     }).catch((error) => {
@@ -292,7 +316,6 @@ export class ContextoEquipePage {
       is24Hour: true,
       titleText: "Término",
     });
-
   }
 
   dataFormatada(date: Date) {

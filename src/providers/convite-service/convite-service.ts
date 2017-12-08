@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import * as firebase from 'firebase';
 
-import { dataBaseStorage } from "../../app/app.constants";
+import { dataBaseStorage, MensagemTipo } from "../../app/app.constants";
 
 //Services
 import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
 import { EquipeServiceProvider } from "../equipe-service/equipe-service";
+import { ChatServiceProvider } from "../chat-service/chat-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
@@ -20,7 +22,8 @@ export class ConviteServiceProvider {
   constructor(
     public db: AngularFireDatabase,
     public usuarioService: UsuarioServiceProvider,
-    public equipeService: EquipeServiceProvider) {
+    public equipeService: EquipeServiceProvider,
+    public chatService: ChatServiceProvider) {
 
     console.log('Hello ConviteServiceProvider Provider');
   }
@@ -29,7 +32,6 @@ export class ConviteServiceProvider {
 
   public enviarConvites(listaEmails: string[], keyEquipe: string) {
     listaEmails = this.tratarListaDeEmails(listaEmails);
-
     var listaKeyUsuarios = [];
     var listaEmailsNaoCadastrados = [];
 
@@ -47,7 +49,7 @@ export class ConviteServiceProvider {
 
             updates[`${dataBaseStorage.Convite}/${keyConvite}`] = {
               "timestamp": firebase.database.ServerValue.TIMESTAMP,
-              "keyEquipe": keyEquipe,       
+              "keyEquipe": keyEquipe,
               "email": "",
               "keyUsuario": elemKeyUsuario
             };
@@ -58,7 +60,7 @@ export class ConviteServiceProvider {
 
             updates[`${dataBaseStorage.Convite}/${keyConvite}`] = {
               "timestamp": firebase.database.ServerValue.TIMESTAMP,
-              "keyEquipe": keyEquipe,          
+              "keyEquipe": keyEquipe,
               "email": elemEmailUsuario,
               "keyUsuario": ""
             };
@@ -75,7 +77,7 @@ export class ConviteServiceProvider {
 
     listaEmails.forEach(email => {
       var promise = new Promise((resolve, reject) => {
-        this.usuarioService.getUsuarioByEmail(email).take(1).subscribe((data: any) => {
+        this.usuarioService.getUsuarioByEmail(email).subscribe((data: any) => {
           if (data.length > 0) {
             listaKeyUsuarios.push(<Usuario>data[0].$key);
           } else {
@@ -107,7 +109,7 @@ export class ConviteServiceProvider {
     var keys: string[] = [];
 
     return new Promise((resolve, reject) => {
-      return this.getConvitesEquipe(equipeId).take(1).subscribe((data) => {
+      return this.getConvitesEquipe(equipeId).subscribe((data) => {
         data.forEach(convite => {
           if (listaUsuariosKey.indexOf(convite.keyUsuario) > -1 || listaEmails.indexOf(convite.email) > -1) {
             keys.push(convite.$key)
@@ -174,11 +176,11 @@ export class ConviteServiceProvider {
   }
 
   public aceitarConvite(convite: ConviteUsuario) {
-    var updates = {};
-    updates[`${dataBaseStorage.Equipe}/${convite.keyEquipe}/membros/${convite.keyUsuario}`] = true
+    let updates = {};
+    updates[`${dataBaseStorage.Equipe}/${convite.keyEquipe}/keyMembros/${convite.keyUsuario}`] = true
     // /equipes
     // /-KvRuD-alrojFi8PkGwW
-    // /membros
+    // /keyMembros
     // /UGn4OuOO5GTPO7ZeI5xmqyM3yV92
 
     updates[`${dataBaseStorage.Usuario}/${convite.keyUsuario}/equipes/${convite.keyEquipe}`] = true;
@@ -188,6 +190,9 @@ export class ConviteServiceProvider {
     // /-KvRuD-alrojFi8PkGwW
 
     return this.db.database.ref().update(updates).then((data) => {
+      let conteudo = `'${this.usuarioService.usuario.nome}' entrou na equipe`;
+      this.chatService.enviarMensagem(convite.keyEquipe, convite.keyEquipe, MensagemTipo.Notificacao, conteudo);
+
       return this.excluirConvite(convite.$key).then(excluirConviteData => {
         return excluirConviteData;
       });

@@ -5,7 +5,7 @@ export class Local {
 
 	nome: string = "";
 	descricao: string = "";
-	coordenadas: Coordenadas;
+	coordenadas: Coordenadas = null;;
 	keyTarefas: string[] = [];
 
 	public Copy() {

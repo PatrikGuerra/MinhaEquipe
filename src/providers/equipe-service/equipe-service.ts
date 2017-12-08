@@ -10,12 +10,15 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Enums
 import { OrigemImagem } from "../../app/app.constants";
+import { MensagemTipo } from "../../app/app.constants";
 
 //Models
 import { Equipe } from "../../models/equipe";
+import { Usuario } from "../../models/usuario";
 
 //Services
 import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
+import { ChatServiceProvider } from "../chat-service/chat-service";
 
 @Injectable()
 export class EquipeServiceProvider {
@@ -40,18 +43,57 @@ export class EquipeServiceProvider {
     return equipe;
   }
 
-  private removerUsuarioDasTarefas(keyEquipe: string, keyUsuario: string): Promise<any> {
-    console.log("chegou aquieeeee 3")
+
+  public removerMembro(keyEquipe: string, usuario: Usuario): Promise<any> {
+    console.log("removerMembro -3")
     return new Promise((resolve, reject) => {
-      console.log("chegou aquieeeee 4")
+      console.log("removerMembro -2")
+      this.removerMembroDaEquipe(keyEquipe, usuario.$key).then(data => {
+        console.log("removerMembro -1")
+
+        let chatServiceProvider = new ChatServiceProvider(this.db);
+        let mensagem = `'${usuario.nome}' removido`;
+        chatServiceProvider.enviarMensagem(keyEquipe, keyEquipe, MensagemTipo.Notificacao, mensagem)
+
+        console.log("removerMembro Final")
+        resolve(true);
+      }).catch(error => {
+        reject(error);
+      });
+    });
+  }
+
+  public sairDaEquipe(keyEquipe: string, ): Promise<any> {
+    console.log("sairDaEquipe -3")
+    return new Promise((resolve, reject) => {
+      console.log("sairDaEquipe -2")
+      this.removerMembroDaEquipe(keyEquipe, this.userService.usuario.$key).then(data => {
+        console.log("sairDaEquipe -1")
+
+        let chatServiceProvider = new ChatServiceProvider(this.db);
+        let mensagem = `'${this.userService.usuario.nome}' saiu`;
+        chatServiceProvider.enviarMensagem(keyEquipe, keyEquipe, MensagemTipo.Notificacao, mensagem)
+
+        console.log("sairDaEquipe Final")
+        resolve(true);
+      }).catch(error => {
+        reject(error);
+      });
+    });
+  }
+
+  private removerUsuarioDasTarefas(keyEquipe: string, keyUsuario: string): Promise<any> {
+    console.log("removerUsuarioDasTarefas 3")
+    return new Promise((resolve, reject) => {
+      console.log("removerUsuarioDasTarefas 4")
       this.db.object(`${dataBaseStorage.TarefaResponsavel}/${keyUsuario}/${keyEquipe}`).take(1).subscribe(keyTarefas => {
-        console.log("chegou aquieeeee 5")
+        console.log("removerUsuarioDasTarefas 5")
         if (keyTarefas.$value === null) {
-          console.log("chegou aquieeeee 6 -- null")
+          console.log("removerUsuarioDasTarefas 6 -- null")
           resolve(true);
         } else {
           Object.keys(keyTarefas).forEach(keyTarefa => {
-            console.log("chegou aquieeeee 6 -- " + keyTarefa)
+            console.log("removerUsuarioDasTarefas 6 -- " + keyTarefa)
             //Remove o usuário de cada Tarefa
             this.db.object(`${dataBaseStorage.Tarefa}/${keyEquipe}/${keyTarefa}/keyResponsaveis/${keyUsuario}`).remove();
           });
@@ -62,24 +104,24 @@ export class EquipeServiceProvider {
     });
   }
 
-  public removerMembro(keyEquipe: string, keyUsuario: string): Promise<any> {
+  private removerMembroDaEquipe(keyEquipe: string, keyUsuario: string): Promise<any> {
     console.clear()
-    console.log("chegou aquieeeee 1")
+    console.log("removerMembroDaEquipe 1")
     return new Promise((resolve, reject) => {
-      console.log("chegou aquieeeee 2")
+      console.log("removerMembroDaEquipe 2")
       //Exclui o registro de TarefaResponsavel do usuario na equipe
       this.removerUsuarioDasTarefas(keyEquipe, keyUsuario).then(() => {
-        console.log("chegou aquieeeee 7")
+        console.log("removerMembroDaEquipe 7")
 
         this.db.object(`${dataBaseStorage.TarefaResponsavel}/${keyUsuario}/${keyEquipe}`).remove().then(() => {
-          console.log("chegou aquieeeee 8")
+          console.log("removerMembroDaEquipe 8")
           //remove a equipe do usuario
           this.db.object(`${dataBaseStorage.Usuario}/${keyUsuario}/equipes/${keyEquipe}`).remove().then(() => {
-            console.log("chegou aquieeeee 7")
+            console.log("removerMembroDaEquipe 7")
 
             //remove o usuario da equipe
             this.db.object(`${dataBaseStorage.Equipe}/${keyEquipe}/keyMembros/${keyUsuario}`).remove().then(() => {
-              console.log("chegou aquieeeee 10")
+              console.log("removerMembroDaEquipe 10")
               resolve(true);
             }).catch(error => {
               console.error("error 4");

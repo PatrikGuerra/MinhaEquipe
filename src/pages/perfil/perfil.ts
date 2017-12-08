@@ -33,10 +33,6 @@ export class PerfilPage {
     public popoverCtrl: PopoverController) {
 
     this.atualizarUsuarioPagina();
-
-    if (!this.usuario.tags) {
-      this.usuario.tags = [];
-    }
   }
 
   private atualizarUsuarioPagina() {
@@ -137,8 +133,12 @@ export class PerfilPage {
     loading.present();
 
     this.usuarioService.salvar(this.usuario).then((data) => {
+      console.log(this.usuario);
       loading.dismiss();
       toast.present();
+    }).catch(error => {
+      console.log(error);
+      loading.dismiss();
     });
   }
 }

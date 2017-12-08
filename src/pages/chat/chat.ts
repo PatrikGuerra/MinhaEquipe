@@ -50,14 +50,49 @@ export class ChatPage implements OnInit, OnDestroy {
     this.equipe = this.sessaoService.equipe;
   }
 
+  private outrosUsuarios = [];
+
   ionViewDidLoad() {
-    this.chatService.getMensagens(this.equipe.$key).subscribe((mensagensData) => {
+
+    console.log(this.sessaoService.equipe.membros);
+    this.chatService.getMensagens(this.equipe.$key).subscribe((mensagensData: Mensagem[]) => {
+
+      mensagensData.forEach(mensagem => {
+        mensagem.setRemetente(this.sessaoService.equipe.membros);
+        if (mensagem.tipo == MensagemTipo.Mensagem && !mensagem.remetente) {
+
+          this.buscarUsuario(mensagem.keyRemetente).then((data: Usuario) => {
+            mensagem.remetente = data;
+          });
+          
+          console.log(mensagem.remetente);
+        }
+      });
+
+      console.log(mensagensData);
       this.mensagens = mensagensData;
     });
 
     if (this.platform.is('cordova')) {
       this.keyboard.onKeyboardShow().subscribe(() => this.scrollDown());
     }
+  }
+
+  private buscarUsuario(keyUsuario: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      console.log(this.outrosUsuarios);
+
+      for (let index = 0; index < this.outrosUsuarios.length; index++) {
+        if (this.outrosUsuarios[index] == keyUsuario) {
+          resolve(this.outrosUsuarios[index]);
+        }
+      }
+
+      this.usuarioService.getUsuario(keyUsuario).take(1).subscribe((data: Usuario) => {
+        this.outrosUsuarios.push(data);
+        resolve(data)
+      });
+    });
   }
 
   ngOnInit() {
@@ -115,5 +150,20 @@ export class ChatPage implements OnInit, OnDestroy {
 
   private get scroller(): Element {
     return this.messageContent.querySelector('.scroll-content');
+  }
+
+  private retornaNomeOuEmail(usuario: Usuario) {
+    console.log("usuario")
+    console.log(usuario)
+    if (usuario) {
+      if (usuario.nome) {
+        return usuario.nome;
+      }
+      if (usuario.email) {
+        return usuario.email;
+      }
+    }
+
+    return ""
   }
 }

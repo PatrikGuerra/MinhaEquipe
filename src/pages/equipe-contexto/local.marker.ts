@@ -21,17 +21,17 @@ export class LocalMarker extends google.maps.OverlayView {
 
 		if (!marcador) {
 			marcador = this.marker = document.createElement('div');
-			marcador.className = 'marker markerLocal';
+			marcador.className = 'markerLocal';
 
-			if (this.args.img) {
-				let imagem = document.createElement('img');
-				imagem.src = this.args.img;
-				marcador.appendChild(imagem);
-			} else {
-				let paragrafo = document.createElement('p');
-				paragrafo.innerHTML = this.args.label.substring(0, 2);
-				marcador.appendChild(paragrafo);
-			}
+			// if (this.args.img) {
+			// 	let imagem = document.createElement('img');
+			// 	imagem.src = this.args.img;
+			// 	marcador.appendChild(imagem);
+			// } else {
+			// 	let paragrafo = document.createElement('p');
+			// 	paragrafo.innerHTML = this.args.label.substring(0, 2);
+			// 	marcador.appendChild(paragrafo);
+			// }
 
 			// let point = this.getProjection().fromLatLngToDivPixel(this.latlng);
 			// if (point) {
@@ -41,7 +41,7 @@ export class LocalMarker extends google.maps.OverlayView {
 
 			this.clickListener = google.maps.event.addDomListener(marcador, "click", (event) => {
 				// alert('You clicked on a custom marker!');
-				console.log('You clicked on a custom marker!');
+				console.log('You clicked on a custom marker! local');
 				console.log(event)
 				google.maps.event.trigger(this, "click");
 			});

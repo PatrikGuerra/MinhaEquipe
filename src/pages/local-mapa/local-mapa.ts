@@ -2,7 +2,7 @@
 // https://github.com/ionicthemes/ionic-2-google-maps-google-places-geolocation
 
 import { Component, NgZone, ElementRef, ViewChild } from '@angular/core';
-import { Geolocation } from '@ionic-native/geolocation';
+import { Geolocation, GeolocationOptions } from '@ionic-native/geolocation';
 import { LoadingController, NavController, NavParams, ViewController } from 'ionic-angular';
 
 import { } from '@types/googlemaps';
@@ -22,6 +22,7 @@ export class LocalMapaPage {
   private mapsAutocompleteService = new google.maps.places.AutocompleteService();
   private mapsGeocoder = new google.maps.Geocoder;
   private autocompleteItems = [];
+  private locationLoading: boolean = false;
 
   constructor(
     public zone: NgZone,
@@ -48,10 +49,10 @@ export class LocalMapaPage {
   ionViewDidEnter() {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: {
-        lat: 0,
-        lng: 0
+        lat: -29.166564,
+        lng: -51.1863117
       },
-      zoom: 15, //https://developers.google.com/maps/documentation/static-maps/intro#Zoomlevels
+      zoom: 5, //https://developers.google.com/maps/documentation/static-maps/intro#Zoomlevels
       disableDefaultUI: true //https://developers.google.com/maps/documentation/javascript/examples/control-disableUI?hl=pt-br
     });
 
@@ -72,23 +73,23 @@ export class LocalMapaPage {
   }
 
   centerMapOnCurrentPosition() {
-    let loadingGeo = this.loadingCtrl.create({
-      content: "Buscando sua localização.."
-    });
-
-    loadingGeo.present();
+    this.locationLoading = true;
 
     this.currentPosition().then(data => {
       this.map.setCenter(data);
-      loadingGeo.dismiss();
+      this.locationLoading = false;
     }).catch(error => {
-      loadingGeo.dismiss();
-    })
+      this.locationLoading = false;
+    });
   }
 
   private currentPosition(): Promise<google.maps.LatLng> {
     return new Promise((resolve, reject) => {
-      this.geolocation.getCurrentPosition().then((resp) => {
+      let geolocationOptions = {
+        'timeout': 10000
+      }
+      
+      this.geolocation.getCurrentPosition(geolocationOptions).then((resp) => {
         let pos = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
 
         resolve(pos);

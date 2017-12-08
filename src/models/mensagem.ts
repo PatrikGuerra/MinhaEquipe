@@ -5,18 +5,21 @@ export class Mensagem {
     $key: string;
     timestamp: any; //?: string | Object;
         dia: any;
-    
+
     keyRemetente: string;
         remetente: Usuario;
 
     conteudo: string;
     tipo: MensagemTipo = MensagemTipo.Mensagem;
 
-    public setRemetente(usuarios: Usuario[]){
-        for (var index = 0; index < usuarios.length; index++) {
-            if (usuarios[index].$key == this.keyRemetente) {
-                this.remetente = usuarios[index];
-                break;
+    public setRemetente(usuarios: Usuario[]) {
+        if (this.tipo == MensagemTipo.Mensagem) {
+            console.log("setRemetente")
+            for (var index = 0; index < usuarios.length; index++) {
+                if (usuarios[index].$key == this.keyRemetente) {
+                    this.remetente = usuarios[index];
+                    break;
+                }
             }
         }
     }
