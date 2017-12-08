@@ -27,7 +27,7 @@ export class TarefaPage {
 
   private tarefa: Tarefa = new Tarefa();
   private equipe: Equipe;
-  private enumTarefaSituacao = TarefaSituacao; //https://github.com/angular/angular/issues/2885
+  private enumTarefaSituacaoHtml = TarefaSituacao; //https://github.com/angular/angular/issues/2885
   
   constructor(
     public navCtrl: NavController,
@@ -49,7 +49,11 @@ export class TarefaPage {
       this.tarefa = this.navParams.data.tarefa;
     }
 
-    this.equipe = this.sessaoService.equipe;
+    if (this.navParams.data.equipe) {
+      this.equipe = this.navParams.data.equipe;
+    } else {
+      this.equipe = this.sessaoService.equipe;
+    }
   }
 
   ionViewDidLoad() {
@@ -115,7 +119,7 @@ export class TarefaPage {
     let localSelectPage = this.modalCtrl.create(LocalSelectPage, {
       displayProperty: 'nome',
       title: "Local da tarefa",
-      items: this.sessaoService.equipe.locais,
+      items: this.equipe.locais,
       keySelected: (this.tarefa.keyLocal) ? this.tarefa.keyLocal : ""
     });
 
@@ -138,106 +142,70 @@ export class TarefaPage {
     let usuarioSelectPage = this.modalCtrl.create(UsuarioSelectPage, {
       displayProperty: 'nome',
       title: "Responsáveis da tarefa",
-      items: this.sessaoService.equipe.membros,
+      items: this.equipe.membros,
       selectedItens: this.tarefa.keyResponsaveis.slice()
     });
 
     usuarioSelectPage.onDidDismiss((data) => {
       if (data) {
         this.tarefa.keyResponsaveis = data.keys;
-        this.tarefa.setReponsaveis(this.sessaoService.equipe.membros);
+        this.tarefa.setReponsaveis(this.equipe.membros);
       }
     });
 
     usuarioSelectPage.present();
   }
 
-  comecarTarefa() {
+  private mudarStatusTarefa(enumStatus: TarefaSituacao, textoLoading: string, textoToast: string) {
     let toast = this.toastCtrl.create({
       duration: 3000,
       position: 'bottom',
-      message: "Tarefa iniciada."
+      message: textoToast
     });
 
-    let loading = this.loadingCtrl.create( {
-      content: 'Iniciando Tarefa...'
+    let loading = this.loadingCtrl.create({
+      content: textoLoading
     });
 
     loading.present();
 
-    this.tarefaService.alterarStatus(this.equipe.$key, this.tarefa, this.enumTarefaSituacao.Andamento).then((data) => {
+    this.tarefaService.alterarStatus(this.equipe.$key, this.tarefa, enumStatus).then((data) => {
       loading.dismiss();
       toast.present();
       this.navCtrl.pop();
     }).catch((error) => {
+      console.error(error);
       loading.dismiss();
     });
 
     toast.dismiss();
   }
-  finalizarTarefa() {
-    let toast = this.toastCtrl.create({
-      duration: 3000,
-      position: 'bottom',
-      message: "Tarefa finalizada."
-    });
-
-    let loading = this.loadingCtrl.create( {
-      content: 'Finalizando Tarefa...'
-    });
-
-    loading.present();
-
-    this.tarefaService.alterarStatus(this.equipe.$key, this.tarefa, this.enumTarefaSituacao.Finalizado).then((data) => {
-      loading.dismiss();
-      toast.present();
-      this.navCtrl.pop();
-    }).catch((error) => {
-      loading.dismiss();
-    });
-
-    toast.dismiss();
+  public comecarTarefa() {
+    this.mudarStatusTarefa(TarefaSituacao.Andamento, "Iniciando Tarefa...", "Tarefa iniciada.");
   }
-  cancelarTarefa() {
-    let toast = this.toastCtrl.create({
-      duration: 3000,
-      position: 'bottom',
-      message: "Tarefa finalizada."
-    });
-
-    let loading = this.loadingCtrl.create( {
-      content: 'Finalizando Tarefa...'
-    });
-
-    loading.present();
-
-    this.tarefaService.alterarStatus(this.equipe.$key, this.tarefa, this.enumTarefaSituacao.Cancelada).then((data) => {
-      loading.dismiss();
-      toast.present();
-      this.navCtrl.pop();
-    }).catch((error) => {
-      loading.dismiss();
-    });
-
-    toast.dismiss();
+  public finalizarTarefa() {
+    this.mudarStatusTarefa(TarefaSituacao.Finalizado, "Finalizando Tarefa...", "Tarefa finalizada.");
+  }
+  public cancelarTarefa() {
+    this.mudarStatusTarefa(TarefaSituacao.Cancelada, "Cancelando Tarefa...", "Tarefa cancelada.");
   }
 
-  private isAdministradorEquipe() {
+  public isAdministradorEquipe() {
     let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
     return retorno;
   }
   
-  private isResponsavel() {
+  public isResponsavel() {
     let retorno = this.tarefa.keyResponsaveis.indexOf(this.usuarioService.usuario.$key) > -1;
     return retorno;
   }
 
-  private isSituacao(situacao: TarefaSituacao) {    
+  public isSituacao(situacao: TarefaSituacao) {    
     let retorno = this.tarefa.situacao == situacao;
     return retorno;
   }
   
-  private corBadge(tarefaSituacao: TarefaSituacao) {
+  public corBadge(tarefaSituacao: TarefaSituacao) {
     if (tarefaSituacao == TarefaSituacao.Andamento) {
       return "cortarefaandamento";
     } else if (tarefaSituacao == TarefaSituacao.Cancelada) {
@@ -251,7 +219,7 @@ export class TarefaPage {
     return "primary";
   }
 
-  private descricaoBadge(tarefaSituacao: TarefaSituacao) {
+  public descricaoBadge(tarefaSituacao: TarefaSituacao) {
     return TarefaSituacao[tarefaSituacao];
   }
 }
