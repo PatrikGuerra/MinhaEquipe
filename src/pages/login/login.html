@@ -1,28 +1,26 @@
-<ion-header>
-  <ion-navbar color="primary">
-    <ion-title>Login</ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-content class="login-content" padding>
+  <div class="login-img" text-center>
+    <img src="assets/images/logo-empty-branco.png" />
+  </div>
 
-<ion-content no-bounce>
-  <form [formGroup]="loginForm">
-    <ion-item>
-      <ion-label floating>E-mail</ion-label>
-      <ion-input type="email" formControlName="email" maxlength="320" [(ngModel)]="credencial.email"></ion-input>
-    </ion-item>
+  <div class="login-box">
+    <form [formGroup]="loginForm">
+      <ion-list inset>
+        <ion-item>
+          <ion-input type="email" formControlName="email" placeholder="Email" maxlength="320" [(ngModel)]="credencial.email" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="password" formControlName="senha" placeholder="Senha" minlength="8" [(ngModel)]="credencial.senha" required></ion-input>
+        </ion-item>
 
-    <ion-item>
-      <ion-label floating>Senha</ion-label>
-      <ion-input type="password" formControlName="senha" minlength="8" [(ngModel)]="credencial.senha"></ion-input>
-    </ion-item>
+      </ion-list>
 
-    <div padding-horizontal padding-top>
-      <button ion-button block color="primary" [disabled]="!loginForm.valid" (click)="entrar()">Entrar</button>
-      <button ion-button block outline (click)="criarConta()">Ou criar conta</button>
-    </div>
-  </form>
+      <div class="signup-col">
+        <button ion-button block class="submit-btn" color="primary" full [disabled]="!loginForm.valid" (click)="entrar()">Entrar</button>
+        <button ion-button block outline (click)="criarConta()">Ou criar conta</button>
+        <button ion-button block clear small (click)="esqueciSenha()">Esqueceu sua senha?</button>
+      </div>
 
-  <div padding>
-    <button ion-button block clear small (click)="esqueciSenha()">Esqueceu sua senha?</button>
+    </form>
   </div>
 </ion-content>
