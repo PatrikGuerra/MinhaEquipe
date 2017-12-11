@@ -36,7 +36,13 @@ export class TarefasUsuarioPage {
     private equipeService: EquipeServiceProvider,
     private tarefaService: TarefaServiceProvider,
     private sessaoService: SessaoServiceProvider) {
+  }
 
+  ionViewDidEnter() {
+    this.carregar();
+  }
+
+  private carregar() {
     let loading = this.loadingCtrl.create({
       content: 'Carregando tarefas...'
     });
