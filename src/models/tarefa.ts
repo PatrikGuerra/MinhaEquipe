@@ -9,7 +9,7 @@ import { Equipe } from "./equipe";
 export class Tarefa {
 		$key?: string = "";
 
-	keyLocal: string; 
+	keyLocal: string = ""; 
 		local: Local;
 
 	keyResponsaveis: string[] = [];
