@@ -1,55 +1,74 @@
 import { Component, forwardRef, EventEmitter, Output, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { AlertController, ToastController } from "ionic-angular";
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
+import { ToastController } from "ionic-angular";
+import { } from "@angular/core/src/linker/view_utils";
 
 @Component({
   selector: 'tags-input',
   templateUrl: 'tags-input.html',
-
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => TagsInputComponent),
     multi: true
   }],
 })
-export class TagsInputComponent {
+export class TagsInputComponent implements ControlValueAccessor {
   private inputValorTag: string = "";
   private listaTag: Array<string> = [];
   public adicionarHabilitado: boolean = true;
 
-  @Input() maxTags: number;
-  @Input() alertInputPlaceholder: string;
-  @Input() alertButtonLabel: string;
-  @Input() wordLengthRestrictionMsg: string;
-  @Input() duplicatesRestrictionMsg: string;
-  @Input() maxWordLength: number;
+  @Input() quantidadeMaxTags: number;
+  @Input() tamanhoMaxTag: number;
   @Input() permitirDuplicados: boolean = false;
+  @Input() mensagemValidacaoTamanhoMaxTag: string;
+  @Input() mensagemValidacaoItensDuplicados: string;
+  @Input() palceholderInput: string;
 
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) { }
+  @Output() eventTagAdicionada = new EventEmitter();
+  @Output() eventTagRemovida = new EventEmitter();
 
-  writeValue(value: Array<any>): void {
-    this.listaTag = value;
+  constructor(private toastCtrl: ToastController) { }
 
-    if (value) {
+  get value(): Array<string> {
+    return this.listaTag
+  }
+
+  writeValue(obj: any): void {
+    this.listaTag = obj;
+
+    if (obj) {
       this.restricaoQuantidadeMaximaDeItensValida();
     }
   }
 
-  registerOnChange(fn: (_: Array<any>) => void): void {
+  registerOnChange(fn: any): void {
+  }
+  
+  registerOnTouched(fn: any): void {
+    // throw new Error("Method not implemented.");
   }
 
-  registerOnTouched(fn: () => void): void {
+  setDisabledState?(isDisabled: boolean): void {
+    // throw new Error("Method not implemented.");
   }
 
-  public adicionarItem(): void {
+  public bindAdicionarItem(): void {
     if (this.inputValorTag && this.restricaoItensDuplicadosValida(this.inputValorTag) && this.restricaoTamanhoDaPalavraValida(this.inputValorTag)) {
       this.addValue(this.inputValorTag);
       this.inputValorTag = "";
     }
   }
 
+  public bindRemoverItem(index: number): void {
+    let valorTagRemovida = this.listaTag[index];
+
+    this.listaTag.splice(index, 1);
+    this.eventTagRemovida.emit({ data: valorTagRemovida });
+    this.restricaoQuantidadeMaximaDeItensValida();
+  }
+
   private restricaoQuantidadeMaximaDeItensValida() {
-    if (this.listaTag.length >= this.maxTags) {
+    if (this.listaTag.length >= this.quantidadeMaxTags) {
       this.adicionarHabilitado = false;
     } else {
       this.adicionarHabilitado = true;
@@ -58,6 +77,7 @@ export class TagsInputComponent {
 
   private addValue(tagValor: string) {
     this.listaTag.push(tagValor);
+    this.eventTagAdicionada.emit({ data: tagValor });
     this.restricaoQuantidadeMaximaDeItensValida();
   }
 
@@ -66,7 +86,7 @@ export class TagsInputComponent {
       valorTag = valorTag.toUpperCase()
 
       let itensDuplicadosValidaToast = this.toastCtrl.create({
-        message: this.duplicatesRestrictionMsg || 'Uma tag de mesmo nome já foi informada.',
+        message: this.mensagemValidacaoItensDuplicados || 'Uma tag de mesmo nome já foi informada.',
         duration: 3000
       });
 
@@ -82,9 +102,9 @@ export class TagsInputComponent {
   }
 
   private restricaoTamanhoDaPalavraValida(tagValor: string): boolean {
-    if (tagValor.length > this.maxWordLength) {
+    if (tagValor.length > this.tamanhoMaxTag) {
       let restricaoTamanhoDaPalavraToast = this.toastCtrl.create({
-        message: this.wordLengthRestrictionMsg || `Somente são permitidos ${this.maxWordLength} caracteres.`,
+        message: this.mensagemValidacaoTamanhoMaxTag || `Somente são permitidos ${this.tamanhoMaxTag} caracteres.`,
         duration: 3000
       });
 
@@ -93,10 +113,5 @@ export class TagsInputComponent {
     }
 
     return true
-  }
-
-  public removerItem(index: number): void {
-    this.listaTag.splice(index, 1);
-    this.restricaoQuantidadeMaximaDeItensValida()
   }
 }

@@ -6,15 +6,15 @@
 
 		<div padding-horizontal padding-bottom>
 			<ion-item>
-				<ion-input type="text" [(ngModel)]="inputValorTag" placeholder="Insira aqui uma nova Tag" [maxlength]="maxWordLength"></ion-input>
-				<button ion-button item-right (click)="adicionarItem()" [disabled]="!adicionarHabilitado">
+				<ion-input type="text" [(ngModel)]="inputValorTag" [placeholder]="placeholderInput || 'Insira aqui uma nova Tag'" [maxlength]="tamanhoMaxTag"></ion-input>
+				<button ion-button item-right (click)="bindAdicionarItem()" [disabled]="!adicionarHabilitado">
 					<ion-icon name="add"></ion-icon>
 				</button>
 			</ion-item>
 		</div>
 
 		<div padding-horizontal text-center>
-			<button type="button" *ngFor="let tag of listaTag; let i=index" ion-button item-right icon-right (click)="removerItem(i)">
+			<button type="button" *ngFor="let tag of listaTag; let i=index" outline ion-button item-right icon-right (click)="bindRemoverItem(i)">
 				{{ tag }}
 				<ion-icon name="close"></ion-icon>
 			</button>

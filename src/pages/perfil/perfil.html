@@ -43,5 +43,6 @@
     <ion-input type="text" [ngModel]="usuario.email" readonly name="email"></ion-input>
   </ion-item>
 
-  <tags-input [maxWordLength]="10" [maxTags]="5" [permitirDuplicados]="false" [(ngModel)]="usuario.tags"></tags-input>
+  <tags-input [tamanhoMaxTag]="10" [quantidadeMaxTags]="5" [permitirDuplicados]="false" [(ngModel)]="usuario.tags"></tags-input>
+  <!-- <tags-input [tamanhoMaxTag]="10" [quantidadeMaxTags]="5" [permitirDuplicados]="false" [(ngModel)]="usuario.tags" (eventTagAdicionada)="bindTagAdicionada($event)" (eventTagRemovida)="bindTagRemovida($event)"></tags-input> -->
 </ion-content>

@@ -141,4 +141,14 @@ export class PerfilPage {
       loading.dismiss();
     });
   }
+
+  // bindTagAdicionada(e) {
+  //   console.log("bindTagAdicionada");
+  //   console.log(e);
+  // }
+
+  // bindTagRemovida(e) {
+  //   console.log("bindTagRemovida");
+  //   console.log(e);
+  // }
 }
