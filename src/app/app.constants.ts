@@ -11,6 +11,7 @@ export const dataBaseStorage = {
 	Chat: 'chats',
 	Equipe: 'equipes',
 	Usuario: 'usuarios',
+	// UsuarioEquipes: 'usuariosEquipes',
 	UsuarioLocalizacao: 'localizacoes',
 	Convite: 'convites',
 	Local: 'locais',
