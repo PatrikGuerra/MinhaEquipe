@@ -25,7 +25,7 @@ import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 @Injectable()
 export class UsuarioServiceProvider {
-  public usuario: Usuario;
+  private usuario: Usuario;
   private geolocationSubscription: any;
 
   constructor(
@@ -39,6 +39,29 @@ export class UsuarioServiceProvider {
     console.log("this.usuario");
     console.log(this.usuario);
   }
+
+  //Done
+  getuid() {
+    return this.storage.get("uid");
+  }
+
+  //Done
+  public getUsuarioAplicacao() {
+    return this.usuario;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   private firebaseToUsuario(objeto: any) {
     let usuario: Usuario = Object.assign(new Usuario(), JSON.parse(JSON.stringify(objeto)))
@@ -136,9 +159,7 @@ export class UsuarioServiceProvider {
   }
 
 
-  getuid() {
-    return this.storage.get("uid");
-  }
+
 
   public buscarUsuariosPorKey(keysUsuario: string[]) {
     var promises = [];
