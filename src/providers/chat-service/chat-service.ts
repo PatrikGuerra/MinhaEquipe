@@ -6,13 +6,19 @@ import { dataBaseStorage } from "../../app/app.constants";
 
 //Models
 import { Mensagem } from "../../models/mensagem";
+import { ConviteUsuario } from "../../models/conviteUsuario";
 import { MensagemTipo } from "../../app/app.constants";
+
+//Service
+import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
+import { Usuario } from '../../models/usuario';
 
 @Injectable()
 export class ChatServiceProvider {
-  private enumMensagemTipo = MensagemTipo; //https://github.com/angular/angular/issues/2885
+  // private enumMensagemTipo = MensagemTipo; //https://github.com/angular/angular/issues/2885
 
-  constructor(public db: AngularFireDatabase) {
+  constructor(public db: AngularFireDatabase,
+    private usuarioService: UsuarioServiceProvider) {
   }
 
   private firebaseToMensagem(objeto: any) {
@@ -66,10 +72,14 @@ export class ChatServiceProvider {
 
   //https://stackoverflow.com/questions/4114095/how-to-revert-git-repository-to-a-previous-commit#answer-21718540
   public enviarMensagem(keyEquipe: string, keyUsuario: string, mensagemTipo: MensagemTipo, conteudo: string) {
-    if (mensagemTipo == this.enumMensagemTipo.Notificacao) {
+    if (mensagemTipo == MensagemTipo.Notificacao) {
       keyUsuario = keyEquipe;
     }
 
+    return this.enviar(keyEquipe, keyUsuario, mensagemTipo, conteudo);
+  }
+
+  private enviar(keyEquipe: string, keyUsuario: string, mensagemTipo: MensagemTipo, conteudo: string) {
     return this.db.list(`${dataBaseStorage.Chat}/${keyEquipe}`).push({
       'timestamp': firebase.database.ServerValue.TIMESTAMP,
       'keyRemetente': keyUsuario,
@@ -77,4 +87,26 @@ export class ChatServiceProvider {
       'tipo': mensagemTipo
     });
   }
+
+  public enviarMensagemMembroEntrou(keyEquipe: string, keyUsuario: string) {
+    this.usuarioService.getUsuario(keyUsuario).take(1).subscribe((dataUsuario: Usuario) => {
+      let conteudo = `'${dataUsuario.nome}' entrou`
+      this.enviar(keyEquipe, dataUsuario.$key, MensagemTipo.Notificacao, conteudo);
+    });
+  }
+
+  public enviarMensagemMembroSaiu(keyEquipe: string, keyUsuario: string) {
+    this.usuarioService.getUsuario(keyUsuario).take(1).subscribe((dataUsuario: Usuario) => {
+      let conteudo = `'${dataUsuario.nome}' saiu`
+      this.enviar(keyEquipe, dataUsuario.$key, MensagemTipo.Notificacao, conteudo);
+    });
+  }
+  
+  public enviarMensagemMembroRemovido(keyEquipe: string, keyUsuario: string) {
+    this.usuarioService.getUsuario(keyUsuario).take(1).subscribe((dataUsuario: Usuario) => {
+      let conteudo = `'${dataUsuario.nome}' foi removido`
+      this.enviar(keyEquipe, dataUsuario.$key, MensagemTipo.Notificacao, conteudo);
+    });
+  }
+  
 }

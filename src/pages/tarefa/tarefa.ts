@@ -191,12 +191,12 @@ export class TarefaPage {
   }
 
   public isAdministradorEquipe() {
-    let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
+    let retorno = this.equipe.keyResponsavel == this.usuarioService.getUsuarioAplicacao().$key;
     return retorno;
   }
   
   public isResponsavel() {
-    let retorno = this.tarefa.keyResponsaveis.indexOf(this.usuarioService.usuario.$key) > -1;
+    let retorno = this.tarefa.keyResponsaveis.indexOf(this.usuarioService.getUsuarioAplicacao().$key) > -1;
     return retorno;
   }
 

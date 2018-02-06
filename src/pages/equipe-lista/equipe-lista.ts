@@ -12,6 +12,9 @@ import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-
 import { Equipe } from "../../models/equipe";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 
+import { Subscription } from 'rxjs/Subscription';
+
+
 @IonicPage()
 @Component({
   selector: 'page-equipe-lista',
@@ -19,6 +22,7 @@ import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-ser
 })
 export class EquipeListaPage {
   private equipes: Equipe[] = [];
+  private subscriptionEquipes: Subscription = new Subscription();
 
   constructor(
     public navCtrl: NavController,
@@ -26,20 +30,40 @@ export class EquipeListaPage {
     private loadingCtrl: LoadingController,
     private usuarioService: UsuarioServiceProvider,
     private equipeService: EquipeServiceProvider,
-
     private sessaoService: SessaoServiceProvider) {
 
+    // let loading = this.loadingCtrl.create({
+    //   content: 'Carregando equipes...'
+    // });
+
+    // loading.present();
+
+    // this.equipeService.getAll(this.usuarioService.getUsuarioAplicacao().$key).subscribe((data: Equipe[]) => {
+    //   console.log("data")
+    //   this.equipes = data;
+    //   loading.dismiss();
+    // });
+  }
+
+
+
+  ionViewWillEnter() {
     let loading = this.loadingCtrl.create({
       content: 'Carregando equipes...'
     });
 
     loading.present();
 
-    this.equipeService.getAll(this.usuarioService.usuario.$key).subscribe((data: Equipe[]) => {
+    this.subscriptionEquipes = this.equipeService.getAll(this.usuarioService.getUsuarioAplicacao().$key).subscribe((data: Equipe[]) => {
       console.log("data")
       this.equipes = data;
       loading.dismiss();
     });
+  }
+
+  ionViewWillLeave() {
+    console.log("ionViewWillLeave")
+    this.subscriptionEquipes.unsubscribe();
   }
 
   ionViewDidLoad() {
@@ -47,9 +71,7 @@ export class EquipeListaPage {
   }
 
   public novaEquipe() {
-    this.navCtrl.push('EquipePage', {
-      nova: true
-    });
+    this.navCtrl.push('EquipePage');
   }
 
   editarEquipe(equipe: Equipe) {

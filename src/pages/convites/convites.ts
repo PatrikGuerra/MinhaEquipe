@@ -4,9 +4,11 @@ import { IonicPage, NavController, ActionSheetController, NavParams, LoadingCont
 //Providers
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { ConviteServiceProvider } from "../../providers/convite-service/convite-service";
+import { ChatServiceProvider } from "../../providers/chat-service/chat-service";
 
 //Models
 import { ConviteUsuario } from "../../models/conviteUsuario";
+import { Subscription } from 'rxjs/Subscription';
 
 @IonicPage()
 @Component({
@@ -15,6 +17,8 @@ import { ConviteUsuario } from "../../models/conviteUsuario";
 })
 export class ConvitesPage {
   private convitesUsuario: ConviteUsuario[] = [];
+  private observable: Subscription;
+  private subscriptionConvites: Subscription = new Subscription();
 
   constructor(
     public navCtrl: NavController,
@@ -23,8 +27,17 @@ export class ConvitesPage {
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private conviteService: ConviteServiceProvider,
-    private usuarioService: UsuarioServiceProvider) {
+    private usuarioService: UsuarioServiceProvider,
+    private chatService: ChatServiceProvider) { }
 
+  //void Runs when the page has loaded.This event only happens once per page being created.If a page leaves but is cached, then this event will not fire again on a subsequent viewing.The ionViewDidLoad event is good place to put your setup code for the page.
+  ionViewDidLoad() {
+    console.log("ionViewDidLoad")
+    console.log('ionsViewDidLoad ConvitesPage');
+  }
+  //void Runs when the page is about to enter and become the active page.
+  ionViewWillEnter() {
+    console.log("ionViewWillEnter")
     let loading = this.loadingCtrl.create({
       content: 'Carregando convites...'
     });
@@ -32,17 +45,32 @@ export class ConvitesPage {
     loading.present();
 
     this.usuarioService.getuid().then((usuarioUid) => {
-      this.conviteService.meusConvites(usuarioUid).subscribe((convitesUsuarioData: ConviteUsuario[]) => {
-        console.log(convitesUsuarioData)
+      this.subscriptionConvites = this.conviteService.meusConvites(usuarioUid).subscribe((convitesUsuarioData: ConviteUsuario[]) => {
         this.convitesUsuario = convitesUsuarioData;
 
         loading.dismiss();
       });
     });
   }
+  //void Runs when the page has fully entered and is now the active page.This event will fire, whether it was the first load or a cached page.
+  ionViewDidEnter() {
+    console.log("ionViewDidEnter")
 
-  ionViewDidLoad() {
-    console.log('ionsViewDidLoad ConvitesPage');
+  }
+  //void Runs when the page is about to leave and no longer be the active page.
+  ionViewWillLeave() {
+    console.log("ionViewWillLeave")
+    this.subscriptionConvites.unsubscribe();
+  }
+  
+  //void Runs when the page has finished leaving and is no longer the active page.
+  ionViewDidLeave() {
+    console.log("ionViewDidLeave")
+
+  }
+  //void Runs when the page is about to be destroyed and have its elements removed.
+  ionViewWillUnload() {
+    console.log("ionViewWillUnload")
   }
 
   private recusarConvite(convite: ConviteUsuario) {
@@ -74,6 +102,8 @@ export class ConvitesPage {
     loading.present();
 
     this.conviteService.aceitarConvite(convite).then(data => {
+      this.chatService.enviarMensagemMembroEntrou(convite.keyEquipe, convite.keyUsuario);
+
       toast.present();
       loading.dismiss();
     });

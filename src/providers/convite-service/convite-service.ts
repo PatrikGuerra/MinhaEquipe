@@ -9,7 +9,6 @@ import { dataBaseStorage, MensagemTipo } from "../../app/app.constants";
 //Services
 import { UsuarioServiceProvider } from "../usuario-service/usuario-service";
 import { EquipeServiceProvider } from "../equipe-service/equipe-service";
-import { ChatServiceProvider } from "../chat-service/chat-service";
 
 //Models
 import { Equipe } from "../../models/equipe";
@@ -22,11 +21,87 @@ export class ConviteServiceProvider {
   constructor(
     public db: AngularFireDatabase,
     public usuarioService: UsuarioServiceProvider,
-    public equipeService: EquipeServiceProvider,
-    public chatService: ChatServiceProvider) {
+    public equipeService: EquipeServiceProvider) {
 
     console.log('Hello ConviteServiceProvider Provider');
   }
+
+  //DONE
+  public meusConvites(usuarioId: string): FirebaseListObservable<ConviteUsuario[]> {
+    return <FirebaseListObservable<ConviteUsuario[]>>this.db.list(`${dataBaseStorage.Convite}`, {
+      query: {
+        orderByChild: `keyUsuario`,
+        equalTo: usuarioId
+      }
+    }).map((items) => {
+      return items.map(item => {
+        return this.firebaseToConviteUsuario(item);
+      });
+    })
+  }
+
+  //DONE
+  private firebaseToConviteUsuario(objeto: any) {
+    let conviteUsuario: ConviteUsuario = Object.assign(new ConviteUsuario(), JSON.parse(JSON.stringify(objeto)))
+    conviteUsuario.$key = objeto.$key;
+    conviteUsuario.dia = new Date(conviteUsuario.timestamp);
+
+    this.equipeService.getEquipe(conviteUsuario.keyEquipe).subscribe(data => {
+      conviteUsuario.equipe = data
+    })
+
+    return conviteUsuario;
+  }
+
+  //DONE
+  private excluirConvite(conviteId: string) {
+    return this.db.object(`${dataBaseStorage.Convite}/${conviteId}`).remove().then(data => {
+      return data;
+    });
+  }
+
+  //DONE
+  public recusarConvite(convite: ConviteUsuario) {
+    return this.excluirConvite(convite.$key).then(data => {
+      return data;
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //https://github.com/angular/angularfire2/issues/708
 
@@ -137,46 +212,14 @@ export class ConviteServiceProvider {
     })
   }
 
-  private firebaseToConviteUsuario(objeto: any) {
-    let conviteUsuario: ConviteUsuario = Object.assign(new ConviteUsuario(), JSON.parse(JSON.stringify(objeto)))
-    conviteUsuario.$key = objeto.$key;
-    conviteUsuario.dia = new Date(conviteUsuario.timestamp);
 
 
-    this.equipeService.getEquipe(conviteUsuario.keyEquipe).subscribe(data => {
-      conviteUsuario.equipe = data
-    })
 
-    return conviteUsuario;
-  }
 
-  public meusConvites(usuarioId: string): FirebaseListObservable<ConviteUsuario[]> {
-    return <FirebaseListObservable<ConviteUsuario[]>>this.db.list(`${dataBaseStorage.Convite}`, {
-      query: {
-        orderByChild: `keyUsuario`,
-        equalTo: usuarioId
-      }
-    }).map((items) => {
-      return items.map(item => {
-        return this.firebaseToConviteUsuario(item);
-      });
-    })
-  }
-
-  private excluirConvite(conviteId: string) {
-    return this.db.object(`${dataBaseStorage.Convite}/${conviteId}`).remove().then(data => {
-      return data;
-    });
-  }
-
-  public recusarConvite(convite: ConviteUsuario) {
-    return this.excluirConvite(convite.$key).then(data => {
-      return data;
-    });
-  }
 
   public aceitarConvite(convite: ConviteUsuario) {
     let updates = {};
+
     updates[`${dataBaseStorage.Equipe}/${convite.keyEquipe}/keyMembros/${convite.keyUsuario}`] = true
     // /equipes
     // /-KvRuD-alrojFi8PkGwW
@@ -190,11 +233,14 @@ export class ConviteServiceProvider {
     // /-KvRuD-alrojFi8PkGwW
 
     return this.db.database.ref().update(updates).then((data) => {
-      let conteudo = `'${this.usuarioService.usuario.nome}' entrou na equipe`;
-      this.chatService.enviarMensagem(convite.keyEquipe, convite.keyEquipe, MensagemTipo.Notificacao, conteudo);
+      
+      this.equipeService.adicionarMembroNOVO(convite.keyEquipe, convite.keyUsuario).then((data) => {
+        //Trecho novo
+      });
 
-      return this.excluirConvite(convite.$key).then(excluirConviteData => {
-        return excluirConviteData;
+        
+        return this.excluirConvite(convite.$key).then(excluirConviteData => {
+          return excluirConviteData;
       });
     });
   }

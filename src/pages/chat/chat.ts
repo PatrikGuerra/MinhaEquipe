@@ -18,6 +18,8 @@ import { Mensagem } from "../../models/mensagem";
 import { UsuarioServiceProvider } from "../../providers/usuario-service/usuario-service";
 import { SessaoServiceProvider } from "../../providers/sessao-service/sessao-service";
 
+import { DataHora } from "../../Utils/dataHora";
+
 @IonicPage()
 @Component({
   selector: 'page-chat',
@@ -28,6 +30,7 @@ export class ChatPage implements OnInit, OnDestroy {
   textMaxLength: number = 400;
   usuario: Usuario;
   equipe: Equipe;
+  DataHoraaa: DataHora = new DataHora();
 
   private autoScroller: MutationObserver;
 
@@ -46,7 +49,7 @@ export class ChatPage implements OnInit, OnDestroy {
     private sessaoService: SessaoServiceProvider,
     public popoverCtrl: PopoverController) {
 
-    this.usuario = this.usuarioService.usuario;
+    this.usuario = this.usuarioService.getUsuarioAplicacao();
     this.equipe = this.sessaoService.equipe;
   }
 
@@ -122,11 +125,11 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   isToday(timestamp: number) {
-    return this.diaSemHora(timestamp) == new Date().setHours(0, 0, 0, 0);
+    return this.DataHoraaa.isToday(timestamp);;
   }
 
   public diaSemHora(timestamp: number) {
-    return new Date(timestamp).setHours(0, 0, 0, 0);
+    return this.DataHoraaa.diaSemHora(timestamp);
   }
 
   private scrollDown() {

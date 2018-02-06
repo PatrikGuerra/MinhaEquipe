@@ -46,7 +46,7 @@ export class LocaisPage {
   }
 
   isAdministradorEquipe() {
-    let retorno = this.equipe.keyResponsavel == this.usuarioService.usuario.$key;
+    let retorno = this.equipe.keyResponsavel == this.usuarioService.getUsuarioAplicacao().$key;
     return retorno;
   }
 }

@@ -29,7 +29,7 @@ export class EquipeServiceProvider {
     public db: AngularFireDatabase,
     public storage: Storage,
     private camera: Camera,
-    private userService: UsuarioServiceProvider) {
+    private usuarioService: UsuarioServiceProvider) {
 
     console.log('Hello EquipeServiceProvider Provider');
   }
@@ -44,18 +44,42 @@ export class EquipeServiceProvider {
   }
 
 
+  //DONE
+  public adicionarMembroNOVO(keyEquipe: string, keyUsuario: string) {
+    let updates = {};
+
+    updates[`${dataBaseStorage.EquipeMembros}/${keyEquipe}/${keyUsuario}`] = true
+
+    return this.db.database.ref().update(updates).then((data) => {
+      // // let conteudo = `'${this.usuarioService.getUsuarioAplicacao().nome}' entrou na equipe`;
+      // this.chatService.enviarMensagem(convite.keyEquipe, convite.keyEquipe, MensagemTipo.Notificacao, conteudo);
+
+      // return this.excluirConvite(convite.$key).then(excluirConviteData => {
+      // return excluirConviteData;
+      // });
+      return data;
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
   public removerMembro(keyEquipe: string, usuario: Usuario): Promise<any> {
-    console.log("removerMembro -3")
     return new Promise((resolve, reject) => {
-      console.log("removerMembro -2")
       this.removerMembroDaEquipe(keyEquipe, usuario.$key).then(data => {
-        console.log("removerMembro -1")
 
-        let chatServiceProvider = new ChatServiceProvider(this.db);
-        let mensagem = `'${usuario.nome}' removido`;
-        chatServiceProvider.enviarMensagem(keyEquipe, keyEquipe, MensagemTipo.Notificacao, mensagem)
+        let chatServiceProvider = new ChatServiceProvider(this.db, this.usuarioService);
+        chatServiceProvider.enviarMensagemMembroRemovido(keyEquipe, usuario.$key);
 
-        console.log("removerMembro Final")
         resolve(true);
       }).catch(error => {
         reject(error);
@@ -64,17 +88,13 @@ export class EquipeServiceProvider {
   }
 
   public sairDaEquipe(keyEquipe: string, ): Promise<any> {
-    console.log("sairDaEquipe -3")
     return new Promise((resolve, reject) => {
-      console.log("sairDaEquipe -2")
-      this.removerMembroDaEquipe(keyEquipe, this.userService.usuario.$key).then(data => {
-        console.log("sairDaEquipe -1")
+      let usuarioAplicacao = this.usuarioService.getUsuarioAplicacao()
+      this.removerMembroDaEquipe(keyEquipe, usuarioAplicacao.$key).then(data => {
 
-        let chatServiceProvider = new ChatServiceProvider(this.db);
-        let mensagem = `'${this.userService.usuario.nome}' saiu`;
-        chatServiceProvider.enviarMensagem(keyEquipe, keyEquipe, MensagemTipo.Notificacao, mensagem)
+        let chatServiceProvider = new ChatServiceProvider(this.db, this.usuarioService);
+        chatServiceProvider.enviarMensagemMembroSaiu(keyEquipe, usuarioAplicacao.$key);
 
-        console.log("sairDaEquipe Final")
         resolve(true);
       }).catch(error => {
         reject(error);
@@ -83,17 +103,12 @@ export class EquipeServiceProvider {
   }
 
   private removerUsuarioDasTarefas(keyEquipe: string, keyUsuario: string): Promise<any> {
-    console.log("removerUsuarioDasTarefas 3")
     return new Promise((resolve, reject) => {
-      console.log("removerUsuarioDasTarefas 4")
       this.db.object(`${dataBaseStorage.TarefaResponsavel}/${keyUsuario}/${keyEquipe}`).take(1).subscribe(keyTarefas => {
-        console.log("removerUsuarioDasTarefas 5")
         if (keyTarefas.$value === null) {
-          console.log("removerUsuarioDasTarefas 6 -- null")
           resolve(true);
         } else {
           Object.keys(keyTarefas).forEach(keyTarefa => {
-            console.log("removerUsuarioDasTarefas 6 -- " + keyTarefa)
             //Remove o usuário de cada Tarefa
             this.db.object(`${dataBaseStorage.Tarefa}/${keyEquipe}/${keyTarefa}/keyResponsaveis/${keyUsuario}`).remove();
           });
@@ -106,22 +121,16 @@ export class EquipeServiceProvider {
 
   private removerMembroDaEquipe(keyEquipe: string, keyUsuario: string): Promise<any> {
     console.clear()
-    console.log("removerMembroDaEquipe 1")
     return new Promise((resolve, reject) => {
-      console.log("removerMembroDaEquipe 2")
       //Exclui o registro de TarefaResponsavel do usuario na equipe
       this.removerUsuarioDasTarefas(keyEquipe, keyUsuario).then(() => {
-        console.log("removerMembroDaEquipe 7")
 
         this.db.object(`${dataBaseStorage.TarefaResponsavel}/${keyUsuario}/${keyEquipe}`).remove().then(() => {
-          console.log("removerMembroDaEquipe 8")
           //remove a equipe do usuario
           this.db.object(`${dataBaseStorage.Usuario}/${keyUsuario}/equipes/${keyEquipe}`).remove().then(() => {
-            console.log("removerMembroDaEquipe 7")
 
             //remove o usuario da equipe
             this.db.object(`${dataBaseStorage.Equipe}/${keyEquipe}/keyMembros/${keyUsuario}`).remove().then(() => {
-              console.log("removerMembroDaEquipe 10")
               resolve(true);
             }).catch(error => {
               console.error("error 4");
@@ -151,17 +160,12 @@ export class EquipeServiceProvider {
 
     // var query = firebase.database().ref(dataBaseStorage.Equipe).orderByChild( `keyMembros/${usuarioId}`).equalTo(true);
     // return query.once("value").then(snapshot => {
-    //   console.log(snapshot)
 
     //     snapshot.forEach(childSnapshot=> {
 
     //       var key = childSnapshot.key; // "ada"
-    //       console.log(childSnapshot.key)
-    //       console.log(childSnapshot.val())
 
-    //       console.log(childSnapshot.val())
 
-    //       console.log(Object.assign(new Equipe(), JSON.parse(JSON.stringify(childSnapshot.val()))))
 
     //       // childSnapshot.value
     //       // Cancel enumeration
@@ -196,7 +200,7 @@ export class EquipeServiceProvider {
   /* Salvar - Modo antigo
     public salvar(equipe: Equipe, imagem: string): Promise<any> {
       return new Promise((resolve, reject) => {
-        this.userService.getuid().then((usuarioUid) => {
+        this.usuarioService.getuid().then((usuarioUid) => {
   
           if (!equipe.$key) {
             //Se é Push
@@ -227,7 +231,7 @@ export class EquipeServiceProvider {
 
   public criar(equipe: Equipe, imagem: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.userService.getuid().then((usuarioUid) => {
+      this.usuarioService.getuid().then((usuarioUid) => {
 
         equipe.keyResponsavel = usuarioUid;
         equipe.addMembro(usuarioUid);

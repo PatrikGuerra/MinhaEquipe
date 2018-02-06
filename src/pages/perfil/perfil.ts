@@ -36,7 +36,7 @@ export class PerfilPage {
   }
 
   private atualizarUsuarioPagina() {
-    this.usuario = this.usuarioService.usuario;
+    this.usuario = this.usuarioService.getUsuarioAplicacao();
   }
 
   ionViewDidLoad() {

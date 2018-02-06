@@ -49,7 +49,7 @@ export class TarefasUsuarioPage {
 
     loading.present();
 
-    this.tarefaService.getUsuarioTarefasEquipe(this.usuarioService.usuario.$key).subscribe((data: UsuarioTarefasEquipe[]) => {
+    this.tarefaService.getUsuarioTarefasEquipe(this.usuarioService.getUsuarioAplicacao().$key).subscribe((data: UsuarioTarefasEquipe[]) => {
       data.forEach(usuarioTarefasEquipe => {
         this.equipeService.getEquipe(usuarioTarefasEquipe.keyEquipe).subscribe((dataEquipe: Equipe) => {
           usuarioTarefasEquipe.equipe = dataEquipe;

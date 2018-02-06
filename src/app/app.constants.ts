@@ -10,6 +10,7 @@ export const firebaseConfig = {
 export const dataBaseStorage = {
 	Chat: 'chats',
 	Equipe: 'equipes',
+	EquipeMembros: 'EquipeMembros',
 	Usuario: 'usuarios',
 	// UsuarioEquipes: 'usuariosEquipes',
 	UsuarioLocalizacao: 'localizacoes',
@@ -18,7 +19,7 @@ export const dataBaseStorage = {
 	LocalTarefas: 'localTarefas',//Aponta quais tarefas estão associadas a um determinado local
 
 	Tarefa: 'tarefas',
-	TarefaResponsavel: 'tarefaResponsaveis', //Aponta ao usuaio quais tarefas de quais equipes ele possui
+	TarefaResponsavel: 'tarefaResponsaveis', //Aponta ao usuario quais tarefas de quais equipes ele possui
 };
 
 export enum TarefaSituacao	 {
