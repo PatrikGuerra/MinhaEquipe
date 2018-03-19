@@ -109,7 +109,7 @@ export class ConvitesPage {
     });
   }
 
-  private isToday(timestamp: number) {
+  private dataIgualAHoje(timestamp: number) {
     return new Date(timestamp).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0);
   }
 

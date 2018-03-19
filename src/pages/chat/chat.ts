@@ -30,7 +30,6 @@ export class ChatPage implements OnInit, OnDestroy {
   textMaxLength: number = 400;
   usuario: Usuario;
   equipe: Equipe;
-  DataHoraaa: DataHora = new DataHora();
 
   private autoScroller: MutationObserver;
 
@@ -47,16 +46,16 @@ export class ChatPage implements OnInit, OnDestroy {
 
     private usuarioService: UsuarioServiceProvider,
     private sessaoService: SessaoServiceProvider,
-    public popoverCtrl: PopoverController) {
+    public popoverCtrl: PopoverController,
+    public dataHora : DataHora) {
 
     this.usuario = this.usuarioService.getUsuarioAplicacao();
-    this.equipe = this.sessaoService.equipe;
+    this.equipe = this.sessaoService.equipe;    
   }
 
   private outrosUsuarios = [];
 
   ionViewDidLoad() {
-
     console.log(this.sessaoService.equipe.membros);
     this.chatService.getMensagens(this.equipe.$key).subscribe((mensagensData: Mensagem[]) => {
 
@@ -124,14 +123,6 @@ export class ChatPage implements OnInit, OnDestroy {
     });
   }
 
-  isToday(timestamp: number) {
-    return this.DataHoraaa.isToday(timestamp);;
-  }
-
-  public diaSemHora(timestamp: number) {
-    return this.DataHoraaa.diaSemHora(timestamp);
-  }
-
   private scrollDown() {
     this.scroller.scrollTop = this.scroller.scrollHeight;
   }
@@ -156,12 +147,11 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   private retornaNomeOuEmail(usuario: Usuario) {
-    console.log("usuario")
-    console.log(usuario)
     if (usuario) {
       if (usuario.nome) {
         return usuario.nome;
       }
+
       if (usuario.email) {
         return usuario.email;
       }

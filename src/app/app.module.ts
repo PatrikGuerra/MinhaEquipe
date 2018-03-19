@@ -47,6 +47,7 @@ import { ConviteServiceProvider } from "../providers/convite-service/convite-ser
 import { ChatServiceProvider } from "../providers/chat-service/chat-service";
 import { LocalServiceProvider } from '../providers/local-service/local-service';
 import { TarefaServiceProvider } from '../providers/tarefa-service/tarefa-service';
+import { DataHora } from "../Utils/dataHora";
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { TarefaServiceProvider } from '../providers/tarefa-service/tarefa-servic
     DatePicker,
     Geolocation,
     ElasticDirective,
+    DataHora,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     SessaoServiceProvider,
     AuthServiceProvider,

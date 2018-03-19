@@ -14,12 +14,12 @@
   <ion-list no-padding *ngIf="usuario">
     <div *ngFor="let mensagem of mensagens; let i = index">
 
-      <fieldset *ngIf="i == 0 || (i > 0) && diaSemHora(mensagem.dia) != diaSemHora(mensagens[i - 1].dia)">
-        <legend align="center" *ngIf="!isToday(mensagem.timestamp)">
+      <fieldset *ngIf="i == 0 || (i > 0) && dataHora.diaSemHoras(mensagem.dia) != dataHora.diaSemHoras(mensagens[i - 1].dia)">
+        <legend align="center" *ngIf="!dataHora.dataIgualAHoje(mensagem.timestamp)">
           {{ mensagem.dia | date: "dd/MM/yyyy H:mm" }}
         </legend>
 
-        <legend align="center" *ngIf="isToday(mensagem.timestamp)">
+        <legend align="center" *ngIf="dataHora.dataIgualAHoje(mensagem.timestamp)">
           Hoje
         </legend>
       </fieldset>

@@ -33,12 +33,12 @@
 
     <ion-item (click)="alterarDataInicio()" [ngClass]="corClasse()">
       <ion-label style="color:#999; max-width: 30%;">Início</ion-label>
-      <ion-label text-right>{{ dataFormatada(equipe.dataInicio) }}</ion-label>
+      <ion-label text-right>{{ (equipe.dataInicio != null) ? dataHora.dataFormatada(equipe.dataInicio) : "Selecione uma data e hora" }}</ion-label>
     </ion-item>
 
     <ion-item (click)="alterarDataTermino()" [ngClass]="corClasse()">
       <ion-label style="color:#999; max-width: 30%;">Término</ion-label>
-      <ion-label text-right>{{ dataFormatada(equipe.dataFim) }}</ion-label>
+      <ion-label text-right>{{ (equipe.dataFim != null) ? dataHora.dataFormatada(equipe.dataFim) : "Selecione uma data e hora" }}</ion-label>
     </ion-item>
   </form>
 </ion-content>
