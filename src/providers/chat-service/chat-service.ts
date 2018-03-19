@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2/database-deprecated';
 
 import * as firebase from 'firebase/app';
 import { dataBaseStorage } from "../../app/app.constants";
@@ -80,6 +80,8 @@ export class ChatServiceProvider {
   }
 
   private enviar(keyEquipe: string, keyUsuario: string, mensagemTipo: MensagemTipo, conteudo: string) {
+    
+
     return this.db.list(`${dataBaseStorage.Chat}/${keyEquipe}`).push({
       'timestamp': firebase.database.ServerValue.TIMESTAMP,
       'keyRemetente': keyUsuario,

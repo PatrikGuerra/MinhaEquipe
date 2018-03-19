@@ -19,7 +19,7 @@ import { firebaseConfig } from "./app.constants";
 //Firebase
 import { AngularFireModule } from "angularfire2";
 import { AngularFireAuthModule } from "angularfire2/auth";
-import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireDatabaseModule } from 'angularfire2/database-deprecated';
 
 //Paginas
 import { CadastroPage } from "../pages/cadastro/cadastro";

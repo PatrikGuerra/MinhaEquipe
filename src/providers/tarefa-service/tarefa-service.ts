@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 
 import { dataBaseStorage } from "../../app/app.constants";
 import { TarefaSituacao } from "../../app/app.constants";

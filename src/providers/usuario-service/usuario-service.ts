@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 
 import * as firebase from 'firebase';
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
 import { dataBaseStorage } from "../../app/app.constants";
 
 import { Storage } from '@ionic/storage';

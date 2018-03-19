@@ -4,7 +4,7 @@ import { IonicPage, LoadingController, NavController, NavParams, ViewController,
 
 import { } from '@types/googlemaps';
 
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
 import * as firebase from 'firebase';
 
 import { dataBaseStorage } from "../../app/app.constants";
